@@ -1,4 +1,4 @@
-# 1단계: Gradle과 JDK 22를 사용하여 빌드
+# 1단계: Gradle과 JDK 17을 사용하여 빌드
 FROM gradle:8.3-jdk22 AS build
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY src ./src
 RUN gradle clean build --no-daemon
 
 # 2단계: 최종 실행 이미지 (JDK 22만 포함)
-FROM openjdk:22-jdk-alpine
+FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # 빌드된 jar 파일을 복사
