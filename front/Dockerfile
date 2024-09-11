@@ -1,29 +1,26 @@
-# 단계 1: Node.js를 사용하여 React 애플리케이션을 빌드
-FROM node:18 AS build
+# 1. Node.js를 사용해 빌드
+FROM node:16 AS build
 
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# package.json과 package-lock.json을 복사
-COPY package.json package-lock.json ./
-
 # 의존성 설치
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
 
-# 소스 코드 복사
+# 애플리케이션 빌드
 COPY . .
-
-# React 애플리케이션 빌드
 RUN npm run build
 
-# 단계 2: Nginx를 사용하여 빌드된 애플리케이션을 서비스
+# 2. Nginx를 사용해 정적 파일 서빙
 FROM nginx:alpine
 
-# Nginx의 기본 HTML 디렉토리로 빌드된 파일 복사
+# 빌드된 리액트 파일들을 Nginx 기본 경로에 복사
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Nginx 기본 포트(80) 노출
+# Nginx 컨테이너가 실행될 포트
 EXPOSE 80
 
-# Nginx 실행
+# Nginx 시작 명령
 CMD ["nginx", "-g", "daemon off;"]
