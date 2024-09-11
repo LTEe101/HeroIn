@@ -17,6 +17,7 @@ function App() {
             HeroIn 다운로드
           </a>
         </li>
+        <h2>CI/CD 테스트</h2>
       </header>
     </div>
   );
