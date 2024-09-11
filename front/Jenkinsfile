@@ -1,0 +1,85 @@
+pipeline {
+    agent {
+        docker {
+            image 'docker:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    environment {
+        DOCKER_IMAGE = 'qkrdusgn00/lte-react'  // DockerHub 사용자명과 이미지 이름을 포함
+        REGISTRY = 'index.docker.io'  // DockerHub 레지스트리
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'  // Jenkins에 등록된 DockerHub 자격 증명 ID
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Git에서 소스 코드 가져오기
+                git branch: 'develop-FE', url: 'https://lab.ssafy.com/s11-ai-image-sub1/S11P21E101.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // 프로젝트 의존성 설치
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // 리액트 테스트 실행 (필수 단계는 아니지만, CI의 핵심 요소)
+                    sh 'npm test'
+                }
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                script {
+                    // Docker Compose를 사용해 이미지 빌드
+                    sh 'docker-compose build'
+                }
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                script {
+                    // DockerHub에 로그인 후 이미지 푸시
+                    docker.withRegistry("https://${REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
+                        // 이미지에 태그를 붙이고 푸시
+                        sh "docker tag ${DOCKER_IMAGE}:latest ${DOCKER_IMAGE}:latest"
+                        sh "docker push ${DOCKER_IMAGE}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Docker Compose로 최신 이미지로 컨테이너 실행
+                    sh 'docker-compose pull'
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // 빌드 후 작업 공간 정리
+            cleanWs()
+        }
+
+        failure {
+            // 실패 시 알림 또는 로그 저장
+            echo 'Build failed. Please check logs.'
+        }
+    }
+}
