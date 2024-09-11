@@ -73,10 +73,10 @@ pipeline {
 
     post {
         always {
-            // 빌드 후 작업 공간 정리
-            cleanWs()
+            node {
+                cleanWs() // cleanWs는 반드시 node 블록 내에서 실행되어야 합니다
+            }
         }
-
         failure {
             // 실패 시 알림 또는 로그 저장
             echo 'Build failed. Please check logs.'
