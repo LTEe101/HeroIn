@@ -18,6 +18,7 @@ function App() {
           </a>
         </li>
         <h2>CI/CD 테스트</h2>
+        <h2>CI/CD 테스트2</h2>
       </header>
     </div>
   );
