@@ -1555,6 +1555,7 @@ MonoBehaviour:
   userIdInputField: {fileID: 445788484}
   passwordInputField: {fileID: 560733855}
   loginButton: {fileID: 1965582137}
+  joingButton: {fileID: 1429922750}
 --- !u!1 &1965582135
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class APIManager : MonoBehaviour
 {
-    private string apiUrl = "http://j11e101.p.ssafy.io:5000";
+    private string apiUrl = "http://j11e101.p.ssafy.io:5000/api";
 
     // 로그인 요청을 보내는 함수
     public IEnumerator Login(string userId, string password, System.Action<User> onSuccess, System.Action<string> onError)
@@ -60,5 +62,42 @@ public class APIManager : MonoBehaviour
         user.name = "김태훈";
         user.userId = "zxader";
         return user;
+    }
+
+    public IEnumerator Join(string name, string userId, string pwd, Image imgNO, System.Action<string> onSuccess, System.Action<string> onError)
+    {
+        // 서버에 보낼 데이터 설정
+        // WWWForm form = new WWWForm();
+        //form.AddField("name", name);
+        //form.AddField("userId", userId);
+        //form.AddField("pwd", pwd);
+        //form.AddField("imgNO", imgNO);
+
+        // POST 요청을 보낼 UnityWebRequest 객체 생성
+        //using (UnityWebRequest request = UnityWebRequest.Post(apiUrl, form))
+        //{
+        //    // 요청 전송 및 응답 대기
+        //    yield return request.SendWebRequest();
+
+        //    // 오류 처리
+        //    if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        //    {
+        //        Debug.LogError("Error: " + request.error);
+        //        onError?.Invoke(request.error);
+        //        yield break; // 오류 발생 시 메소드 종료
+        //    }
+
+        //}
+
+        // 가짜 데이터로 테스트
+        yield return new WaitForSeconds(0.2f); // 서버 응답 대기 시뮬레이션
+
+    // 가짜 User 객체 생성
+    onSuccess?.Invoke("회원가입 성공");
+
+    // 오류 처리 테스트용
+    //onError?.Invoke("가짜 오류 메시지"); // 주석 해제 시 오류 처리 테스트 가능
+
+    yield return null;
     }
 }
