@@ -8,6 +8,7 @@ public class Managers : MonoBehaviour
     static Managers Instance { get { Init(); return s_instance; } } // 유일한 매니저를 갖고온다
 
     DataManager _data = new DataManager();
+    InputManager _input = new InputManager();
     APIManager _api;
     ResourceManager _resource = new ResourceManager();
     UIManager _ui = new UIManager();
@@ -15,12 +16,11 @@ public class Managers : MonoBehaviour
     SceneManagerEx _scene = new SceneManagerEx();
 
     public static DataManager Data { get { return Instance._data; } }
+    public static InputManager Input { get { return Instance._input; } }
     public static APIManager API { get { return Instance._api; } }
     public static ResourceManager Resource { get { return Instance._resource; } }
     public static UIManager UI { get { return Instance._ui; } }
-
     public static PoolManager Pool { get { return Instance._pool; } }
-
     public static SceneManagerEx Scene { get { return Instance._scene; } }
 
     void Start()
@@ -30,6 +30,7 @@ public class Managers : MonoBehaviour
 
     void Update()
     {
+        _input.OnUpdate();
     }
 
     static void Init()
@@ -53,6 +54,7 @@ public class Managers : MonoBehaviour
 
     public static void Clear()
     {
+        Input.Clear();
         Scene.Clear();
         UI.Clear();
         Pool.Clear();

@@ -25,6 +25,10 @@ public class UIManager
             return root;
         }
     }
+    public int GetStackCount()
+    {
+        return _popupStack.Count;
+    }
 
     // UI 오브젝트에 Canvas를 추가하고 정렬 순서를 설정하는 함수
     public void SetCanvas(GameObject go, bool sort = true)
