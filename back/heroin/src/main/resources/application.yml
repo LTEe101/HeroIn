@@ -5,5 +5,3 @@ spring:
     password: ${DB_PASSWORD}
   profiles:
     active: dev
-  config:
-    import: "optional:classpath:application-secret.yml"
