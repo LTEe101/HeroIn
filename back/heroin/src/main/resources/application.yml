@@ -3,5 +3,6 @@ spring:
     url: jdbc:mysql://j11e101.p.ssafy.io:3307/mydb
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   profiles:
     active: dev
