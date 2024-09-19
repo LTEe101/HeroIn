@@ -1,0 +1,22 @@
+{
+  "cards": [
+    {
+      "historyId": "1",
+      "name": "이순신",
+      "description": "설명",
+      "imgNO": "1"
+    },
+    {
+      "historyId": "2",
+      "name": "이름2",
+      "description": "설명",
+      "imgNO": "2"
+    },
+    {
+      "historyId": "3",
+      "name": "이름3",
+      "description": "설명",
+      "imgNO": "3"
+    }
+  ]
+} 
