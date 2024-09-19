@@ -92,7 +92,7 @@ public class CameraController : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             string hitObjectName = hit.collider.gameObject.name;
-            
+            Debug.Log(hitObjectName);
             switch (hitObjectName)
             {
                 case "UserButton":
