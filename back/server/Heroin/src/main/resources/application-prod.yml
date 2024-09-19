@@ -1,14 +1,14 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/heroin?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true"
-    username: root
-    password: ssafy
+    url: { DB_URL }
+    username: { DB_USER }
+    password: { DB_PWD }
   jpa:
     hibernate:
-      ddl-auto: create # 배포 환경에서는 DB 자동 생성 금지
+      ddl-auto: update # 배포 환경에서는 DB 자동 생성 금지
 jwt:
-  secret: wYJ6V3rKQFbS5vH60QpC7ePqPL1LK3piQ4s3wBfJvX0
+  secret: { JWT_SECRET }

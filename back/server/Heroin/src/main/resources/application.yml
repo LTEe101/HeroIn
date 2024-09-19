@@ -1,7 +1,4 @@
 spring:
-  config:
-    import:
-      - application-prod.yml
   servlet:
     multipart:
       max-file-size: 50MB
