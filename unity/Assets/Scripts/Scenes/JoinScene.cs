@@ -72,7 +72,6 @@ public class JoinScene : BaseScene
             name,
             Id,
             pwd,
-            imgNo,
             (message) =>
             {
                 // 회원가입 성공 시 처리

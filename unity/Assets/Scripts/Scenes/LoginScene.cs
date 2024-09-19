@@ -18,7 +18,6 @@ public class LoginScene : BaseScene
         SceneType = Define.Scene.Login;
         loginButton.onClick.AddListener(OnLoginButtonClicked);
         joingButton.onClick.AddListener(OnJoinButtonClicked);
-
     }
 
     private void Update()
@@ -42,9 +41,10 @@ public class LoginScene : BaseScene
         StartCoroutine(Managers.API.Login(
             userId,
             password,
-            (user) => {
+            (message) => {
                 // 로그인 성공 시 처리
-                Managers.Data.SetUserInfo(user);
+                Debug.Log(message);
+                //Managers.Data.SetUserInfo(user);
                 Managers.Scene.LoadScene(Define.Scene.Home);
             },
             (error) => {
