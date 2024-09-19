@@ -41,3 +41,9 @@ test {
     systemProperty 'spring.test.database.replace', 'NONE'
     useJUnitPlatform()
 }
+
+jar {
+    archiveBaseName = 'heroin'
+    archiveVersion = '' // 필요 시 버전도 명시
+    enabled = false
+}
