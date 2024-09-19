@@ -1,15 +1,14 @@
 package com.ssafy.Heroin.api;
 
 import com.ssafy.Heroin.dto.jwt.JwtToken;
-import com.ssafy.Heroin.dto.user.SignInDto;
-import com.ssafy.Heroin.dto.user.SignUpDto;
-import com.ssafy.Heroin.dto.user.UserDto;
-import com.ssafy.Heroin.dto.user.UserProfileDto;
+import com.ssafy.Heroin.dto.user.*;
 import com.ssafy.Heroin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +20,6 @@ public class UserController {
 
     @PostMapping("/login")
     public JwtToken signIn(@RequestBody SignInDto signInDto) {
-        System.out.println("hello");
         String username = signInDto.getUserLoginId();
         String password = signInDto.getUserLoginPw();
         JwtToken jwtToken = userService.signIn(username, password);
@@ -37,13 +35,20 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(@RequestBody UserDto userDto) {
-        UserProfileDto userProfile = userService.getUserProfile(userDto);
+    public ResponseEntity<?> getProfile(@RequestBody JwtToken token) {
+        UserProfileDto userProfile = userService.getUserProfile(token);
 
         if (userProfile != null) {
             return ResponseEntity.ok(userProfile);
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/card")
+    public ResponseEntity<?> getCard(@RequestBody UserDto userDto) {
+        List<UserHistoryCardDto> historyCards = userService.getHistoryCards(userDto);
+
+        return ResponseEntity.ok(historyCards);
     }
 }
