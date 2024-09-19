@@ -88,8 +88,8 @@ public class UI_History : UI_Popup
         int startItem = pageIndex * itemsPerPage;
         int endItem = Mathf.Min(startItem + itemsPerPage, historyList.Count);
 
-        float yOffset = 25f; // Y축 간격
-        Vector2 startPosition = new Vector2(0, 30); // 초기 위치 설정
+        float yOffset = 13f; // Y축 간격
+        Vector2 startPosition = new Vector2(32, 30); // 초기 위치 설정
 
         for (int i = startItem; i < endItem; i++)
         {

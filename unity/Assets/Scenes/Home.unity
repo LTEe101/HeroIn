@@ -2942,8 +2942,6 @@ MonoBehaviour:
   _moveSpeed: 5
   _rotationSpeed: 2
   _mouseSensitivity: 2
-  _rotationMinLimits: {x: 3.22, y: -57.642, z: -5.066}
-  _rotationMaxLimits: {x: 3.22, y: -57.642, z: -5.066}
 --- !u!1001 &1030974867
 PrefabInstance:
   m_ObjectHideFlags: 0
