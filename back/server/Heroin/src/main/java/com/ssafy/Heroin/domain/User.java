@@ -3,6 +3,7 @@ package com.ssafy.Heroin.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,9 +28,10 @@ public class User {
 
     private String title;
 
+    @CreationTimestamp
     private LocalDateTime createAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<UserHistoryCard> historyCards;
 
 }

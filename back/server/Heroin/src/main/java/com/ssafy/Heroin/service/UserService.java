@@ -1,10 +1,13 @@
 package com.ssafy.Heroin.service;
 
 import com.ssafy.Heroin.domain.User;
+import com.ssafy.Heroin.domain.UserHistoryCard;
 import com.ssafy.Heroin.dto.jwt.JwtToken;
 import com.ssafy.Heroin.dto.user.SignUpDto;
 import com.ssafy.Heroin.dto.user.UserDto;
+import com.ssafy.Heroin.dto.user.UserProfileDto;
 import com.ssafy.Heroin.jwt.JwtTokenProvider;
+import com.ssafy.Heroin.repository.UserHistoryCardRepository;
 import com.ssafy.Heroin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,12 +16,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional()
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserHistoryCardRepository userHistoryCardRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -41,6 +47,7 @@ public class UserService {
     public SignUpDto signUp(UserDto userDto) {
         User user = DtotoUser(userDto);
         ExistUser(user.getUserId());
+        user.setHistoryCards(null);
         userRepository.save(user);
         SignUpDto signUpDto = new SignUpDto();
         signUpDto.setUserLoginId(user.getUserId());
@@ -65,5 +72,21 @@ public class UserService {
         if(userRepository.existsByUserId(userLoginId)) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
+    }
+
+    @Transactional
+    public UserProfileDto getUserProfile(UserDto userDto) {
+        Optional<User> user = userRepository.findByUserId(userDto.getUserLoginId());
+
+        if(user.isPresent()) {
+            UserProfileDto userProfileDto = new UserProfileDto();
+            userProfileDto.setUserName(user.get().getUsername());
+            userProfileDto.setImg(user.get().getImgNo());
+            userProfileDto.setTitle(user.get().getTitle());
+
+            return userProfileDto;
+        }
+
+        return null;
     }
 }

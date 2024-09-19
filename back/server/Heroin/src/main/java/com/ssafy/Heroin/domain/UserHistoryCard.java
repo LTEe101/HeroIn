@@ -13,7 +13,7 @@ public class UserHistoryCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_history_card")
+    @Column(name = "user_history_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -21,8 +21,8 @@ public class UserHistoryCard {
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "history_id")
-    private HistoryCard historycard;
+    @JoinColumn(name = "history_card_id")
+    private HistoryCard historyCard;
 
     private LocalDateTime createAt;
 }

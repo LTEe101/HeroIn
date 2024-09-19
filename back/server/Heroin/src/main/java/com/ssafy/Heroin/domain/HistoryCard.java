@@ -13,10 +13,10 @@ public class HistoryCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "history_id")
+    @Column(name = "history_card_id")
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "historyCard")
     private List<UserHistoryCard> userHistoryCards;
 
     private String name;
