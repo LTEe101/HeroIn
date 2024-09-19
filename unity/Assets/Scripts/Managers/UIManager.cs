@@ -30,6 +30,15 @@ public class UIManager
         return _popupStack.Count;
     }
 
+    // 스택의 맨 위에 있는 팝업 UI를 반환하는 함수
+    public UI_Popup GetTopPopupUI()
+    {
+        if (_popupStack.Count == 0)
+            return null; // 스택이 비어 있으면 null 반환
+
+        return _popupStack.Peek(); // 스택 최상단 팝업 반환
+    }
+
     // UI 오브젝트에 Canvas를 추가하고 정렬 순서를 설정하는 함수
     public void SetCanvas(GameObject go, bool sort = true)
     {
@@ -75,21 +84,6 @@ public class UIManager
 
         return sceneUI; // 생성된 Scene UI 반환
     }
-
-    //// Popup UI를 생성하고 화면에 표시하는 함수
-    //public T ShowPopupUI<T>(string name = null) where T : UI_Popup
-    //{
-    //    if (string.IsNullOrEmpty(name))
-    //        name = typeof(T).Name; // 이름이 없으면 타입 이름으로 설정
-
-    //    GameObject go = Managers.Resource.Instantiate($"UI/Popup/{name}"); // 리소스를 통해 Popup UI 생성
-    //    T popup = Util.GetOrAddComponent<T>(go); // UI_Popup 타입 컴포넌트 추가
-    //    _popupStack.Push(popup); // 생성된 팝업을 스택에 저장
-
-    //    go.transform.SetParent(Root.transform); // UI 루트 오브젝트 아래에 설정
-
-    //    return popup; // 생성된 팝업 반환
-    //}
 
     // Popup UI를 생성하고 화면에 표시하며, 파라미터를 넘기는 함수
     public T ShowPopupUI<T>(string name = null, object[] args = null) where T : UI_Popup

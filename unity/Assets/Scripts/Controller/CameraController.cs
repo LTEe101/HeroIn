@@ -98,6 +98,18 @@ public class CameraController : MonoBehaviour
                 case "UserButton":
                     StartCoroutine(MoveCameraAndShowUI<UI_User>());
                     break;
+                case "1592":
+                    ShowPopupUI<UI_Story_Info_1592>();
+                    break;
+                case "1919":
+                    ShowPopupUI<UI_Story_Info_1919>();
+                    break;
+                case "Start":
+                    UI_Popup topPopup = Managers.UI.GetTopPopupUI();
+                    if (topPopup == null) break;
+                    // 이동
+                    LoadScene(topPopup);
+                    break;
                 case "Exit":
                     Debug.Log("나가기");
                     break;
@@ -113,15 +125,15 @@ public class CameraController : MonoBehaviour
     IEnumerator MoveCameraAndShowUI<T>() where T : UI_Popup
     {
         _status = Cameras.Move;
-
+        Managers.UI.CloseAllPopupUI();
         // 카메라 이동
         yield return StartCoroutine(MoveToPositionAndRotation(_targetPosition, _targetRotation));
 
         // 이동이 완료된 후 UI 띄우기
-        Managers.UI.ShowPopupUI<T>();
+        ShowPopupUI<T>();
         _status = Cameras.Stop;
     }
-
+    
     // 카메라를 목표 위치와 회전으로 이동시키는 코루틴
     IEnumerator MoveToPositionAndRotation(Vector3 targetPos, Quaternion targetRot)
     {
@@ -146,5 +158,26 @@ public class CameraController : MonoBehaviour
         StartCoroutine(MoveToPositionAndRotation(_initialPosition, _initialRotation));
     }
 
-
+    public void ShowPopupUI<T>() where T : UI_Popup
+    {
+        UI_Popup topPopup = Managers.UI.GetTopPopupUI();
+        if (topPopup != null && topPopup.GetType() == typeof(T))
+        {
+            Managers.UI.CloseAllPopupUI();
+            return; // 이미 같은 팝업이 열려 있으면 아무 작업도 하지 않음
+        }
+        else if (Managers.UI.GetStackCount() > 0)
+        {
+            Managers.UI.CloseAllPopupUI();
+        }
+        Managers.UI.ShowPopupUI<T>();
+    }
+    public void LoadScene(UI_Popup topPopup)
+    {
+        if (topPopup.GetType() == typeof(UI_Story_Info_1592))
+        {
+            // SceneManager.LoadScene();
+            Debug.Log("이동");
+        }
+    }
 }
