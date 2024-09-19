@@ -20,8 +20,5 @@ WORKDIR /app
 # 빌드된 jar 파일을 복사 (정확한 파일명 사용 권장)
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# 빌드 단계에서 복사한 설정 파일을 최종 이미지로 복사
-#COPY --from=build /app/config /app/config
-
-# 애플리케이션 실행 명령
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 애플리케이션 실행 명령에 Spring 프로파일 적용
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
