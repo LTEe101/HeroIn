@@ -13,6 +13,9 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# 빌드된 파일 확인
+RUN ls -la /app/build
+
 # 2. Nginx를 사용해 정적 파일 서빙
 FROM nginx:alpine
 
