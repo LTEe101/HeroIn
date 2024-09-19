@@ -31,6 +31,13 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public Claims getPayload(String token) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
     // Member 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
     public JwtToken generateToken(Authentication authentication) {
         // 권한 가져오기

@@ -1,14 +1,15 @@
 package com.ssafy.Heroin.service;
 
 import com.ssafy.Heroin.domain.User;
-import com.ssafy.Heroin.domain.UserHistoryCard;
 import com.ssafy.Heroin.dto.jwt.JwtToken;
 import com.ssafy.Heroin.dto.user.SignUpDto;
 import com.ssafy.Heroin.dto.user.UserDto;
+import com.ssafy.Heroin.dto.user.UserHistoryCardDto;
 import com.ssafy.Heroin.dto.user.UserProfileDto;
 import com.ssafy.Heroin.jwt.JwtTokenProvider;
 import com.ssafy.Heroin.repository.UserHistoryCardRepository;
 import com.ssafy.Heroin.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -24,9 +27,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserHistoryCardRepository userHistoryCardRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserHistoryCardRepository userHistoryCardRepository;
 
     @Transactional
     public JwtToken signIn(String username, String password) {
@@ -35,7 +38,7 @@ public class UserService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         System.out.println(authenticationToken);
 
-        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
+        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 User 에 대한 검증 진행
         // authenticate 메서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         System.out.println(authentication);
@@ -75,8 +78,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileDto getUserProfile(UserDto userDto) {
-        Optional<User> user = userRepository.findByUserId(userDto.getUserLoginId());
+    public UserProfileDto getUserProfile(JwtToken token) {
+        Claims claim = jwtTokenProvider.getPayload(token.getAccessToken());
+        Optional<User> user = userRepository.findByUserId(claim.getSubject());
 
         if(user.isPresent()) {
             UserProfileDto userProfileDto = new UserProfileDto();
@@ -88,5 +92,11 @@ public class UserService {
         }
 
         return null;
+    }
+
+    public List<UserHistoryCardDto> getHistoryCards(UserDto userDto) {
+        List<UserHistoryCardDto> userHistoryCardDtos = userHistoryCardRepository.findByUser(userDto);
+
+        return userHistoryCardDtos;
     }
 }
