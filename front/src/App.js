@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import GlitchButtonComponent from "./components/GlitchButtonComponent";
 
@@ -16,7 +16,11 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// Styled Components
+const Logo = styled.img`
+  width: 200px;
+  margin-bottom: 20px;
+`;
+
 const GameContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -32,24 +36,56 @@ const GameContainer = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-`;
 
-const Logo = styled.img`
-  width: 200px;
-  margin-bottom: 20px;
+  /* 그림자 추가 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5); /* 그림자 효과 */
+  padding: 20px; /* 여백 추가 */
 `;
 
 const VideoContainer = styled.div`
   width: 80%;
-  max-width: 600px;
+  max-width: 550px;
   margin: 20px 0;
+
+  /* 모서리를 둥글게 만들기 */
+  border-radius: 30px;
+
+  /* 그림자 제거 */
+  box-shadow: none;
 
   iframe {
     border: none; /* 테두리 없애기 */
+    width: 100%;
+    border-radius: 30px; /* iframe 내부도 둥글게 만들기 */
   }
 `;
 
 const App = () => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(script);
+
+    window.onYouTubeIframeAPIReady = () => {
+      const player = new window.YT.Player(videoRef.current, {
+        events: {
+          onStateChange: (event) => {
+            if (event.data === window.YT.PlayerState.ENDED) {
+              player.playVideo(); // 비디오가 종료되면 재생
+            }
+          },
+        },
+      });
+    };
+
+    return () => {
+      // 클린업
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const handleDownloadClick = (event) => {
     event.preventDefault(); // 기본 동작 방지
     const confirmDownload = window.confirm("정말로 다운로드하시겠습니까?");
@@ -70,9 +106,10 @@ const App = () => {
         </h1>
         <VideoContainer>
           <iframe
+            ref={videoRef}
             width="100%"
             height="315"
-            src="https://www.youtube.com/embed/8owhox1bPWw?autoplay=1&mute=1"
+            src="https://www.youtube.com/embed/8owhox1bPWw?enablejsapi=1&autoplay=1&mute=1"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen></iframe>
