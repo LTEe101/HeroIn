@@ -4,13 +4,16 @@ FROM node:16 AS build
 # 작업 디렉토리 설정
 WORKDIR /app
 
+# package.json과 package-lock.json만 복사하여 캐시 최적화
+COPY package.json package-lock.json ./
+
 # 의존성 설치
-COPY package.json ./
-COPY package-lock.json ./
 RUN npm install
 
-# 애플리케이션 빌드
+# 애플리케이션 소스 코드 복사
 COPY . .
+
+# 애플리케이션 빌드
 RUN npm run build
 
 # 2. Nginx를 사용해 정적 파일 서빙
@@ -20,7 +23,7 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Nginx 컨테이너가 실행될 포트
-EXPOSE 80
+EXPOSE 3000
 
 # Nginx 시작 명령
 CMD ["nginx", "-g", "daemon off;"]
