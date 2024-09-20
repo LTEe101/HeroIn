@@ -21,6 +21,7 @@ FROM nginx:alpine
 
 # 빌드된 리액트 파일들을 Nginx 기본 경로에 복사
 COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Nginx 시작 명령
 CMD ["nginx", "-g", "daemon off;"]
