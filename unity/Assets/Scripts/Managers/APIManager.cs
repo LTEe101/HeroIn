@@ -36,8 +36,59 @@ public class APIManager : MonoBehaviour
         string jsonData = JsonUtility.ToJson(loginData); // JSON 형식으로 변환
 
         // POST 요청
-        yield return SendRequest(apiUrl + "user/login", "POST", jsonData, onSuccess, onError);
+        yield return SendRequest(apiUrl + "user/login", "POST", jsonData, (response) =>
+        {
+            // 로그인 성공 후 토큰 저장
+            TokenResponse tokenResponse = JsonUtility.FromJson<TokenResponse>(response);
+
+            if (tokenResponse != null)
+            {
+                // 토큰 저장 (PlayerPrefs에 저장)
+                PlayerPrefs.SetString("accessToken", tokenResponse.accessToken);
+                PlayerPrefs.SetString("refreshToken", tokenResponse.refreshToken);
+                PlayerPrefs.Save(); // 저장
+
+                Debug.Log("로그인 성공, 토큰 저장 완료");
+            }
+
+            // 성공 콜백 호출
+            onSuccess?.Invoke(response);
+
+        }, onError);
     }
+
+    // 유저 정보 요청 (GET) - JWT 토큰으로 유저 정보 가져오기
+    public IEnumerator GetUserInfo(System.Action<UserInfoResponse> onSuccess, System.Action<string> onError)
+    {
+        // JWT 토큰 가져오기
+        string accessToken = PlayerPrefs.GetString("accessToken", "");
+
+        // 유효한 토큰이 있는지 확인
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            onError?.Invoke("토큰이 없습니다.");
+            yield break;
+        }
+
+        // GET 요청
+        yield return SendRequest(apiUrl + "user/profile", "GET", null, (response) =>
+        {
+            // 서버로부터 받은 유저 정보를 파싱
+            UserInfoResponse userInfo = JsonUtility.FromJson<UserInfoResponse>(response);
+
+            if (userInfo != null)
+            {
+                Debug.Log("유저 정보 가져오기 성공: " + userInfo.userName);
+                onSuccess?.Invoke(userInfo);
+            }
+            else
+            {
+                onError?.Invoke("유저 정보 파싱 실패");
+            }
+
+        }, onError);
+    }
+
 
     // 데이터를 요청하는 함수 (GET)
     public IEnumerator GetData(string endpoint, System.Action<string> onSuccess, System.Action<string> onError)
@@ -62,6 +113,12 @@ public class APIManager : MonoBehaviour
         if (method == "GET")
         {
             request = UnityWebRequest.Get(url);
+            // JWT 토큰을 Authorization 헤더에 추가
+            string accessToken = PlayerPrefs.GetString("accessToken", "");
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                request.SetRequestHeader("Authorization", "Bearer " + accessToken);
+            }
         }
         else if (method == "POST" || method == "PUT")
         {
@@ -118,4 +175,21 @@ public class LoginData
 {
     public string userLoginId;   // 계정 ID
     public string userLoginPw;   // 비밀번호
+}
+
+// 토큰 응답에 사용되는 데이터 클래스 (로그인 성공 시 받는 토큰 정보)
+[System.Serializable]
+public class TokenResponse
+{
+    public string accessToken;
+    public string refreshToken;
+}
+
+// 유저 정보 응답에 사용되는 데이터 클래스
+[System.Serializable]
+public class UserInfoResponse
+{
+    public string userName;
+    public string img;
+    public string title;
 }

@@ -9,10 +9,8 @@ using UnityEngine;
 public class User
 {
 	public string name;
-    public string userId;
 	public string title;
 	public string imgNo;
-    public string createAt;
 }
 #endregion
 
