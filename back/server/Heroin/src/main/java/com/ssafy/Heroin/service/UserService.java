@@ -1,6 +1,7 @@
 package com.ssafy.Heroin.service;
 
 import com.ssafy.Heroin.domain.User;
+import com.ssafy.Heroin.domain.UserHistoryCard;
 import com.ssafy.Heroin.dto.jwt.JwtToken;
 import com.ssafy.Heroin.dto.user.SignUpDto;
 import com.ssafy.Heroin.dto.user.UserDto;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Transactional()
+@Transactional
 @Service
 public class UserService {
 
@@ -94,9 +95,26 @@ public class UserService {
         return null;
     }
 
-    public List<UserHistoryCardDto> getHistoryCards(UserDto userDto) {
-        List<UserHistoryCardDto> userHistoryCardDtos = userHistoryCardRepository.findByUser(userDto);
+    @Transactional
+    public List<UserHistoryCardDto> getHistoryCards(String userId) {
+        List<UserHistoryCard> userHistoryCards = userHistoryCardRepository.findByUser(userId);
 
-        return userHistoryCardDtos;
+        List<UserHistoryCardDto> userHistoryCardDtos = new ArrayList<>();
+
+        if(!userHistoryCards.isEmpty()) {
+
+            for(UserHistoryCard userHistoryCard : userHistoryCards) {
+                UserHistoryCardDto userHistoryCardDto = new UserHistoryCardDto();
+                userHistoryCardDto.setHistoryCardId(userHistoryCard.getHistoryCard().getId());
+                userHistoryCardDto.setUserTableId(userHistoryCard.getUser().getId());
+                userHistoryCardDto.setCreationDate(userHistoryCard.getCreateAt());
+
+                userHistoryCardDtos.add(userHistoryCardDto);
+            }
+
+            return userHistoryCardDtos;
+        }
+
+        return null;
     }
 }

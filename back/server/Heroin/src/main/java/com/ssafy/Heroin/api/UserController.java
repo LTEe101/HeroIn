@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(signUpDto);
     }
 
-    @GetMapping("/profile")
+    @PostMapping("/profile")
     public ResponseEntity<?> getProfile(@RequestBody JwtToken token) {
         UserProfileDto userProfile = userService.getUserProfile(token);
 
@@ -46,8 +46,8 @@ public class UserController {
     }
 
     @GetMapping("/card")
-    public ResponseEntity<?> getCard(@RequestBody UserDto userDto) {
-        List<UserHistoryCardDto> historyCards = userService.getHistoryCards(userDto);
+    public ResponseEntity<?> getCard(@RequestParam String userId) {
+        List<UserHistoryCardDto> historyCards = userService.getHistoryCards(userId);
 
         return ResponseEntity.ok(historyCards);
     }

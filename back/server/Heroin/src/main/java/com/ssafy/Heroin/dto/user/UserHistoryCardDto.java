@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class UserHistoryCardDto {
 
-    private User user;
-    private HistoryCard historyCard;
+    private Long userTableId;
+    private Long historyCardId;
     private LocalDateTime creationDate;
 
 }
