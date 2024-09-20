@@ -22,8 +22,5 @@ FROM nginx:alpine
 # 빌드된 리액트 파일들을 Nginx 기본 경로에 복사
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Nginx 컨테이너가 실행될 포트
-EXPOSE 80
-
 # Nginx 시작 명령
 CMD ["nginx", "-g", "daemon off;"]
