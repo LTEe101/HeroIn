@@ -99,10 +99,10 @@ public class CameraController : MonoBehaviour
                     StartCoroutine(MoveCameraAndShowUI<UI_User>());
                     break;
                 case "1592":
-                    ShowPopupUI<UI_Story_Info_1592>();
+                    StartCoroutine(MoveToInitialPositionAndRotationAndShowUI<UI_Story_Info_1592>());
                     break;
                 case "1919":
-                    ShowPopupUI<UI_Story_Info_1919>();
+                    StartCoroutine(MoveToInitialPositionAndRotationAndShowUI<UI_Story_Info_1919>());
                     break;
                 case "Start":
                     UI_Popup topPopup = Managers.UI.GetTopPopupUI();
@@ -124,16 +124,24 @@ public class CameraController : MonoBehaviour
     // 카메라 위치와 회전을 변경하고 UI를 띄우는 메서드
     IEnumerator MoveCameraAndShowUI<T>() where T : UI_Popup
     {
-        _status = Cameras.Move;
         Managers.UI.CloseAllPopupUI();
         // 카메라 이동
         yield return StartCoroutine(MoveToPositionAndRotation(_targetPosition, _targetRotation));
 
         // 이동이 완료된 후 UI 띄우기
         ShowPopupUI<T>();
-        _status = Cameras.Stop;
     }
-    
+
+    // 카메라 초기 위치와 회전으로 이동하고 UI를 띄우는 메서드
+    IEnumerator MoveToInitialPositionAndRotationAndShowUI<T>() where T : UI_Popup
+    {
+        // 카메라 이동
+        yield return StartCoroutine(MoveToPositionAndRotation(_initialPosition, _initialRotation));
+
+        // 이동이 완료된 후 UI 띄우기
+        ShowPopupUI<T>();
+    }
+
     // 카메라를 목표 위치와 회전으로 이동시키는 코루틴
     IEnumerator MoveToPositionAndRotation(Vector3 targetPos, Quaternion targetRot)
     {
