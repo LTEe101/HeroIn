@@ -176,6 +176,7 @@ public class CameraController : MonoBehaviour
     {
         if (topPopup.GetType() == typeof(UI_Story_Info_1592))
         {
+            //Managers.Scene.LodingLoadScene(Define.Scene.Game);
             // SceneManager.LoadScene();
             Debug.Log("¿Ãµø");
         }

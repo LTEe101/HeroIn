@@ -30,7 +30,6 @@ public class LoginScene : BaseScene
 
     public void Login()
     {
-        Managers.Scene.LoadScene(Define.Scene.Home);
         string userId = userIdInputField.text;
         string password = passwordInputField.text;
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(password))
@@ -84,7 +83,7 @@ public class LoginScene : BaseScene
 
     private void OnJoinButtonClicked()
     {
-        Managers.Scene.LodingLoadScene(Define.Scene.Join);
+        Managers.Scene.LoadScene(Define.Scene.Join);
     }
 
     public override void Clear()
