@@ -14,7 +14,7 @@ public class Managers : MonoBehaviour
     UIManager _ui = new UIManager();
     PoolManager _pool = new PoolManager();
     SceneManagerEx _scene = new SceneManagerEx();
-
+    LoadingManager _loading;
     public static DataManager Data { get { return Instance._data; } }
     public static InputManager Input { get { return Instance._input; } }
     public static APIManager API { get { return Instance._api; } }
@@ -22,6 +22,7 @@ public class Managers : MonoBehaviour
     public static UIManager UI { get { return Instance._ui; } }
     public static PoolManager Pool { get { return Instance._pool; } }
     public static SceneManagerEx Scene { get { return Instance._scene; } }
+    public static LoadingManager Loading { get { return Instance._loading; } }
 
     void Start()
     {
@@ -47,6 +48,7 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<Managers>();
             s_instance._api = go.AddComponent<APIManager>();
+            s_instance._loading = go.AddComponent<LoadingManager>();
             s_instance._data.Init();
             s_instance._pool.Init();
         }		

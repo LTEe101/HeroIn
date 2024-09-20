@@ -13,6 +13,7 @@ public class Define
         Home,
         Story,
         Game,
+        Loading,
     }
 
     public enum Sound
