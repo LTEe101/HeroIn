@@ -57,21 +57,33 @@ public class APIManager : MonoBehaviour
         }, onError);
     }
 
-    // 유저 정보 요청 (GET) - JWT 토큰으로 유저 정보 가져오기
+    // 유저 정보 요청 (POST) - JWT 토큰으로 유저 정보 가져오기
     public IEnumerator GetUserInfo(System.Action<UserInfoResponse> onSuccess, System.Action<string> onError)
     {
         // JWT 토큰 가져오기
         string accessToken = PlayerPrefs.GetString("accessToken", "");
+        string refreshToken = PlayerPrefs.GetString("refreshToken", "");
 
         // 유효한 토큰이 있는지 확인
-        if (string.IsNullOrEmpty(accessToken))
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
         {
             onError?.Invoke("토큰이 없습니다.");
             yield break;
         }
 
-        // GET 요청
-        yield return SendRequest(apiUrl + "user/profile", "GET", null, (response) =>
+        // 요청 데이터 생성
+        TokenRequest tokenRequest = new TokenRequest
+        {
+            grantType = "Bearer",
+            accessToken = accessToken,
+            refreshToken = refreshToken
+        };
+
+        // JSON 데이터로 직렬화
+        string jsonData = JsonUtility.ToJson(tokenRequest);
+
+        // POST 요청 보내기
+        yield return SendRequest(apiUrl + "user/profile", "POST", jsonData, (response) =>
         {
             // 서버로부터 받은 유저 정보를 파싱
             UserInfoResponse userInfo = JsonUtility.FromJson<UserInfoResponse>(response);
@@ -160,36 +172,3 @@ public class APIManager : MonoBehaviour
     }
 }
 
-// JSON 데이터 구조 정의 (회원가입)
-[System.Serializable]
-public class JoinData
-{
-    public string userLoginId;   // 계정 ID
-    public string userLoginPw;   // 비밀번호
-    public string userName;      // 사용자 이름
-}
-
-// 로그인 요청에 사용되는 데이터 클래스
-[System.Serializable]
-public class LoginData
-{
-    public string userLoginId;   // 계정 ID
-    public string userLoginPw;   // 비밀번호
-}
-
-// 토큰 응답에 사용되는 데이터 클래스 (로그인 성공 시 받는 토큰 정보)
-[System.Serializable]
-public class TokenResponse
-{
-    public string accessToken;
-    public string refreshToken;
-}
-
-// 유저 정보 응답에 사용되는 데이터 클래스
-[System.Serializable]
-public class UserInfoResponse
-{
-    public string userName;
-    public string img;
-    public string title;
-}
