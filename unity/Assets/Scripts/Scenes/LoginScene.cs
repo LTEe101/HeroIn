@@ -52,7 +52,7 @@ public class LoginScene : BaseScene
                          User user = new User
                          {
                              name = userInfoResponse.userName,
-                             title = userInfoResponse.title, // 만약 email이 있다면
+                             title = userInfoResponse.title, 
                              imgNo = userInfoResponse.img
                          };
 
