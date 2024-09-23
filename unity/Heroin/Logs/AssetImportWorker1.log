@@ -15,7 +15,7 @@ C:/Users/SSAFY/Desktop/S11P21E101/unity/Heroin
 -logFile
 Logs/AssetImportWorker1.log
 -srvPort
-56170
+57513
 Successfully changed project path to: C:/Users/SSAFY/Desktop/S11P21E101/unity/Heroin
 C:/Users/SSAFY/Desktop/S11P21E101/unity/Heroin
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -49,14 +49,14 @@ C:/Users/SSAFY/Desktop/S11P21E101/unity/Heroin
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [13300]  Target information:
+Player connection [25224]  Target information:
 
-Player connection [13300]  * "[IP] 192.168.30.183 [Port] 0 [Flags] 2 [Guid] 2580095974 [EditorId] 2580095974 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-MMCQPV1) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [25224]  * "[IP] 192.168.30.183 [Port] 0 [Flags] 2 [Guid] 2570125219 [EditorId] 2570125219 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-MMCQPV1) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [13300] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [13300] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [25224] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [25224] Host joined alternative multi-casting on [225.0.0.222:34997]...
 [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-Refreshing native plugins compatible for Editor in 15.51 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 13.76 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 2022.3.44f1 (c3ae09b9f03c)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/Resources/UnitySubsystems
@@ -72,46 +72,46 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56752
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56724
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.44f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.022885 seconds.
-- Loaded All Assemblies, in  0.478 seconds
+Registered in 0.019023 seconds.
+- Loaded All Assemblies, in  0.469 seconds
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.379 seconds
-Domain Reload Profiling: 853ms
-	BeginReloadAssembly (130ms)
+- Finished resetting the current domain, in  0.321 seconds
+Domain Reload Profiling: 787ms
+	BeginReloadAssembly (149ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (43ms)
-	RebuildNativeTypeToScriptingClass (13ms)
-	initialDomainReloadingComplete (97ms)
-	LoadAllAssembliesAndSetupDomain (190ms)
-		LoadAssemblies (129ms)
+	RebuildCommonClasses (40ms)
+	RebuildNativeTypeToScriptingClass (12ms)
+	initialDomainReloadingComplete (88ms)
+	LoadAllAssembliesAndSetupDomain (176ms)
+		LoadAssemblies (145ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (186ms)
-			TypeCache.Refresh (184ms)
-				TypeCache.ScanAssembly (165ms)
+		AnalyzeDomain (172ms)
+			TypeCache.Refresh (171ms)
+				TypeCache.ScanAssembly (153ms)
 			ScanForSourceGeneratedMonoScriptInfo (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (379ms)
+	FinalizeReload (322ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (317ms)
+		SetupLoadedEditorAssemblies (267ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (19ms)
-			SetLoadedEditorAssemblies (7ms)
+			InitializePlatformSupportModulesInManaged (17ms)
+			SetLoadedEditorAssemblies (6ms)
 			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (3ms)
-			ProcessInitializeOnLoadAttributes (206ms)
-			ProcessInitializeOnLoadMethodAttributes (82ms)
+			BeforeProcessingInitializeOnLoad (2ms)
+			ProcessInitializeOnLoadAttributes (173ms)
+			ProcessInitializeOnLoadMethodAttributes (68ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -120,7 +120,7 @@ Domain Reload Profiling: 853ms
 Worker process is ready to serve import requests
 Caller must complete domain reload
 Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in  0.882 seconds
+- Loaded All Assemblies, in  0.842 seconds
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Package Manager log level set to [2]
@@ -128,47 +128,47 @@ Package Manager log level set to [2]
 [Package Manager] UpmClient::Send -- Unable to send message (not connected to UPM process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.644 seconds
-Domain Reload Profiling: 1519ms
-	BeginReloadAssembly (238ms)
+- Finished resetting the current domain, in  0.686 seconds
+Domain Reload Profiling: 1522ms
+	BeginReloadAssembly (187ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (8ms)
+		DisableScriptedObjects (6ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (30ms)
-	RebuildCommonClasses (47ms)
-	RebuildNativeTypeToScriptingClass (14ms)
-	initialDomainReloadingComplete (65ms)
-	LoadAllAssembliesAndSetupDomain (510ms)
-		LoadAssemblies (467ms)
+		CreateAndSetChildDomain (26ms)
+	RebuildCommonClasses (40ms)
+	RebuildNativeTypeToScriptingClass (13ms)
+	initialDomainReloadingComplete (60ms)
+	LoadAllAssembliesAndSetupDomain (535ms)
+		LoadAssemblies (453ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (195ms)
-			TypeCache.Refresh (173ms)
-				TypeCache.ScanAssembly (153ms)
+		AnalyzeDomain (199ms)
+			TypeCache.Refresh (174ms)
+				TypeCache.ScanAssembly (156ms)
 			ScanForSourceGeneratedMonoScriptInfo (16ms)
-			ResolveRequiredComponents (5ms)
-	FinalizeReload (644ms)
+			ResolveRequiredComponents (6ms)
+	FinalizeReload (686ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (480ms)
+		SetupLoadedEditorAssemblies (518ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (13ms)
+			InitializePlatformSupportModulesInManaged (14ms)
 			SetLoadedEditorAssemblies (5ms)
 			RefreshPlugins (0ms)
-			BeforeProcessingInitializeOnLoad (77ms)
-			ProcessInitializeOnLoadAttributes (340ms)
-			ProcessInitializeOnLoadMethodAttributes (25ms)
-			AfterProcessingInitializeOnLoad (19ms)
+			BeforeProcessingInitializeOnLoad (81ms)
+			ProcessInitializeOnLoadAttributes (377ms)
+			ProcessInitializeOnLoadMethodAttributes (23ms)
+			AfterProcessingInitializeOnLoad (17ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (21ms)
+		AwakeInstancesAfterBackupRestoration (17ms)
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.06 seconds
-Refreshing native plugins compatible for Editor in 8.22 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 3.38 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 3094 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 19 unused Assets / (54.5 KB). Loaded Objects now: 3562.
-Memory consumption went from 120.7 MB to 120.6 MB.
-Total: 3.352300 ms (FindLiveObjects: 0.261800 ms CreateObjectMapping: 0.084900 ms MarkObjects: 2.916400 ms  DeleteObjects: 0.088200 ms)
+Unloading 3095 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 19 unused Assets / (55.0 KB). Loaded Objects now: 3563.
+Memory consumption went from 124.5 MB to 124.4 MB.
+Total: 2.002800 ms (FindLiveObjects: 0.149500 ms CreateObjectMapping: 0.045500 ms MarkObjects: 1.734000 ms  DeleteObjects: 0.073200 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
   custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
@@ -185,45 +185,191 @@ AssetImportParameters requested are different than current active one (requested
   custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
 ========================================================================
 Received Import Request.
-  Time since last request: 16046.099163 seconds.
-  path: Assets/Imported Assets/RPGTinyHeroWavePBR/Animation/Spear/Idle_Normal_Spear.fbx
-  artifactKey: Guid(a0108ebad17650742b01c9dcd1540a39) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Imported Assets/RPGTinyHeroWavePBR/Animation/Spear/Idle_Normal_Spear.fbx using Guid(a0108ebad17650742b01c9dcd1540a39) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+  Time since last request: 21330.404031 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Sky/Day_01.png
+  artifactKey: Guid(d35854f7dee1fa142bb787589f54fd14) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Sky/Day_01.png using Guid(d35854f7dee1fa142bb787589f54fd14) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
 [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
 [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
- -> (artifact id: '66fa23c424c8c425d33a734e04a773a8') in 0.232338 seconds
+ -> (artifact id: '9eb7de23e06216b06eeb993fdaf4d567') in 0.117878 seconds
 Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 111
+Number of asset objects unloaded after import = 1
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/Imported Assets/RPGTinyHeroWavePBR/Mesh/Weapons/OHS02_Niddle.fbx
-  artifactKey: Guid(20c5b9a4402480b4e88e930f8c26205d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Imported Assets/RPGTinyHeroWavePBR/Mesh/Weapons/OHS02_Niddle.fbx using Guid(20c5b9a4402480b4e88e930f8c26205d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+  Time since last request: 0.000024 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Sky/Night_01.mat
+  artifactKey: Guid(1065b432639a84123a07ea43fe5ba4c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Sky/Night_01.mat using Guid(1065b432639a84123a07ea43fe5ba4c9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
 [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
- -> (artifact id: '8ea3e8e493a210c0363e28b2da4cdafc') in 0.018898 seconds
+ -> (artifact id: 'e8ee6dabcf0502d16654a8dbfc6e378b') in 0.057522 seconds
 Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 7
+Number of asset objects unloaded after import = 2
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000034 seconds.
-  path: Assets/Imported Assets/RPGTinyHeroWavePBR/Prefab/Weapons/OHS02_Niddle.prefab
-  artifactKey: Guid(f9ec344f25d9c0c4d93a8d5a176fa122) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Imported Assets/RPGTinyHeroWavePBR/Prefab/Weapons/OHS02_Niddle.prefab using Guid(f9ec344f25d9c0c4d93a8d5a176fa122) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
-[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
- -> (artifact id: 'f28e2f98bec7e257dcea79373ce930d8') in 0.022202 seconds
+  Time since last request: 0.686119 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/Sand.terrainlayer
+  artifactKey: Guid(53d936f403822e0458c42b6d14038351) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/Sand.terrainlayer using Guid(53d936f403822e0458c42b6d14038351) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '914ac1f51d144e1eb4f997e45be49193') in 0.013807 seconds
 Number of updated asset objects reloaded before import = 0
-Number of asset objects unloaded after import = 11
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000021 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/Soil.terrainlayer
+  artifactKey: Guid(5864d079862a40c439c805f190acb2b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/Soil.terrainlayer using Guid(5864d079862a40c439c805f190acb2b2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'dc3e70318aac7d8864b19258cc3b9685') in 0.008887 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/Stone.terrainlayer
+  artifactKey: Guid(d373305feab743c46b1e8aedc45c3447) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/Stone.terrainlayer using Guid(d373305feab743c46b1e8aedc45c3447) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'a70c2f10dffb25ff1916c7089df4e527') in 0.002314 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 0.000021 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/TurtleShip Palette.asset
+  artifactKey: Guid(8f898fbe30f5b9040862121df4f08aa3) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Terrain/TurtleShip Palette.asset using Guid(8f898fbe30f5b9040862121df4f08aa3) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '2f5f5ab750780b33b7b191c5ff13e4f0') in 0.001632 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 1
+========================================================================
+Received Import Request.
+  Time since last request: 0.783649 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Artillery_Nomal.tga
+  artifactKey: Guid(5555c73ab76c7f6428ee62f77d9e0029) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Artillery_Nomal.tga using Guid(5555c73ab76c7f6428ee62f77d9e0029) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '87b3d15a2ef58ea7f8b0b39fc8c9d6a4') in 0.032371 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/cloth_A_Normal.tga
+  artifactKey: Guid(a2430785d3e69bb458e5c4403665a1d1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/cloth_A_Normal.tga using Guid(a2430785d3e69bb458e5c4403665a1d1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'd8d9d03474707b554cbd11d576b4467b') in 0.009515 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000022 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Grass_BaseColor.png
+  artifactKey: Guid(8c7ccc7b7ee955e44a549f281faa1995) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Grass_BaseColor.png using Guid(8c7ccc7b7ee955e44a549f281faa1995) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '609c846b55deb76a08ff7d8ca21d3c3e') in 0.009661 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000020 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Hanok Props_Normal.tga
+  artifactKey: Guid(af2891dd677c3164f9f93355f740c850) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Hanok Props_Normal.tga using Guid(af2891dd677c3164f9f93355f740c850) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'f36fa25993c8fadbacb935133da0ccf3') in 0.009853 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000022 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Hanok Pillar_A_BaseColor.tga
+  artifactKey: Guid(b0a358693ed9fd3498444c937b029105) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Hanok Pillar_A_BaseColor.tga using Guid(b0a358693ed9fd3498444c937b029105) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '3e05dd8ab9b9ab65290936a9fc7b890f') in 0.008845 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000024 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Hanok Props_BaseColor.tga
+  artifactKey: Guid(d73e898d3a78ab6479c76aab0d81cdd9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Hanok Props_BaseColor.tga using Guid(d73e898d3a78ab6479c76aab0d81cdd9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'db16554f2741ead2c7c169998fb6917c') in 0.008449 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000025 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Flag_Normal.tga
+  artifactKey: Guid(a37b73150b2754544b2e99a93992f099) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Flag_Normal.tga using Guid(a37b73150b2754544b2e99a93992f099) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '19f81e0a46799f04e0c94e5e7a395bca') in 0.008518 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000025 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Flag_BaseColor.tga
+  artifactKey: Guid(ee37698300abd9e4cbddbc372683e854) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Flag_BaseColor.tga using Guid(ee37698300abd9e4cbddbc372683e854) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '67a6b3565e2dca4f5388a83ce1c63bbf') in 0.012720 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000019 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Brazier_A_BaseColor.tga
+  artifactKey: Guid(c7d26e234f8b9e54fbcbd7e13a32515e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Brazier_A_BaseColor.tga using Guid(c7d26e234f8b9e54fbcbd7e13a32515e) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '17eff5e9f29530dce49c203a42845a0a') in 0.010528 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Flower_A_01_Nomal.tga
+  artifactKey: Guid(5e7156c53a3ce0744af45166b02715d1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Flower_A_01_Nomal.tga using Guid(5e7156c53a3ce0744af45166b02715d1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'c3a91206cbf7e39ed4c5a5b9e25d3bcb') in 0.010038 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000019 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/DancheongFrame_Normal.tga
+  artifactKey: Guid(3d6f688ca7516c84491adac2dd96b4a4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/DancheongFrame_Normal.tga using Guid(3d6f688ca7516c84491adac2dd96b4a4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: '508776fe3a08e11317904a806aaa1644') in 0.010153 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000020 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Drum_A_Normal.tga
+  artifactKey: Guid(c4b9723f19e728a44805d6d15c002189) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Drum_A_Normal.tga using Guid(c4b9723f19e728a44805d6d15c002189) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'd19c8e84f8495c7165987ae1c64c9f90') in 0.008793 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Grass_B_BaseColor.png
+  artifactKey: Guid(840447dff2b5efa4eb9e363f228b1f38) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Imported Assets/TurtleShip-BuiltInRP/Textures/Grass_B_BaseColor.png using Guid(840447dff2b5efa4eb9e363f228b1f38) Importer(815301076,1909f56bfc062723c751e8b465ee728b) [PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+[PhysX] Initialized MultithreadedTaskDispatcher with 20 workers.
+ -> (artifact id: 'd23fbeb1cbcb5fa6b30d89f935268e72') in 0.007599 seconds
+Number of updated asset objects reloaded before import = 0
+Number of asset objects unloaded after import = 2
 Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
 TcpMessagingSession - receive error: operation aborted. errorcode: 995, details: 스레드 종료 또는 응용 프로그램 요청 때문에 I/O 작업이 취소되었습니다.
 AssetImportWorker is now disconnected from the server
