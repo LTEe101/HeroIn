@@ -46,8 +46,10 @@ public class UserController {
     }
 
     @PostMapping("/addcard")
-    public ResponseEntity<?> addUserHistoryCardandTitle(@RequestParam Long checkId) {
+    public ResponseEntity<?> addUserHistoryCardandTitle(@RequestParam Long checkId, @RequestParam String userId) {
+        userService.addHistoryCardandTitle(checkId, userId);
 
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/card")

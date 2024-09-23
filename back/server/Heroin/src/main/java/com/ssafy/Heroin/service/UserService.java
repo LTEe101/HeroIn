@@ -1,14 +1,10 @@
 package com.ssafy.Heroin.service;
 
-import com.ssafy.Heroin.domain.User;
-import com.ssafy.Heroin.domain.UserHistoryCard;
-import com.ssafy.Heroin.domain.UserTitle;
+import com.ssafy.Heroin.domain.*;
 import com.ssafy.Heroin.dto.jwt.JwtToken;
 import com.ssafy.Heroin.dto.user.*;
 import com.ssafy.Heroin.jwt.JwtTokenProvider;
-import com.ssafy.Heroin.repository.UserHistoryCardRepository;
-import com.ssafy.Heroin.repository.UserRepository;
-import com.ssafy.Heroin.repository.UserTitleRepository;
+import com.ssafy.Heroin.repository.*;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +27,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserHistoryCardRepository userHistoryCardRepository;
     private final UserTitleRepository userTitleRepository;
+    private final HistoryCardRepository historyCardRepository;
+    private final TitleRepository titleRepository;
 
     @Transactional
     public JwtToken signIn(String username, String password) {
@@ -61,10 +59,28 @@ public class UserService {
         return signUpDto;
     }
 
-    public void addHistoryCardandTitle(Long checkId) {
+    public void addHistoryCardandTitle(Long checkId, String userId) {
         UserHistoryCard userHistoryCard = new UserHistoryCard();
         UserTitle userTitle = new UserTitle();
 
+        Optional<User> Ouser = userRepository.findByUserId(userId);
+        User user = new User();
+        if(Ouser.isPresent()) {
+            user = Ouser.get();
+            userHistoryCard.setUser(user);
+            userTitle.setUser(user);
+        }
+        Optional<HistoryCard> historyCard = historyCardRepository.findById(checkId);
+        if(historyCard.isPresent()) {
+            userHistoryCard.setHistoryCard(historyCard.get());
+        }
+        Optional<Title> title = titleRepository.findById(checkId);
+        if (title.isPresent()) {
+            userTitle.setTitle(title.get());
+        }
+
+        userHistoryCardRepository.save(userHistoryCard);
+        userTitleRepository.save(userTitle);
     }
 
     private User DtotoUser(UserDto userDto) {
