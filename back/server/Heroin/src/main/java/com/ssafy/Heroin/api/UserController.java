@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/card")
-    public ResponseEntity<?> getCard(@RequestParam String userId) {
+    public ResponseEntity<?> getUserCard(@RequestParam String userId) {
         List<UserHistoryCardDto> historyCards = userService.getHistoryCards(userId);
 
         return ResponseEntity.ok(historyCards);
