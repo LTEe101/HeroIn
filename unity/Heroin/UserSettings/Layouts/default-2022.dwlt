@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 0
-  controlID: 90
+  controlID: 67
   draggingID: 0
 --- !u!114 &3
 MonoBehaviour:
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 40
+  controlID: 17
   draggingID: 0
 --- !u!114 &9
 MonoBehaviour:
@@ -273,7 +273,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -281,16 +281,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\SSAFY\Desktop\S11P21E101\unity\Heroin
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 105d0000
-    m_LastClickedID: 23824
-    m_ExpandedIDs: 00000000105d000000ca9a3b
+    m_SelectedIDs: f81c0300
+    m_LastClickedID: 204024
+    m_ExpandedIDs: 00000000f21c030000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -318,7 +318,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000105d0000
+    m_ExpandedIDs: 00000000f21c0300
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -394,9 +394,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1088.5
-    y: 19
-    width: 338.5
+    x: 946
+    y: 78.5
+    width: 486.5
     height: 734
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -458,9 +458,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: 7c200300
       m_LastClickedID: 0
-      m_ExpandedIDs: 2cfaffff
+      m_ExpandedIDs: 263efdff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -476,7 +476,7 @@ MonoBehaviour:
         m_IsRenaming: 0
         m_OriginalEventType: 11
         m_IsRenamingFilename: 0
-        m_ClientGUIView: {fileID: 0}
+        m_ClientGUIView: {fileID: 3}
       m_SearchString: 
     m_ExpandedScenes: []
     m_CurrenRootInstanceID: 0
@@ -814,9 +814,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 4.0194488, y: 4.181499, z: 22.43212}
+    m_Target: {x: 6.9036665, y: 1.2707138, z: 17.328367}
     speed: 2
-    m_Value: {x: 4.0194488, y: 4.181499, z: 22.43212}
+    m_Value: {x: 6.9036665, y: 1.2707138, z: 17.328367}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -862,13 +862,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.007275811, y: -0.07711061, z: -0.0005633516, w: -0.99699575}
+    m_Target: {x: 0.0005457489, y: -0.08608264, z: -0.000047739326, w: -0.99628764}
     speed: 2
-    m_Value: {x: 0.007275812, y: -0.07711062, z: -0.00056335167, w: -0.99699587}
+    m_Value: {x: 0.00054574903, y: -0.08608266, z: -0.000047739337, w: -0.9962879}
   m_Size:
-    m_Target: 13.631683
+    m_Target: 10
     speed: 2
-    m_Value: 13.631683
+    m_Value: 10
   m_Ortho:
     m_Target: 0
     speed: 2
