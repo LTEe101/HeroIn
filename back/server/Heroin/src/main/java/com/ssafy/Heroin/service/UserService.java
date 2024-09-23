@@ -61,6 +61,12 @@ public class UserService {
         return signUpDto;
     }
 
+    public void addHistoryCardandTitle(Long checkId) {
+        UserHistoryCard userHistoryCard = new UserHistoryCard();
+        UserTitle userTitle = new UserTitle();
+
+    }
+
     private User DtotoUser(UserDto userDto) {
         User user = new User();
 
