@@ -3,6 +3,7 @@ package com.ssafy.Heroin.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -24,5 +25,6 @@ public class UserTitle {
     @JoinColumn(name = "title_id")
     private Title title;
 
+    @CreationTimestamp
     private LocalDateTime createAt;
 }

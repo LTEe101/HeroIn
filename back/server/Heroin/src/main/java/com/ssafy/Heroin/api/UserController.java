@@ -51,4 +51,12 @@ public class UserController {
 
         return ResponseEntity.ok(historyCards);
     }
+
+    @GetMapping("/title")
+    public ResponseEntity<?> getUserTitle(@RequestParam String userId) {
+        List<UserTitleDto> titleDtos = userService.getTitles(userId);
+        System.out.println(titleDtos);
+
+        return ResponseEntity.ok(titleDtos);
+    }
 }
