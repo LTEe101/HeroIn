@@ -45,10 +45,22 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/addcard")
+    public ResponseEntity<?> addUserHistoryCardandTitle(@RequestParam Long checkId) {
+
+    }
+
     @GetMapping("/card")
-    public ResponseEntity<?> getCard(@RequestParam String userId) {
+    public ResponseEntity<?> getUserCard(@RequestParam String userId) {
         List<UserHistoryCardDto> historyCards = userService.getHistoryCards(userId);
 
         return ResponseEntity.ok(historyCards);
+    }
+
+    @GetMapping("/title")
+    public ResponseEntity<?> getUserTitle(@RequestParam String userId) {
+        List<UserTitleDto> titleDtos = userService.getTitles(userId);
+
+        return ResponseEntity.ok(titleDtos);
     }
 }

@@ -2,14 +2,13 @@ package com.ssafy.Heroin.service;
 
 import com.ssafy.Heroin.domain.User;
 import com.ssafy.Heroin.domain.UserHistoryCard;
+import com.ssafy.Heroin.domain.UserTitle;
 import com.ssafy.Heroin.dto.jwt.JwtToken;
-import com.ssafy.Heroin.dto.user.SignUpDto;
-import com.ssafy.Heroin.dto.user.UserDto;
-import com.ssafy.Heroin.dto.user.UserHistoryCardDto;
-import com.ssafy.Heroin.dto.user.UserProfileDto;
+import com.ssafy.Heroin.dto.user.*;
 import com.ssafy.Heroin.jwt.JwtTokenProvider;
 import com.ssafy.Heroin.repository.UserHistoryCardRepository;
 import com.ssafy.Heroin.repository.UserRepository;
+import com.ssafy.Heroin.repository.UserTitleRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +30,7 @@ public class UserService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserHistoryCardRepository userHistoryCardRepository;
+    private final UserTitleRepository userTitleRepository;
 
     @Transactional
     public JwtToken signIn(String username, String password) {
@@ -59,6 +59,12 @@ public class UserService {
         signUpDto.setUserName(user.getUsername());
 
         return signUpDto;
+    }
+
+    public void addHistoryCardandTitle(Long checkId) {
+        UserHistoryCard userHistoryCard = new UserHistoryCard();
+        UserTitle userTitle = new UserTitle();
+
     }
 
     private User DtotoUser(UserDto userDto) {
@@ -105,14 +111,35 @@ public class UserService {
 
             for(UserHistoryCard userHistoryCard : userHistoryCards) {
                 UserHistoryCardDto userHistoryCardDto = new UserHistoryCardDto();
-                userHistoryCardDto.setHistoryCardId(userHistoryCard.getHistoryCard().getId());
-                userHistoryCardDto.setUserTableId(userHistoryCard.getUser().getId());
+                userHistoryCardDto.setCardName(userHistoryCard.getHistoryCard().getName());
+                userHistoryCardDto.setCardDescription(userHistoryCard.getHistoryCard().getDescription());
+                userHistoryCardDto.setCardImg(userHistoryCard.getHistoryCard().getImgNo());
+                userHistoryCardDto.setUsername(userHistoryCard.getUser().getUsername());
                 userHistoryCardDto.setCreationDate(userHistoryCard.getCreateAt());
 
                 userHistoryCardDtos.add(userHistoryCardDto);
             }
 
             return userHistoryCardDtos;
+        }
+
+        return null;
+    }
+
+    @Transactional
+    public List<UserTitleDto> getTitles(String userId) {
+        List<UserTitle> userTitles = userTitleRepository.findByUserId(userId);
+        List<UserTitleDto> userTitleDtos = new ArrayList<>();
+
+        if(!userTitles.isEmpty()) {
+            for(UserTitle userTitle : userTitles) {
+                UserTitleDto userTitleDto = new UserTitleDto();
+                userTitleDto.setUserTitle(userTitle.getTitle().getTitle());
+                userTitleDto.setCreateAt(userTitle.getCreateAt());
+                userTitleDtos.add(userTitleDto);
+            }
+
+            return userTitleDtos;
         }
 
         return null;

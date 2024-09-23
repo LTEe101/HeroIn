@@ -34,4 +34,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserHistoryCard> historyCards;
 
+    @OneToMany(mappedBy = "user")
+    private List<UserTitle> Titles;
+
 }
