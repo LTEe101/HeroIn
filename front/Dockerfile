@@ -12,7 +12,7 @@ RUN npm run build
 #RUN ls -la /app
 FROM nginx:stable-alpine
 
-COPY --from=0 /app/dist /usr/share/nginx/html
+COPY --from=0 /app/build /usr/share/nginx/html
 
 RUN ["rm", "/etc/nginx/conf.d/default.conf"]
 
