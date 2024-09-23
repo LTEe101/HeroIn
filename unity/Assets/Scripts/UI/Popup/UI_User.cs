@@ -4,9 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
 public class UI_User : UI_Popup
 {
-    CameraController _cameraController;
+    [SerializeField]
+    private Vector3 _initialPosition = new Vector3(-10f, 1.910354f, -2.25f);
+
+    [SerializeField]
+    private Quaternion _initialRotation = Quaternion.Euler(6f, 0.0f, 0.0f); // 초기 회전
 
     enum Buttons
     {
@@ -35,7 +40,6 @@ public class UI_User : UI_Popup
     public override void Init()
     {
         base.Init();
-        _cameraController = FindObjectOfType<CameraController>();
         Bind<Button>(typeof(Buttons));
         Bind<Text>(typeof(Texts));
         Bind<Image>(typeof(Images));
@@ -54,7 +58,7 @@ public class UI_User : UI_Popup
     public void OnCloseButtonClicked(PointerEventData data)
     {
         Managers.UI.ClosePopupUI(this);
-        _cameraController.MoveToInitialPositionAndRotation();
+        CameraController.Instance.StartMoveToPositionAndRotation(_initialPosition, _initialRotation);
     }
 
     public void OnHistoryBookButtonClicked(PointerEventData data)
