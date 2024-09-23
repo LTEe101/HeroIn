@@ -9,7 +9,7 @@ public class Define
         Unknown,
         Login,
         Join,
-        Lobby,
+        Museum,
         Home,
         Story,
         Game,

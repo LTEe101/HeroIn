@@ -60,8 +60,8 @@ public class LoginScene : BaseScene
                          Managers.Data.SetUserInfo(user);
                          Debug.Log("유저 정보 저장 성공: " + user.name);
 
-                         // 홈 씬으로 이동
-                         Managers.Scene.LoadScene(Define.Scene.Home);
+                         // 박물관 씬으로 이동
+                         Managers.Scene.LoadScene(Define.Scene.Museum);
                      },
                      (error) => {
                          Debug.LogError($"유저 정보 가져오기 실패: {error}");
