@@ -42,6 +42,3 @@ out/
 ###jwt###
 **/application-jwt.yml
 **/application-local.yml
-
-###prod###
-**/application-prod.yml
