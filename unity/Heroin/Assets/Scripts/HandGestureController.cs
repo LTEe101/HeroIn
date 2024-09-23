@@ -4,6 +4,8 @@ public class HandGestureController : MonoBehaviour
 {
     public Animator bowAnimator;  // 활 애니메이션을 위한 Animator
     private bool canShoot = true; // 활을 쏠 수 있는지 여부를 저장하는 플래그
+    private float shootCooldownTime = 3.0f; // 활을 쏘고 다시 쏠 수 있게 되는 대기 시간
+    private float shootTimer = 0f; // 쿨타임 타이머
 
     void Start()
     {
@@ -12,10 +14,20 @@ public class HandGestureController : MonoBehaviour
 
     void Update()
     {
+        // 연사가 불가능하도록 타이머 설정
+        if (!canShoot)
+        {
+            shootTimer += Time.deltaTime;
+            if (shootTimer >= shootCooldownTime)
+            {
+                canShoot = true;
+                shootTimer = 0f; // 타이머 초기화
+            }
+        }
+
         // HandTracking 인스턴스에서 좌표 데이터 가져오기
         Vector3[] leftHandPositions = HandTracking.Instance.leftHandPositions;
         Vector3[] rightHandPositions = HandTracking.Instance.rightHandPositions;
-        canShoot = true;
 
         // 두 손 모두 인식된 경우
         if (leftHandPositions.Length == 21 && rightHandPositions.Length == 21)
@@ -23,18 +35,18 @@ public class HandGestureController : MonoBehaviour
             bool leftFist = IsFistClosed(leftHandPositions);
             bool rightFist = IsFistClosed(rightHandPositions);
             bool handsOverlapping = IsHandOverlapping(leftHandPositions, rightHandPositions);
-            bool isBackHandOpen = IsHandOpen(rightHandPositions);
+            bool isLeftHandOpen = IsHandOpen(leftHandPositions);
+            bool isRightHandOpen = IsHandOpen(rightHandPositions);
             bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
 
-
-            // 활 쏘기 준비 상태 (두 손이 주먹을 쥔 상태에서 앞뒤로 포개짐)
+            // Aiming (두 손이 주먹을 쥔 상태에서 앞뒤로 포개짐)
             if (canShoot && leftFist && rightFist && handsOverlapping)
             {
                 Debug.Log("Ready to aim");
                 bowAnimator.SetBool("Aiming", true);
             }
-            // 활을 쏘는 동작 (뒤쪽 손이 펴진 경우)
-            else if (bowAnimator.GetBool("Aiming") && leftFist && isBackHandOpen && canShoot)
+            // Shooting (뒤쪽 손이 펴진 경우)
+            else if (bowAnimator.GetBool("Aiming") && leftFist && (isLeftHandOpen || isRightHandOpen) && canShoot)
             {
                 Debug.Log("Shot the arrow!");
                 bowAnimator.SetBool("Aiming", false);
@@ -48,7 +60,7 @@ public class HandGestureController : MonoBehaviour
             bool leftFist = leftHandPositions.Length == 21 && IsFistClosed(leftHandPositions);
             bool rightFist = rightHandPositions.Length == 21 && IsFistClosed(rightHandPositions);
 
-            // 한 손만 주먹을 쥐고 있는 경우에도 Aiming 상태
+            // Aiming (너무 포개져서 주먹쥔 한 손만 인식된 경우)
             if (leftFist || rightFist)
             {
                 Debug.Log("One hand is making a fist. Ready to aim.");
@@ -64,6 +76,7 @@ public class HandGestureController : MonoBehaviour
     // 주먹 쥔 상태 확인
     bool IsFistClosed(Vector3[] points)
     {
+        // 첫 번째 조건: 손가락 끝과 기저부의 거리 계산
         for (int i = 0; i < 4; i++)
         {
             Vector3 fingerTip = points[8 + (i * 4)];
@@ -74,6 +87,19 @@ public class HandGestureController : MonoBehaviour
                 return false;
             }
         }
+
+        // 두 번째 조건: 손가락 끝끼리의 거리가 작은지 확인
+        for (int i = 0; i < 3; i++)
+        {
+            Vector3 fingerTip1 = points[8 + (i * 4)];
+            Vector3 fingerTip2 = points[8 + ((i + 1) * 4)];
+
+            if (Vector3.Distance(fingerTip1, fingerTip2) > 0.3f) // 손가락 끝끼리의 거리
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 
