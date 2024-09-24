@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import GlitchButtonComponent from "./components/GlitchButtonComponent";
+import ButtonComponent from "./components/ButtonComponent"; // 기존 GlitchButton 대신 전통 버튼 컴포넌트로 변경
 
 // Global Style with font-face
 const GlobalStyle = createGlobalStyle`
@@ -31,7 +31,7 @@ const GameContainer = styled.div`
   color: white; /* 텍스트 색상 흰색으로 변경 */
 
   /* 배경 이미지 + 그라데이션 */
-  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.4)),
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(255, 255, 255, 0.4)),
     url(${require("./assets/images/background.png")}); /* 이미지 경로 */
   background-size: cover;
   background-position: center;
@@ -115,10 +115,7 @@ const App = () => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen></iframe>
         </VideoContainer>
-        <GlitchButtonComponent
-          text="게임 다운로드"
-          onClick={handleDownloadClick}
-        />
+        <ButtonComponent text="다운로드" onClick={handleDownloadClick} />
       </GameContainer>
     </>
   );

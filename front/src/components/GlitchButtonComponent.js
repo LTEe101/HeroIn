@@ -9,12 +9,15 @@ const Button = styled.button`
   font-weight: 600;
   color: #1d2119;
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.95));
-  min-width: 10em;
+  /* min-width 값을 키워 버튼 너비를 증가 */
+  min-width: 15em;
+  /* padding 값을 키워 버튼 높이를 증가 */
+  padding: 1em 2em;
+  font-size: 1.2em; /* 텍스트 크기 조정 */
   background: none;
   border: none;
   cursor: pointer;
   position: relative;
-  padding: 0;
   display: inline-block;
 
   .button-outline {
