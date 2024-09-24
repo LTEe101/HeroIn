@@ -88,6 +88,7 @@ const App = () => {
 
   const handleDownloadClick = (event) => {
     event.preventDefault(); // 기본 동작 방지
+    console.log("클릭됨"); // 확인용 로그
     const confirmDownload = window.confirm("정말로 다운로드하시겠습니까?");
 
     if (confirmDownload) {

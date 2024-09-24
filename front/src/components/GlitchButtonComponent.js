@@ -165,7 +165,7 @@ const Button = styled.button`
   }
 `;
 
-const ButtonComponent = ({ text }) => {
+const ButtonComponent = ({ text, onClick }) => {
   const buttonTextRef = useRef(null);
 
   useEffect(() => {
@@ -202,7 +202,7 @@ const ButtonComponent = ({ text }) => {
   }, [text]);
 
   return (
-    <Button className="button">
+    <Button className="button" onClick={onClick}>
       <span className="button-outline">
         <span className="button-shadow">
           <span className="button-inside" ref={buttonTextRef}>
