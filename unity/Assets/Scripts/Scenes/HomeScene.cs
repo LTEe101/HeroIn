@@ -65,6 +65,7 @@ public class HomeScene : BaseScene
 
     void OnMouseClicked(Define.MouseEvent evt)
     {
+        if (evt != Define.MouseEvent.Click) return;
         if (CameraController.Instance == null) return;
 
         Ray ray = CameraController.Instance.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
