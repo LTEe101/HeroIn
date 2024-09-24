@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public abstract class UI_Base : MonoBehaviour
 {
@@ -62,6 +63,8 @@ public abstract class UI_Base : MonoBehaviour
     protected GameObject GetObject(int idx) { return Get<GameObject>(idx); }
     // Text 컴포넌트를 특정 인덱스로 가져오는 함수
     protected Text GetText(int idx) { return Get<Text>(idx); }
+    // TMP 컴포넌트를 특정 인덱스로 가져오는 함수
+    protected TextMeshProUGUI GetTMP(int idx) { return Get<TextMeshProUGUI>(idx); }
     // Button 컴포넌트를 특정 인덱스로 가져오는 함수
     protected Button GetButton(int idx) { return Get<Button>(idx); }
     // Image 컴포넌트를 특정 인덱스로 가져오는 함수
@@ -85,6 +88,16 @@ public abstract class UI_Base : MonoBehaviour
                 // 기존에 등록된 드래그 이벤트를 제거하고 새로 추가
                 evt.OnDragHandler -= action;
                 evt.OnDragHandler += action;
+                break;
+            case Define.UIEvent.PointerEnter:
+                // 기존에 등록된 드래그 이벤트를 제거하고 새로 추가
+                evt.OnPointerEnterHandler -= action;
+                evt.OnPointerEnterHandler += action;
+                break;
+            case Define.UIEvent.PointerExit:
+                // 기존에 등록된 드래그 이벤트를 제거하고 새로 추가
+                evt.OnPointerExitHandler -= action;
+                evt.OnPointerExitHandler += action;
                 break;
         }
     }

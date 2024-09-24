@@ -16,15 +16,6 @@ public class HomeScene : BaseScene
     [SerializeField]
     private Quaternion _targetRotation = Quaternion.Euler(-1.082f, 0.104f, -0.001f); // 목표 회전
 
-    [SerializeField]
-    private float _moveSpeed = 5.0f; // 카메라 이동 속도
-
-    [SerializeField]
-    private float _rotationSpeed = 2.0f; // 카메라 회전 속도
-
-    [SerializeField]
-    private float _mouseSensitivity = 2.0f; // 마우스 감도
-
     protected override void Init()
     {
         base.Init();
@@ -74,6 +65,7 @@ public class HomeScene : BaseScene
 
     void OnMouseClicked(Define.MouseEvent evt)
     {
+        if (evt != Define.MouseEvent.Click) return;
         if (CameraController.Instance == null) return;
 
         Ray ray = CameraController.Instance.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);

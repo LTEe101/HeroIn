@@ -26,13 +26,17 @@ public class Define
     public enum UIEvent
     {
         Click,
-        Drag,
+        Drag, 
+        PointerEnter,
+        PointerExit,
     }
 
     public enum MouseEvent
     {
         Press,
         Click,
+        PointerEnter,
+        PointerExit,
     }
 
     public enum CameraMode

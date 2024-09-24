@@ -13859,7 +13859,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ceiling_Rounded
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8244427886674354696, guid: 16f716ac3181ac54c8899a933a8e1ae8, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

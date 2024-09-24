@@ -7,7 +7,7 @@ public class APIManager : MonoBehaviour
     private string apiUrl = "https://j11e101.p.ssafy.io/api/";
 
     // 회원가입 요청을 보내는 함수 (POST)
-    public IEnumerator Join(string userLoginId, string userLoginPw, string userName, System.Action<string> onSuccess, System.Action<string> onError)
+    public IEnumerator Join(string userName, string userLoginId, string userLoginPw, System.Action<string> onSuccess, System.Action<string> onError)
     {
         // JSON 데이터 생성
         JoinData joinData = new JoinData
