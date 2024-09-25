@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static CameraController;
+using static Outline;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    float _speed = 10.0f;
+    float _speed = 5.0f;
 
     Vector3 _destPos;
 
@@ -15,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     // 카메라의 오프셋
     [SerializeField]
-    Vector3 cameraOffset = new Vector3(0, 1.5f, -4); // 적절한 높이와 거리 설정
+    Vector3 cameraOffset = new Vector3(0, 2, -2); // 적절한 높이와 거리 설정
 
     [SerializeField]
     float _mouseSensitivity = 2.0f; // 마우스 감도
@@ -24,8 +25,6 @@ public class PlayerController : MonoBehaviour
     {
         Managers.Input.KeyAction -= OnKeyboard;
         Managers.Input.KeyAction += OnKeyboard;
-        Managers.Input.MouseAction -= OnMouseClicked;
-        Managers.Input.MouseAction += OnMouseClicked;
         UpdateCameraPosition();
     }
 
@@ -108,7 +107,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-
+   
     void OnKeyboard()
     {
         if (_state == PlayerState.Die)
@@ -179,27 +178,5 @@ public class PlayerController : MonoBehaviour
             cameraTransform.rotation = Quaternion.Euler(15f, cameraTransform.rotation.eulerAngles.y, 0f);
         }
     }
-
-    void OnMouseClicked(Define.MouseEvent evt)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            string hitObjectName = hit.collider.gameObject.name;
-            Debug.Log(hitObjectName);
-            switch (hitObjectName)
-            {
-                case "Spaceship":
-                    Managers.Scene.LoadScene(Define.Scene.Home);
-                    break;
-                default:
-                    Debug.Log("해당 오브젝트에 대한 팝업이 없습니다.");
-                    break;
-            }
-
-        }
-    }
+    
 }

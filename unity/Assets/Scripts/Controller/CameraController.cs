@@ -3,44 +3,52 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    // Ä«¸Ş¶ó »óÅÂ¸¦ ³ªÅ¸³»´Â ¿­°ÅÇü
+    // Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public enum CameraStatus
     {
         Stop,
         Move,
     }
 
-    // ÇöÀç Ä«¸Ş¶ó »óÅÂ
+    // ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½ï¿½ï¿½
     private CameraStatus _status = CameraStatus.Stop;
 
-    // ÇöÀç »óÅÂ¸¦ ¿ÜºÎ¿¡¼­ ÀĞÀ» ¼ö ÀÖµµ·Ï ÇÁ·ÎÆÛÆ¼ Ãß°¡
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ß°ï¿½
     public CameraStatus Status
     {
         get { return _status; }
     }
 
-    [SerializeField]
-    private float _moveSpeed = 5.0f; // Ä«¸Ş¶ó ÀÌµ¿ ¼Óµµ
+    [SerializeField] Vector3 startPosition; // ì¹´ë©”ë¼ ì‹œì‘ ìœ„ì¹˜
+    [SerializeField] Vector3 closeUpPosition; // í´ë¡œì¦ˆì—…í•  ìœ„ì¹˜ (ì¹´ë©”ë¼ê°€ ì´ë™í•  ìœ„ì¹˜)
+    [SerializeField] Quaternion startRotation; // ì¹´ë©”ë¼ ì‹œì‘ íšŒì „
+    [SerializeField] Quaternion closeUpRotation; // í´ë¡œì¦ˆì—…í•  íšŒì „
+    [SerializeField] float movingSpeed = 1.0f; // ì¹´ë©”ë¼ ì´ë™ ì†ë„
+    private bool isMoving = false; // ì¹´ë©”ë¼ê°€ ì›€ì§ì´ëŠ”ì§€ ì—¬ë¶€
+    public System.Action onCloseUpComplete;
 
     [SerializeField]
-    private float _rotationSpeed = 2.0f; // Ä«¸Ş¶ó È¸Àü ¼Óµµ
+    private float _moveSpeed = 5.0f; // Ä«ï¿½Ş¶ï¿½ ï¿½Ìµï¿½ ï¿½Óµï¿½
 
     [SerializeField]
-    private float _mouseSensitivity = 2.0f; // ¸¶¿ì½º °¨µµ
+    private float _rotationSpeed = 2.0f; // Ä«ï¿½Ş¶ï¿½ È¸ï¿½ï¿½ ï¿½Óµï¿½
 
-    // Singleton ÀÎ½ºÅÏ½º
+    [SerializeField]
+    private float _mouseSensitivity = 2.0f; // ï¿½ï¿½ï¿½ì½º ï¿½ï¿½ï¿½ï¿½
+
+    // Singleton ï¿½Î½ï¿½ï¿½Ï½ï¿½
     public static CameraController Instance { get; private set; }
 
     private void Awake()
     {
-        // Singleton ÆĞÅÏ ±¸Çö
+        // Singleton ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (Instance == null)
         {
             Instance = this;
         }
         else
         {
-            Destroy(gameObject); // Áßº¹ ÀÎ½ºÅÏ½º Á¦°Å
+            Destroy(gameObject); // ï¿½ßºï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½
             return;
         }
     }
@@ -48,9 +56,46 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         _status = CameraStatus.Stop;
+
+        Camera[] allCameras = Camera.allCameras;
+        foreach (Camera cam in allCameras)
+        {
+            if (cam != GetComponent<Camera>())
+            {
+                cam.enabled = false;
+            }
+        }
+
+        // ì¹´ë©”ë¼ì˜ ì‹œì‘ ìœ„ì¹˜ ì„¤ì •
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+    }
+    void LateUpdate()
+    {
+        if (isMoving)
+        {
+            transform.position = Vector3.Lerp(transform.position, closeUpPosition, Time.deltaTime * movingSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, closeUpRotation, Time.deltaTime * movingSpeed);
+
+            // í´ë¡œì¦ˆì—… ìœ„ì¹˜ì— ë„ë‹¬í•˜ë©´ ì›€ì§ì„ì„ ë©ˆì¶¤
+            if (Vector3.Distance(transform.position, closeUpPosition) < 0.1f)
+            {
+                isMoving = false;
+                onCloseUpComplete?.Invoke();
+            }
+        }
+    }
+    public void StartCloseUp(Vector3 start, Vector3 end, Quaternion startRot, Quaternion endRot, float speed)
+    {
+        startPosition = start;
+        closeUpPosition = end;
+        startRotation = startRot;
+        closeUpRotation = endRot;
+        movingSpeed = speed;
+        isMoving = true;
     }
 
-    // Ä«¸Ş¶ó¸¦ ¸ñÇ¥ À§Ä¡¿Í È¸ÀüÀ¸·Î ÀÌµ¿½ÃÅ°´Â ÄÚ·çÆ¾
+    // Ä«ï¿½Ş¶ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½Ä¡ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾
     public IEnumerator MoveToPositionAndRotation(Vector3 targetPos, Quaternion targetRot)
     {
         _status = CameraStatus.Move;
@@ -62,13 +107,13 @@ public class CameraController : MonoBehaviour
             yield return null;
         }
 
-        // ÃÖÁ¾ À§Ä¡ ¹× È¸Àü Á¶Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         transform.position = targetPos;
         transform.rotation = targetRot;
         _status = CameraStatus.Stop;
     }
 
-    // ¸¶¿ì½º ÀÔ·Â¿¡ µû¶ó Ä«¸Ş¶ó È¸Àü Ã³¸®
+    // ï¿½ï¿½ï¿½ì½º ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Ş¶ï¿½ È¸ï¿½ï¿½ Ã³ï¿½ï¿½
     public void RotateCamera(float mouseX)
     {
         if (_status == CameraStatus.Move)
@@ -77,14 +122,14 @@ public class CameraController : MonoBehaviour
         Vector3 rotation = transform.localEulerAngles;
         rotation.y -= mouseX * _mouseSensitivity;
 
-        // YÃà È¸Àü Á¦ÇÑ (¿¹: 310µµ ~ 2µµ)
+        // Yï¿½ï¿½ È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½: 310ï¿½ï¿½ ~ 2ï¿½ï¿½)
         if (rotation.y >= 310 || rotation.y <= 2)
         {
             transform.localEulerAngles = new Vector3(6, rotation.y, 0);
         }
     }
 
-    // Ä«¸Ş¶ó ÀÌµ¿À» ½ÃÀÛÇÏ´Â ¸Ş¼­µå
+    // Ä«ï¿½Ş¶ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     public void StartMoveToPositionAndRotation(Vector3 targetPos, Quaternion targetRot)
     {
         StartCoroutine(MoveToPositionAndRotation(targetPos, targetRot));

@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Tripolygon_URP_TurtleShip_Water
+  m_Shader: {fileID: 4800000, guid: eb976c05974de704388ac623dd1383b3, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _4141normal:
+        m_Texture: {fileID: 2800000, guid: 23982ed13e5e483419538350b70ea0a3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WaterNormal:
+        m_Texture: {fileID: 2800000, guid: fcea1cc464812f0449be1ce822f753b4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AlphaCutoff: 0.5
+    - _ChromaticAberration: 0.1
+    - _Distortion: 0.292
+    - _EnvironmentReflections: 1
+    - _Float0: 1
+    - _FoamContrast: 22.03
+    - _FoamDistance: 0.34
+    - _FoamDistortion: 19.64
+    - _FoamRange: -17.11
+    - _IOR: 4.7
+    - _Metallic: 0
+    - _Opacity: 0.219
+    - _ReceiveShadows: 1
+    - _Refraction: 0.94
+    - _Smoothness: 0.917
+    - _Specular: -3.4
+    - _SpecularHighlights: 1
+    - _WaterDepth: 22.4
+    - _WaterDepth_Contrast: 1.37
+    - _WaterDepth_Range: 0
+    - _WaveSpeed: 0.05
+    - _WaveTile: 25
+    - __dirty: 0
+    - _edrdrf: 44.85
+    m_Colors:
+    - _Color0: {r: 1, g: 0, b: 0, a: 0}
+    - _DeepColor: {r: 0, g: 0.23878403, b: 0.3207547, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MainColor: {r: 0, g: 0.9529412, b: 1, a: 0}
+  m_BuildTextureStacks: []

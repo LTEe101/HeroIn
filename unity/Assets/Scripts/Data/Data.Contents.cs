@@ -92,3 +92,91 @@ public class TokenRequest
     public string refreshToken;
 }
 #endregion
+
+#region Narration
+[Serializable]
+public class NarrationData
+{
+    public List<string> beforeStory;  // 시작 전 내레이션 리스트
+    public List<string> afterStory;   // 끝난 후 내레이션 리스트
+}
+#endregion
+
+#region Dialog
+
+[Serializable]
+public class Choice
+{
+    public string text;  // 선택지 텍스트
+    public int next;     // 선택 후 연결되는 다음 대사 ID
+}
+
+
+[Serializable]
+public class Dialog
+{
+    public int id;                 // 대사 ID
+    public string speaker;         // 대사하는 인물
+    public string text;            // 대사 내용
+    public List<Choice> choices;   // 선택지 리스트 (선택지가 있을 경우)
+    public int next;              // 다음 대사 ID (선택지가 없을 경우)
+}
+
+[Serializable]
+public class DialogData : ILoader<int, Dialog>
+{
+    public List<Dialog> dialogs = new List<Dialog>();
+
+    public Dictionary<int, Dialog> MakeDict()
+    {
+        Dictionary<int, Dialog> dict = new Dictionary<int, Dialog>();
+        foreach (Dialog dialog in dialogs)
+        {
+            dict.Add(dialog.id, dialog);
+        }
+        return dict;
+    }
+}
+[Serializable]
+public class AllScenariosData : ILoader<int, DialogData>
+{
+    public List<DialogData> scenarios; // 시나리오 리스트
+
+    public Dictionary<int, DialogData> MakeDict()
+    {
+        Dictionary<int, DialogData> dict = new Dictionary<int, DialogData>();
+        for (int i = 0; i < scenarios.Count; i++)
+        {
+            dict.Add(i + 1, scenarios[i]); // 인덱스를 시나리오 ID로 사용
+        }
+        return dict;
+    }
+}
+#endregion
+
+#region GameInfo
+
+[Serializable]
+public class GameInfo
+{
+    public string title;       // 게임 제목
+    public string desc; // 게임 설명
+}
+
+[Serializable]
+public class GameInfoData : ILoader<int, GameInfo>
+{
+    public List<GameInfo> infos = new List<GameInfo>();
+
+    public Dictionary<int, GameInfo> MakeDict()
+    {
+        Dictionary<int, GameInfo> dict = new Dictionary<int, GameInfo>();
+        for (int i = 0; i < infos.Count; i++)
+        {
+            dict.Add(i + 1, infos[i]); // 인덱스를 미션 ID로 사용
+        }
+        return dict;
+    }
+}
+
+#endregion

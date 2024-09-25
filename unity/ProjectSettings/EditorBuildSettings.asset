@@ -17,4 +17,34 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: 196e180474aad8c4da11eceea536c0ff
+  - enabled: 1
+    path: Assets/Scenes/Museum.unity
+    guid: 26438ecad2e7ae84892df8cf8f760616
+  - enabled: 1
+    path: Assets/Scenes/BeforeStory.unity
+    guid: 9d41da44cc9371049b773e96da219772
+  - enabled: 1
+    path: Assets/Scenes/StoryOne.unity
+    guid: a1aaacc0c321ac44eba041a6e0560cb7
+  - enabled: 1
+    path: Assets/Scenes/StoryTwo.unity
+    guid: ae31a1befc6a53841b07c6c1cb228461
+  - enabled: 1
+    path: Assets/Scenes/StoryThree.unity
+    guid: d36c9a4b3b3c8ef44ae4a024ab0bcc2d
+  - enabled: 1
+    path: Assets/Scenes/StoryFour.unity
+    guid: 59e281bac79275140b2cff813ed2186e
+  - enabled: 1
+    path: Assets/Scenes/StoryFive.unity
+    guid: 322de692134ea8e429764e2473f227a4
+  - enabled: 1
+    path: Assets/Scenes/StorySix.unity
+    guid: 2dee420053c2f90458a835ac8f2f9c74
+  - enabled: 1
+    path: Assets/Scenes/AfterStory.unity
+    guid: 7b199f7369c8b424c88223d1a58b4193
+  - enabled: 1
+    path: Assets/Scenes/GameOne.unity
+    guid: a778ba6ce2c00f147ad90eea9a9b556c
   m_configObjects: {}
