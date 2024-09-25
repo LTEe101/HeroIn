@@ -14,7 +14,21 @@ public class Define
         Story,
         Game,
         Loading,
+        BeforeStory,
+        StoryOne,
+        StoryTwo,
+        StoryThree,
+        StoryFour,
+        StoryFive,
+        StorySix,
+        AfterStory,
+        GameOne,
     }
+     public enum StoryType
+ {
+     Before,
+     After
+ }
 
     public enum Sound
     {

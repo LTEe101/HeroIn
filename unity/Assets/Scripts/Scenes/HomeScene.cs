@@ -71,20 +71,8 @@ public class HomeScene : BaseScene
         // CameraController의 상태가 Move이거나 UI 스택이 존재하면 회전하지 않음
         if (CameraController.Instance.Status == CameraController.CameraStatus.Move || Managers.UI.GetStackCount() > 0) return;
 
-        //HandleMouseRotation(); // 마우스 회전 처리
     }
 
-    void HandleMouseRotation()
-    {
-        if (CameraController.Instance == null) return;
-
-        // 마우스 입력을 받아 카메라 회전
-        if (Input.GetMouseButton(1)) // 마우스 오른쪽 버튼을 누르고 있을 때만 회전
-        {
-            float mouseX = Input.GetAxis("Mouse X");
-            CameraController.Instance.RotateCamera(mouseX);
-        }
-    }
 
     public override void Clear()
     {
@@ -319,7 +307,7 @@ public class HomeScene : BaseScene
         {
             case MonitorStatus.Story1592:
                 ChangeColor();
-                //Managers.Scene.LoadingLoadScene(Define.Scene.Game);
+                Managers.Scene.LodingLoadScene(Define.Scene.BeforeStory);
                 Debug.Log("이동");
                 break;
             default:

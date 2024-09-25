@@ -9,6 +9,7 @@ public class InputManager
     public Action KeyAction = null;
     public Action<Define.MouseEvent> MouseAction = null;
 
+    bool _pressed = false;
     // 마우스 호버 중인 객체를 추적하기 위한 변수
     private GameObject _hoveredObject = null;
 
@@ -32,7 +33,16 @@ public class InputManager
             // 마우스 클릭 처리
             if (Input.GetMouseButtonDown(0))
             {
-                MouseAction.Invoke(Define.MouseEvent.Click);
+                MouseAction.Invoke(Define.MouseEvent.Press);
+                _pressed = true;
+            }
+            else
+            {
+                if (_pressed)
+                {
+                    MouseAction.Invoke(Define.MouseEvent.Click);
+                }
+                _pressed = false;
             }
 
             // 마우스 호버 처리
