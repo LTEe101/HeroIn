@@ -1,0 +1,12 @@
+cloud:
+  aws:
+    s3:
+      bucket: mybossbucket
+    credentials:
+      access-key: AKIAQFC27B6E5ITEHCFQ
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
