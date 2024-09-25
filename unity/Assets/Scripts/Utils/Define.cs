@@ -9,10 +9,11 @@ public class Define
         Unknown,
         Login,
         Join,
-        Lobby,
+        Museum,
         Home,
         Story,
         Game,
+        Loading,
     }
 
     public enum Sound
@@ -25,13 +26,17 @@ public class Define
     public enum UIEvent
     {
         Click,
-        Drag,
+        Drag, 
+        PointerEnter,
+        PointerExit,
     }
 
     public enum MouseEvent
     {
         Press,
         Click,
+        PointerEnter,
+        PointerExit,
     }
 
     public enum CameraMode

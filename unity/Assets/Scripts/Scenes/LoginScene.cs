@@ -39,19 +39,40 @@ public class LoginScene : BaseScene
         }
         // 로그인 시도
         StartCoroutine(Managers.API.Login(
-            userId,
-            password,
-            (message) => {
-                // 로그인 성공 시 처리
-                Debug.Log(message);
-                //Managers.Data.SetUserInfo(user);
-                Managers.Scene.LoadScene(Define.Scene.Home);
-            },
-            (error) => {
-                // 로그인 실패 시 처리
-                Debug.LogError($"로그인 실패: {error}");
-            }
-        ));
+             userId,
+             password,
+             (message) => {
+                 // 로그인 성공 시 처리
+                 Debug.Log(message);
+
+                 // 로그인 성공 후 유저 정보 가져오기
+                 StartCoroutine(Managers.API.GetUserInfo(
+                     (userInfoResponse) => {
+                         // UserInfoResponse -> User로 변환
+                         User user = new User
+                         {
+                             name = userInfoResponse.userName,
+                             title = userInfoResponse.title, 
+                             imgNo = userInfoResponse.img
+                         };
+
+                         // 유저 정보 저장
+                         Managers.Data.SetUserInfo(user);
+                         Debug.Log("유저 정보 저장 성공: " + user.name);
+
+                         // 박물관 씬으로 이동
+                         Managers.Scene.LoadScene(Define.Scene.Museum);
+                     },
+                     (error) => {
+                         Debug.LogError($"유저 정보 가져오기 실패: {error}");
+                     }
+                 ));
+             },
+             (error) => {
+                 // 로그인 실패 시 처리
+                 Debug.LogError($"로그인 실패: {error}");
+             }
+         ));
     }
 
 
