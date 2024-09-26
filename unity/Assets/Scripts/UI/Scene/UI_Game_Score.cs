@@ -40,12 +40,19 @@ public class UI_Game_Score : UI_Scene
                 anims[i] = cannonBalls[i].GetComponent<Animator>();
             }
         }
+
+        GameObject[] targetShips = GameObject.FindGameObjectsWithTag("TargetShip");
+        foreach (var ship in targetShips)
+        {
+            CursorEventHelper.AddCursorChangeEvents(ship);
+        }
     }
     public override void Init()
     {
         base.Init();
 
         Bind<Text>(typeof(Texts));
+        CursorEventHelper.Initialize();
     }
     private UI_Game_Bar _bar = null;
     private bool hasScored = false;
@@ -91,14 +98,28 @@ public class UI_Game_Score : UI_Scene
                         }
                         break;
                 }
-
-                
             }
+            
         }
-       
         if (Input.GetMouseButtonUp(0))
         {   // 누르다 뗐을 시 초기화
             ResetHold();
+        }
+        CursorEventHelper.UpdateCursor();
+    }
+    private void CheckHoverState()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        int mask = (1 << 7); // 레이어 마스크 (7번 레이어가 Target임을 가정)
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100.0f, mask))
+        {
+            if (hit.collider != null)
+            {
+                GameObject hoveredObject = hit.collider.gameObject;
+                CursorEventHelper.AddCursorChangeEvents(hoveredObject);
+            }
         }
     }
     private IEnumerator PlayAnimationAndSpawnParticle(Animator animator, GameObject target)
@@ -136,6 +157,7 @@ public class UI_Game_Score : UI_Scene
 
         if (score == 3)
         {
+            yield return new WaitForSeconds(2f);
             Managers.UI.ShowPopupUI<UI_Game_Finish>();
             StartCoroutine(NextScene(5f));
         }
@@ -150,13 +172,14 @@ public class UI_Game_Score : UI_Scene
         if (evt == Define.MouseEvent.Press) // 클릭 시작
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int mask = (1 << 7); // 레이어 마스크 (6번 레이어가 Target임을 가정)
+            int mask = (1 << 7); // 레이어 마스크 (7번 레이어가 Target임을 가정)
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 100.0f, mask))
             {
                 target = hit.collider.gameObject; // 클릭한 오브젝트 저장
                 isHolding = true; // 꾹 누르기 시작
+                //CursorEventHelper.AddCursorChangeEvents(target);
             }
         }
     }

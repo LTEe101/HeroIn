@@ -19,7 +19,7 @@ public class StoryOneScene : BaseScene
         _cameraController = FindObjectOfType<CameraController>();
         _cameraController.StartCloseUp(new Vector3(48f, 31f, -19.2f), new Vector3(70.1f, 24.7f, -42.6f),
              new Quaternion(0.05f, 0.94f, -0.15f, 0.3f), new Quaternion(0.03f, 0.96f, -0.15f, 0.22f),
-              1.0f);
+              1.2f);
     }
 
     private void Update()
