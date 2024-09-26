@@ -135,24 +135,26 @@ public class S3UploadService {
 
         //S3에 요청할 때 사용할 byteInputStream 생성
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        Thumbnails.of(byteArrayInputStream)
-                .size(200, 300)
-                .keepAspectRatio(false)
-                .toOutputStream(os);
 
-        byte[] compressedImage = os.toByteArray();
-        ByteArrayInputStream uploadInputStream = new ByteArrayInputStream(compressedImage);
+//        이미지 크기 줄이는 코드
+//        ByteArrayOutputStream os = new ByteArrayOutputStream();
+//        Thumbnails.of(byteArrayInputStream)
+//                .size(200, 300)
+//                .keepAspectRatio(false)
+//                .toOutputStream(os);
+//
+//        byte[] compressedImage = os.toByteArray();
+//        ByteArrayInputStream uploadInputStream = new ByteArrayInputStream(compressedImage);
 
         ObjectMetadata metadata = new ObjectMetadata(); //metadata 생성
         metadata.setContentType("image/" + extension);
-        metadata.setContentLength(compressedImage.length);
+        metadata.setContentLength(bytes.length);
 
         try {
             //S3로 putObject 할 때 사용할 요청 객체
             //생성자 : bucket 이름, 파일 명, byteInputStream, metadata
             PutObjectRequest putObjectRequest =
-                    new PutObjectRequest(bucketName, s3FileName, uploadInputStream, metadata)
+                    new PutObjectRequest(bucketName, s3FileName, byteArrayInputStream, metadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead);
 
             //실제로 S3에 이미지 데이터를 넣는 부분이다.
