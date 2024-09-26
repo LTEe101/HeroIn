@@ -1,9 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class HandGestureController : MonoBehaviour
 {
     [SerializeField] private Animator bowAnimator; 
-    [SerializeField] private ShootingManager shootingManager; 
+    [SerializeField] private ShootingManager shootingManager;
+    private bool canDetectGesture = true;
+    private const float GESTURE_COOLDOWN = 5f;
 
     void Update()
     {
@@ -12,6 +15,8 @@ public class HandGestureController : MonoBehaviour
 
     private void DetectHandGesture()
     {
+        if (!canDetectGesture) return;
+
         Vector3[] leftHandPositions = HandTracking.Instance.leftHandPositions;
         Vector3[] rightHandPositions = HandTracking.Instance.rightHandPositions;
 
@@ -42,6 +47,11 @@ public class HandGestureController : MonoBehaviour
                 Debug.Log("Request to shoot");
                 bowAnimator.SetBool("Aiming", false);
                 shootingManager.TryShoot(); // ShootingManager에 발사 요청
+                StartCoroutine(GestureCooldown());
+            }
+            else
+            {
+                bowAnimator.SetBool("Aiming", false);
             }
         }
         // 한 손만 인식된 경우 (두 손이 인식되지 않으면 기본 상태로 복귀) 잘 안 됨 왜이카노
@@ -164,11 +174,19 @@ public class HandGestureController : MonoBehaviour
             Vector3 fingerTip = points[8 + (i * 4)];
             Vector3 fingerBase = points[5 + (i * 4)];
 
-            if (Vector3.Distance(fingerTip, fingerBase) < 0.5f) // 거리 기준 조정
+            if (Vector3.Distance(fingerTip, fingerBase) < 0.4f) // 거리 기준 조정
             {
                 return false;
             }
         }
         return true;
+    }
+    private IEnumerator GestureCooldown()
+    {
+        Debug.Log("Starting gesture cooldown");
+        canDetectGesture = false;
+        yield return new WaitForSeconds(GESTURE_COOLDOWN);
+        canDetectGesture = true;
+        Debug.Log("Gesture cooldown ended");
     }
 }
