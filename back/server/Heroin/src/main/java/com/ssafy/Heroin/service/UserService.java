@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class UserService {
     private final UserTitleRepository userTitleRepository;
     private final HistoryCardRepository historyCardRepository;
     private final TitleRepository titleRepository;
+    private final S3UploadService s3UploadService;
 
     @Transactional
     public JwtToken signIn(String username, String password) {
@@ -46,8 +48,10 @@ public class UserService {
         return jwtTokenProvider.generateToken(authentication);
     }
 
-    public SignUpDto signUp(UserDto userDto) {
-        User user = DtotoUser(userDto);
+    public SignUpDto signUp(MultipartFile userImg, UserDto userDto) {
+
+        String userImgLink = s3UploadService.upload(userImg);
+        User user = DtotoUser(userDto, userImgLink);
         ExistUser(user.getUserId());
         user.setHistoryCards(null);
         userRepository.save(user);
@@ -55,6 +59,7 @@ public class UserService {
         signUpDto.setUserLoginId(user.getUserId());
         signUpDto.setUserLoginPw(user.getUserPw());
         signUpDto.setUserName(user.getUsername());
+        signUpDto.setUserImg(userImgLink);
 
         return signUpDto;
     }
@@ -83,12 +88,13 @@ public class UserService {
         userTitleRepository.save(userTitle);
     }
 
-    private User DtotoUser(UserDto userDto) {
+    private User DtotoUser(UserDto userDto, String userImgLink) {
         User user = new User();
 
         user.setUserId(userDto.getUserLoginId());
         user.setUserPw(userDto.getUserLoginPw());
         user.setUsername(userDto.getUserName());
+        user.setImgNo(userImgLink);
 
         return user;
     }

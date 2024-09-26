@@ -9,4 +9,5 @@ public class SignUpDto {
     private String userLoginId;
     private String userLoginPw;
     private String userName;
+    private String userImg;
 }
