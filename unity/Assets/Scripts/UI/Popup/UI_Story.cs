@@ -140,7 +140,7 @@ public class UI_Story : UI_Popup
                     Managers.Scene.LoadScene(Define.Scene.StoryFive);
                     break;
                 case 5:
-                    Managers.Scene.LoadScene(Define.Scene.StorySix);
+                    Managers.Scene.LoadScene(Define.Scene.MotionGame);
                     break;
                 case 6:
                     Managers.Scene.LoadScene(Define.Scene.AfterStory);

@@ -23,6 +23,7 @@ public class Define
         StorySix,
         AfterStory,
         GameOne,
+        MotionGame,
     }
      public enum StoryType
  {
