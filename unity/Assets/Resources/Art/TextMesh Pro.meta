@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:unity/Assets/Plugins.meta
+guid: ac1b70d76f5051e409b1141a9d4a52b0
+========
 guid: f54d1bd14bd3ca042bd867b519fee8cc
+>>>>>>>> origin/develop-UNITY:unity/Assets/Resources/Art/TextMesh Pro.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
