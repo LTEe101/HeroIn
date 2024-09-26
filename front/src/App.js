@@ -92,7 +92,7 @@ const App = () => {
     const confirmDownload = window.confirm("정말로 다운로드하시겠습니까?");
 
     if (confirmDownload) {
-      window.location.href = "https://j11e101.p.ssafy.io/downloads/heroin.zip"; // 다운로드 링크
+      window.location.href = "https://j11e101.p.ssafy.io/downloads/heroin.exe"; // 다운로드 링크
     }
   };
 
