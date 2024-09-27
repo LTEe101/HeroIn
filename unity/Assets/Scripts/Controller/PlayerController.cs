@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static CameraController;
 using static Outline;
@@ -20,12 +21,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     float _mouseSensitivity = 2.0f; // 마우스 감도
-
     void Start()
     {
-        Managers.Input.KeyAction -= OnKeyboard;
-        Managers.Input.KeyAction += OnKeyboard;
-        UpdateCameraPosition();
+        Debug.Log("시작");
+        _destPos = transform.position;  // 시작 위치 설정
     }
 
     public enum PlayerState
@@ -73,17 +72,18 @@ public class PlayerController : MonoBehaviour
         {
             float moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
             transform.position += dir.normalized * moveDist;
-
-            // 카메라 위치 업데이트
-            UpdateCameraPosition();
+            // 후진 중이 아니면 회전
+            if (!Input.GetKey(KeyCode.S)) // 후진할 때는 회전하지 않음
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 2 * Time.deltaTime);
+            }
         }
 
         // 애니메이션
         Animator anim = GetComponent<Animator>();
         anim.SetFloat("speed", _speed);
     }
-
-
+ 
     void UpdateIdle()
     {
         // 애니메이션
@@ -93,7 +93,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleMouseRotation(); // 마우스 회전 처리
         switch (_state)
         {
             case PlayerState.Die:
@@ -106,12 +105,16 @@ public class PlayerController : MonoBehaviour
                 UpdateIdle();
                 break;
         }
+        HandleMovement();
+        UpdateCameraPosition(); 
     }
-   
-    void OnKeyboard()
+
+    void HandleMovement()
     {
         if (_state == PlayerState.Die)
             return;
+
+        Vector3 moveDir = Vector3.zero;
 
         // 카메라 방향에 따라 이동할 방향을 계산
         Vector3 forward = cameraTransform.forward;
@@ -120,19 +123,17 @@ public class PlayerController : MonoBehaviour
         // Y축 제외하여 평면 상에서 이동하도록 설정
         forward.y = 0;
         right.y = 0;
-
         forward.Normalize();
         right.Normalize();
 
-        Vector3 moveDir = Vector3.zero;
-
+        // WASD 입력 처리
         if (Input.GetKey(KeyCode.W))
         {
-            moveDir += forward; // 카메라가 보는 방향으로 이동
+            moveDir += forward; // 카메라가 보는 방향으로 전진
         }
         if (Input.GetKey(KeyCode.S))
         {
-            moveDir -= forward; // 카메라가 보는 반대 방향으로 이동
+            moveDir -= forward; // 카메라가 보는 방향의 반대 방향으로 후진
         }
         if (Input.GetKey(KeyCode.A))
         {
@@ -148,35 +149,17 @@ public class PlayerController : MonoBehaviour
             _destPos = transform.position + moveDir.normalized * _speed * Time.deltaTime;
             _state = PlayerState.Moving;
         }
-
-        // 애니메이션
-        Animator anim = GetComponent<Animator>();
-        anim.SetFloat("speed", _speed);
     }
-
-    void HandleMouseRotation()
-    {
-        if (Input.GetMouseButton(1)) // 마우스 우클릭 시
-        {
-            float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity;
-
-            // 캐릭터와 카메라 Y축 회전
-            transform.Rotate(0, mouseX, 0); // 캐릭터 회전
-            cameraTransform.RotateAround(transform.position, Vector3.up, mouseX); // 카메라 회전
-        }
-    }
-
     void UpdateCameraPosition()
     {
         if (cameraTransform != null)
         {
-            // 캐릭터의 회전값을 적용하여 카메라의 위치 설정
-            Vector3 rotatedOffset = transform.rotation * cameraOffset;
-            cameraTransform.position = transform.position + rotatedOffset;
+            // 캐릭터의 정면 기준으로 카메라를 회전시켜서 캐릭터의 뒤에 위치시킴
+            Vector3 targetPosition = transform.position + (transform.rotation * cameraOffset); // 캐릭터의 회전값을 반영한 오프셋 위치
+            cameraTransform.position = targetPosition;
 
-            // 카메라가 플레이어를 바라보도록 설정 (회전값 고정)
-            cameraTransform.rotation = Quaternion.Euler(15f, cameraTransform.rotation.eulerAngles.y, 0f);
+            // 카메라가 캐릭터를 항상 바라보도록 설정
+            cameraTransform.LookAt(transform.position + Vector3.up * 1.5f);
         }
     }
-    
 }
