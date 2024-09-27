@@ -24,12 +24,13 @@ public class Define
         AfterStory,
         GameOne,
         MetaverseWar,
+        MotionGame,
     }
      public enum StoryType
- {
-     Before,
-     After
- }
+     {
+         Before,
+         After
+     }
 
     public enum Sound
     {

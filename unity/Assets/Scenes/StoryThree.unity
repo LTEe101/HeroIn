@@ -2695,7 +2695,7 @@ MonoBehaviour:
   closeUpPosition: {x: 0, y: 0, z: 0}
   startRotation: {x: 0, y: 0, z: 0, w: 0}
   closeUpRotation: {x: 0, y: 0, z: 0, w: 0}
-  moveSpeed: 1
+  movingSpeed: 1
   _moveSpeed: 5
   _rotationSpeed: 2
   _mouseSensitivity: 2
