@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.IO;
+using UnityEngine.UI;
 
 public class APIManager : MonoBehaviour
 {
     private string apiUrl = "https://j11e101.p.ssafy.io/api/";
 
     // 회원가입 요청을 보내는 함수 (POST)
-    public IEnumerator Join(string userName, string userLoginId, string userLoginPw, System.Action<string> onSuccess, System.Action<string> onError)
+    public IEnumerator Join(string userName, string userLoginId, string userLoginPw, Image userImage, System.Action<string> onSuccess, System.Action<string> onError)
     {
         // JSON 데이터 생성
         JoinData joinData = new JoinData
@@ -17,11 +19,52 @@ public class APIManager : MonoBehaviour
             userName = userName
         };
 
-        string jsonData = JsonUtility.ToJson(joinData); // JSON 형식으로 변환
+        // JSON 형식으로 변환
+        string jsonData = JsonUtility.ToJson(joinData);
 
-        // POST 요청
-        yield return SendRequest(apiUrl + "user/sign-up", "POST", jsonData, onSuccess, onError);
+        // Image의 텍스처에서 바이트 배열을 추출
+        Texture2D texture = userImage.sprite.texture;
+
+        // 이미지 크기를 256x256으로 줄이기 (필요에 따라 크기를 조정)
+        Texture2D resizedTexture = new Texture2D(256, 256);
+        resizedTexture.SetPixels(texture.GetPixels());
+        resizedTexture.Apply();
+
+        // PNG 형식으로 인코딩
+        byte[] imageBytes = resizedTexture.EncodeToPNG();
+
+        // 멀티파트 폼 데이터 생성
+        WWWForm form = new WWWForm();
+
+        // JSON 데이터를 바이너리 데이터로 추가 (application/json으로 보냄)
+        byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        form.AddBinaryData("userDto", jsonBytes, "userData.json", "application/json");
+
+        // 이미지 파일 추가 (바이트 배열)
+        form.AddBinaryData("userImg", imageBytes, "userImage.png", "image/png");
+
+        // UnityWebRequest를 사용한 POST 요청
+        using (UnityWebRequest www = UnityWebRequest.Post(apiUrl + "user/sign-up", form))
+        {
+            // 요청 전송 및 응답 대기
+            yield return www.SendWebRequest();
+
+            // 오류 처리
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                // 요청 실패 처리
+                Debug.LogError("요청 실패: " + www.downloadHandler.text); // 오류 메시지 출력
+                onError?.Invoke(www.downloadHandler.text); // 서버 응답 내용 전달
+            }
+            else
+            {
+                // 요청 성공 처리
+                onSuccess?.Invoke(www.downloadHandler.text);
+            }
+        }
     }
+
+
 
     // 로그인 요청을 보내는 함수 (POST)
     public IEnumerator Login(string userLoginId, string userLoginPw, System.Action<string> onSuccess, System.Action<string> onError)

@@ -40,6 +40,8 @@ public class UI_Game_Score : UI_Scene
                 anims[i] = cannonBalls[i].GetComponent<Animator>();
             }
         }
+
+       
     }
     public override void Init()
     {
@@ -51,8 +53,6 @@ public class UI_Game_Score : UI_Scene
     private bool hasScored = false;
     private void Update()
     {
-        
-
         if (isHolding)
         {
             holdTime += Time.deltaTime;
@@ -91,11 +91,9 @@ public class UI_Game_Score : UI_Scene
                         }
                         break;
                 }
-
-                
             }
+            
         }
-       
         if (Input.GetMouseButtonUp(0))
         {   // 누르다 뗐을 시 초기화
             ResetHold();
@@ -136,6 +134,7 @@ public class UI_Game_Score : UI_Scene
 
         if (score == 3)
         {
+            yield return new WaitForSeconds(2f);
             Managers.UI.ShowPopupUI<UI_Game_Finish>();
             StartCoroutine(NextScene(5f));
         }
@@ -150,7 +149,7 @@ public class UI_Game_Score : UI_Scene
         if (evt == Define.MouseEvent.Press) // 클릭 시작
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int mask = (1 << 7); // 레이어 마스크 (6번 레이어가 Target임을 가정)
+            int mask = (1 << 7); // 레이어 마스크 (7번 레이어가 Target임을 가정)
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 100.0f, mask))

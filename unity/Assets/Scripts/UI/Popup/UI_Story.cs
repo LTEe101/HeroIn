@@ -126,7 +126,8 @@ public class UI_Story : UI_Popup
     {
         if (nextDialogId == 0)
         {
-            switch(_scenarioNumber){
+            switch (_scenarioNumber)
+            {
                 case 1:
                     Managers.Scene.LoadScene(Define.Scene.StoryTwo);
                     break;
@@ -140,7 +141,7 @@ public class UI_Story : UI_Popup
                     Managers.Scene.LoadScene(Define.Scene.StoryFive);
                     break;
                 case 5:
-                    Managers.Scene.LoadScene(Define.Scene.MotionGame);
+                    Managers.Scene.LoadScene(Define.Scene.StorySix);
                     break;
                 case 6:
                     Managers.Scene.LoadScene(Define.Scene.AfterStory);
@@ -150,7 +151,7 @@ public class UI_Story : UI_Popup
         else
         {
             StartDialog(nextDialogId);
-        } 
+        }
     }
 
     private void StartDialog(int dialogId)
@@ -170,6 +171,8 @@ public class UI_Story : UI_Popup
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(GameObjects));
+
+
         textPanel = GetObject((int)GameObjects.TextPanel);
         choicePanel = GetObject((int)GameObjects.ChoicePanel);
         firstChoice = GetButton((int)Buttons.FirstChoice);
@@ -178,4 +181,4 @@ public class UI_Story : UI_Popup
         choicePanel.SetActive(false);
         InitSpeakerCameras();
     }
-} 
+}
