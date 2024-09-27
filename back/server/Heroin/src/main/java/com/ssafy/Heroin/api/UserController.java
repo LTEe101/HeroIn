@@ -68,4 +68,11 @@ public class UserController {
 
         return ResponseEntity.ok(titleDtos);
     }
+
+    @PatchMapping("/titlepatch")
+    public ResponseEntity<?> updateUserTitle(@RequestParam String userId, @RequestParam String title) {
+        userService.setTitle(userId, title);
+
+        return ResponseEntity.ok().build();
+    }
 }

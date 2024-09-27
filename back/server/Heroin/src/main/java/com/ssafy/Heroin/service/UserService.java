@@ -166,4 +166,14 @@ public class UserService {
 
         return null;
     }
+
+    @Transactional
+    public void setTitle(String userId, String title) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        if(user.isPresent()) {
+            user.get().setTitle(title);
+            userRepository.save(user.get());
+        }
+
+    }
 }
