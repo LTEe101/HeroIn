@@ -141,7 +141,7 @@ public class UI_Story : UI_Popup
                     Managers.Scene.LoadScene(Define.Scene.StoryFive);
                     break;
                 case 5:
-                    Managers.Scene.LoadScene(Define.Scene.MotionGame);
+                    Managers.Scene.LoadScene(Define.Scene.StorySix);
                     break;
                 case 6:
                     Managers.Scene.LoadScene(Define.Scene.AfterStory);
@@ -172,15 +172,11 @@ public class UI_Story : UI_Popup
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(GameObjects));
 
-        CursorEventHelper.Initialize();
 
         textPanel = GetObject((int)GameObjects.TextPanel);
         choicePanel = GetObject((int)GameObjects.ChoicePanel);
         firstChoice = GetButton((int)Buttons.FirstChoice);
         secondChoice = GetButton((int)Buttons.SecondChoice);
-
-        CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.FirstChoice).gameObject);
-        CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.SecondChoice).gameObject);
 
         choicePanel.SetActive(false);
         InitSpeakerCameras();

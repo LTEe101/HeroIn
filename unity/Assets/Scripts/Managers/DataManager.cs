@@ -20,6 +20,13 @@ public class DataManager
     public void Init()
     {
         NarrationData narrationData = LoadJson<NarrationData>("NarrationData");
+        GameInfos = LoadJson<GameInfoData>("GameInfoData").MakeDict();
+        Debug.Log($"Loaded GameInfos count: {GameInfos.Count}");
+        foreach (var info in GameInfos)
+        {
+            Debug.Log($"Game ID: {info.Key}, Title: {info.Value.title}");
+        }
+
         BeforeStoryList = narrationData.beforeStory;
         AfterStoryList = narrationData.afterStory;
 

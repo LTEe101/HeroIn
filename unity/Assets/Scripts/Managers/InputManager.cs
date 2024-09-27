@@ -8,15 +8,14 @@ public class InputManager
 {
     public Action KeyAction = null;
     public Action<Define.MouseEvent> MouseAction = null;
-
     bool _pressed = false;
     // 마우스 호버 중인 객체를 추적하기 위한 변수
     private GameObject _hoveredObject = null;
-
     public GameObject HoveredObject
     {
         get { return _hoveredObject; } // 호버된 객체를 반환하는 속성
     }
+  
 
     public void OnUpdate()
     {
@@ -26,7 +25,7 @@ public class InputManager
         // 키 입력이 있을 때 처리
         if (Input.anyKey && KeyAction != null)
             KeyAction.Invoke();
-
+      
         // 마우스 이벤트 처리
         if (MouseAction != null)
         {
@@ -48,8 +47,10 @@ public class InputManager
             // 마우스 호버 처리
             HandleMouseHover();
         }
+        
     }
 
+   
     void HandleMouseHover()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -84,11 +85,11 @@ public class InputManager
             }
         }
     }
-
     public void Clear()
     {
         KeyAction = null;
         MouseAction = null;
         _hoveredObject = null;
+        Managers.Cursor.Init();
     }
 }

@@ -50,22 +50,22 @@ private int _currentNarrationIndex = 0; // 현재 보여줄 내레이션 인덱스
         Bind<Image>(typeof(Images));
         Bind<Button>(typeof(Buttons));
 
-        CursorEventHelper.Initialize();
+        //CursorEventHelper.Initialize();
 
         // PrevButton 클릭 시 이전 내레이션 표시
         BindEvent(GetButton((int)Buttons.PrevButton).gameObject, (PointerEventData data) => { ShowPreviousNarration(); }, Define.UIEvent.Click);
-        CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.PrevButton).gameObject);
+        //CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.PrevButton).gameObject);
 
         // NextButton 클릭 시 다음 내레이션 표시
         BindEvent(GetButton((int)Buttons.NextButton).gameObject, (PointerEventData data) => { ShowNextNarration(); }, Define.UIEvent.Click);
-        CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.NextButton).gameObject);
+        //CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.NextButton).gameObject);
 
         BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => { ShowNextNarration(); }, Define.UIEvent.Click);
-        CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.StartButton).gameObject);
+        //CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.StartButton).gameObject);
     }
     private void Update()
     {
-        CursorEventHelper.UpdateCursor();
+        //CursorEventHelper.UpdateCursor();
     }
 
     // 내레이션을 업데이트하는 함수
