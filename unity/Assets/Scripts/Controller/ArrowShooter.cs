@@ -182,7 +182,7 @@ public class ArrowShooter : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private float arrowSpeed = 1f; // º”µµ∏¶ ¥ı ≥∑√„
     [SerializeField] private float searchRadius = 30f;
-    [SerializeField] private float arrowLifetime = 1.8f;
+    [SerializeField] private float arrowLifetime = 1.3f;
 
     private Rigidbody arrowRb;
     private LineRenderer trajectoryLine;
@@ -280,6 +280,7 @@ public class ArrowShooter : MonoBehaviour
             Vector3 direction = (targetPosition - existingArrow.transform.position).normalized;
             existingArrow.transform.rotation = Quaternion.Slerp(existingArrow.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 2f);
 
+
             // ±À¿˚ √ﬂ∞°
             //trajectoryPoints.Add(newPosition);
             //trajectoryLine.positionCount = trajectoryPoints.Count;
@@ -299,6 +300,7 @@ public class ArrowShooter : MonoBehaviour
 
     private void ResetArrow()
     {
+        
         existingArrow.transform.position = firePoint.position;
         existingArrow.transform.rotation = firePoint.rotation;
         arrowRb.velocity = Vector3.zero;
@@ -307,24 +309,7 @@ public class ArrowShooter : MonoBehaviour
 
     private Transform FindClosestTarget()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius);
-        Transform closestTarget = null;
-        float closestDistance = Mathf.Infinity;
-
-        foreach (var hitCollider in hitColliders)
-        {
-            if (hitCollider.CompareTag("Enemy"))
-            {
-                float distance = Vector3.Distance(firePoint.position, hitCollider.transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestTarget = hitCollider.transform;
-                }
-            }
-        }
-
-        return closestTarget;
+        return EnemyManager.Instance.GetNearestEnemy(transform.position);
     }
 
     void OnDrawGizmos()

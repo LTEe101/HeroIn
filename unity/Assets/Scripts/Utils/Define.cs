@@ -23,12 +23,13 @@ public class Define
         StorySix,
         AfterStory,
         GameOne,
+        MotionGame,
     }
      public enum StoryType
- {
-     Before,
-     After
- }
+     {
+         Before,
+         After
+     }
 
     public enum Sound
     {

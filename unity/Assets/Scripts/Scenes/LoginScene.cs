@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class LoginScene : BaseScene
 {
@@ -10,7 +11,7 @@ public class LoginScene : BaseScene
     public InputField passwordInputField;
     public Button loginButton;
     public Button joingButton;
-
+    private InputField[] inputFields; // 입력 필드를 배열로 관리
     protected override void Init()
     {
         base.Init();
@@ -18,13 +19,39 @@ public class LoginScene : BaseScene
         SceneType = Define.Scene.Login;
         loginButton.onClick.AddListener(OnLoginButtonClicked);
         joingButton.onClick.AddListener(OnJoinButtonClicked);
+
+        inputFields = new InputField[] { userIdInputField, passwordInputField };
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SelectNextInputField();
+        }
+
         if (Input.GetKeyDown(KeyCode.Return))
         {
             Login();
+        }
+    }
+
+    // 다음 InputField로 이동하는 함수
+    private void SelectNextInputField()
+    {
+        // 현재 선택된 UI 객체 확인
+        GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
+
+        if (currentSelected != null && currentSelected.GetComponent<InputField>() != null)
+        {
+            // 현재 선택된 InputField의 인덱스 찾기
+            int currentIndex = System.Array.IndexOf(inputFields, currentSelected.GetComponent<InputField>());
+
+            // 다음 InputField로 이동, 마지막 필드에서는 첫 번째 필드로 돌아감
+            int nextIndex = (currentIndex + 1) % inputFields.Length;
+
+            // 다음 InputField로 포커스 이동
+            EventSystem.current.SetSelectedGameObject(inputFields[nextIndex].gameObject);
         }
     }
 
@@ -35,6 +62,7 @@ public class LoginScene : BaseScene
         if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(password))
         {
             Debug.Log("아이디 또는 비밀번호 입력");
+            Managers.UI.ShowPopupUI<UI_Alert>(null, new object[] { "아이디 또는 비밀번호를 입력하세요" });
             return;
         }
         // 로그인 시도
@@ -64,12 +92,14 @@ public class LoginScene : BaseScene
                          Managers.Scene.LoadScene(Define.Scene.Museum);
                      },
                      (error) => {
+                         
                          Debug.LogError($"유저 정보 가져오기 실패: {error}");
                      }
                  ));
              },
              (error) => {
                  // 로그인 실패 시 처리
+                 Managers.UI.ShowPopupUI<UI_Alert>(null, new object[] { "아이디 또는 비밀번호가 틀렸습니다" });
                  Debug.LogError($"로그인 실패: {error}");
              }
          ));
