@@ -1417,7 +1417,6 @@ GameObject:
   m_Component:
   - component: {fileID: 219664151}
   - component: {fileID: 219664150}
-  - component: {fileID: 219664152}
   m_Layer: 0
   m_Name: '@Scene'
   m_TagString: Untagged
@@ -1452,18 +1451,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &219664152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 219664149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c3590c2fb59751438d5f414b820aeea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &223247073 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5068377815637736385, guid: 32cbaf226fb818644a92806309cecaa5, type: 3}
@@ -3940,7 +3927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2419858809785064814, guid: 9245fae7d27cc6442b68da396b386354, type: 3}
       propertyPath: m_TagString
-      value: TargetShip
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4917766880161501267, guid: 9245fae7d27cc6442b68da396b386354, type: 3}
       propertyPath: m_Enabled
@@ -6818,7 +6805,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2419858809785064814, guid: 9245fae7d27cc6442b68da396b386354, type: 3}
       propertyPath: m_TagString
-      value: TargetShip
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4917766880161501267, guid: 9245fae7d27cc6442b68da396b386354, type: 3}
       propertyPath: m_Enabled
@@ -19552,7 +19539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2419858809785064814, guid: 9245fae7d27cc6442b68da396b386354, type: 3}
       propertyPath: m_TagString
-      value: TargetShip
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 4917766880161501267, guid: 9245fae7d27cc6442b68da396b386354, type: 3}
       propertyPath: m_Enabled

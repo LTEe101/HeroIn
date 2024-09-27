@@ -42,9 +42,6 @@ public class UI_Game_Desc : UI_Popup
         Bind<Button>(typeof(Buttons));
         Bind<Image>(typeof(Images));
 
-        CursorEventHelper.Initialize();
-
-        CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.StartButton).gameObject);
         BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => { 
             ClosePopupUI();
             Managers.UI.ShowSceneUI<UI_Game_Score>();
