@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class UI_History : UI_Popup
 {
-    private List<string> historyList = new List<string>() { "첫 번째 기록", "두 번째 기록", "세 번째 기록", "네 번째 기록", "다섯 번째 기록" };
+    private List<HistoryTitle> historyList;
     public int itemsPerPage = 3;  // 한 페이지에 보여줄 항목 수
     private int currentPage = 0;  // 현재 페이지 인덱스
     private int totalPages;       // 전체 페이지 수
@@ -31,7 +31,7 @@ public class UI_History : UI_Popup
     public override void Init()
     {
         base.Init();
-
+        historyList = Managers.Data.titles;
         // 버튼 바인드
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(GameObjects));
@@ -95,7 +95,7 @@ public class UI_History : UI_Popup
         {
             GameObject item = Managers.UI.MakeSubItem<UI_History_Item>(gridPanel.transform).gameObject;
             UI_History_Item historyItem = item.GetOrAddComponent<UI_History_Item>();
-            historyItem.SetInfo(historyList[i], this);
+            historyItem.SetInfo(historyList[i].userTitle, this);
 
             // RectTransform을 통해 초기 위치와 Y축 간격 설정
             RectTransform rectTransform = item.GetComponent<RectTransform>();

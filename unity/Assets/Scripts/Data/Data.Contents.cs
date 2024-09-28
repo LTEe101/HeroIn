@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +9,60 @@ using UnityEngine;
 [Serializable]
 public class User
 {
+    public string userId;
 	public string name;
 	public string title;
-	public string imgNo;
+    public Sprite imgNo;
+}
+#endregion
+
+#region HistoryTitle
+[Serializable]
+public class HistoryTitle
+{
+    public string userTitle;
+}
+
+[Serializable]
+public class HistoryTitleData
+{
+    public List<HistoryTitle> titles = new List<HistoryTitle>();
+}
+#endregion
+
+#region 업적 저장 요청 데이터
+// 업적 데이터를 담는 클래스
+[Serializable]
+public class HistoryTitleRequest
+{
+    public int checkId;
+    public string userId;
+}
+#endregion
+
+#region 유저 업적 변경 요청 데이터
+[Serializable]
+public class TitlePatchData
+{
+    public string userId;
+    public string title;
+}
+#endregion
+
+#region 업적 응답 데이터
+// 카드 데이터를 저장할 클래스
+[Serializable]
+public class TitleData
+{
+    public string userTitle;
+    public string createAt;
+}
+
+// 전체 카드 리스트
+[System.Serializable]
+public class TitleListResponse
+{
+    public List<TitleData> titles;
 }
 #endregion
 
@@ -19,26 +71,38 @@ public class User
 [Serializable]
 public class HistoryCard
 {
-	public int historyId;
 	public string name;
 	public string description;
-	public string imgNO;
+	public Sprite imgNO;
 }
 
 [Serializable]
-public class HistoryCardData : ILoader<int, HistoryCard>
+public class HistoryCardData
 {
     public List<HistoryCard> cards = new List<HistoryCard>();
-
-    public Dictionary<int, HistoryCard> MakeDict()
-    {
-        Dictionary<int, HistoryCard> dict = new Dictionary<int, HistoryCard>();
-        foreach (HistoryCard card in cards)
-            dict.Add(card.historyId, card);
-        return dict;
-    }
 }
 
+#endregion
+
+
+#region HistoryCard 응답 데이터
+// 카드 데이터를 저장할 클래스
+[Serializable]
+public class CardData
+{
+    public string username;           
+    public string creationDate;     
+    public string cardDescription;   
+    public string cardImg;            
+    public string cardName;           
+}
+
+// 전체 카드 리스트
+[System.Serializable]
+public class CardListResponse
+{
+    public List<CardData> cards;
+}
 #endregion
 
 #region 회원가입 요청 데이터

@@ -11,14 +11,14 @@ public interface ILoader<Key, Value>
 public class DataManager
 {
     public User userInfo { get; private set; } = new User();
-    public Dictionary<int, HistoryCard> CardDict { get; private set; } = new Dictionary<int, HistoryCard>();
+    public List<HistoryCard> cards = new List<HistoryCard>();
+    public List<HistoryTitle> titles = new List<HistoryTitle>();
     public List<string> BeforeStoryList { get; private set; } = new List<string>();
     public List<string> AfterStoryList { get; private set; } = new List<string>();
     public Dictionary<int, List<Dialog>> DialogDataMap { get; private set; } = new Dictionary<int, List<Dialog>>();
     public Dictionary<int, GameInfo> GameInfos { get; private set; } = new Dictionary<int, GameInfo>();
     public void Init()
     {
-        CardDict = LoadJson<HistoryCardData, int, HistoryCard>("HistoryCardData").MakeDict();
         NarrationData narrationData = LoadJson<NarrationData>("NarrationData");
         GameInfos = LoadJson<GameInfoData>("GameInfoData").MakeDict();
         Debug.Log($"Loaded GameInfos count: {GameInfos.Count}");
@@ -38,7 +38,6 @@ public class DataManager
     {
         userInfo = user;
     }
-    
 
     T LoadJson<T>(string path)
     {
