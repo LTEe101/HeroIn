@@ -8,7 +8,9 @@ public class MotionGameScene : BaseScene
     {
         base.Init();
         SceneType = Define.Scene.MotionGame;
-        
+        UI_Game_Desc popup = Managers.UI.ShowPopupUI<UI_Game_Desc>();
+        popup.LoadInfos(2);
+
     }
 
     private void Update()

@@ -157,10 +157,18 @@ public class AllScenariosData : ILoader<int, DialogData>
 #region GameInfo
 
 [Serializable]
+public class GameDescription
+{
+    public string desc;
+    public string image;
+}
+
+[Serializable]
 public class GameInfo
 {
-    public string title;       // 게임 제목
-    public string desc; // 게임 설명
+    public int id;
+    public string title;
+    public List<GameDescription> descriptions;
 }
 
 [Serializable]
@@ -171,9 +179,9 @@ public class GameInfoData : ILoader<int, GameInfo>
     public Dictionary<int, GameInfo> MakeDict()
     {
         Dictionary<int, GameInfo> dict = new Dictionary<int, GameInfo>();
-        for (int i = 0; i < infos.Count; i++)
+        foreach (GameInfo info in infos)
         {
-            dict.Add(i + 1, infos[i]); // 인덱스를 미션 ID로 사용
+            dict.Add(info.id, info);
         }
         return dict;
     }
