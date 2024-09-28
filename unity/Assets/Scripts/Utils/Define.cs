@@ -23,6 +23,7 @@ public class Define
         StorySix,
         AfterStory,
         GameOne,
+        MetaverseWar,
         MotionGame,
     }
      public enum StoryType
