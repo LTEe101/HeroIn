@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class UI_History_Book: UI_Popup
 {
     public int itemsPerPage = 1;  // 한 페이지에 보여줄 항목 수
-    private int currentPage = 1;  // 현재 페이지 인덱스
+    private int currentPage = 0;  // 현재 페이지 인덱스
     private int totalPages;       // 전체 페이지 수
 
     enum Buttons
@@ -49,7 +49,7 @@ public class UI_History_Book: UI_Popup
         GetButton((int)Buttons.CloseButton).gameObject.BindEvent(OnCloseButtonClicked);
 
         // 전체 페이지 수 계산
-        totalPages = Managers.Data.CardDict.Count;
+        totalPages = Managers.Data.cards.Count;
 
         // 첫 페이지 표시
         ShowPage(currentPage);
@@ -65,7 +65,7 @@ public class UI_History_Book: UI_Popup
     // NextButton 이벤트
     public void OnNextButtonClicked(PointerEventData data)
     {
-        if (currentPage < totalPages)
+        if (currentPage < totalPages - 1)
         {
             currentPage++;
             ShowPage(currentPage);
@@ -75,7 +75,7 @@ public class UI_History_Book: UI_Popup
     // PreviousButton 이벤트
     public void OnPreviousButtonClicked(PointerEventData data)
     {
-        if (currentPage > 1)
+        if (currentPage > 0)
         {
             currentPage--;
             ShowPage(currentPage);
@@ -85,8 +85,9 @@ public class UI_History_Book: UI_Popup
     // 페이지에 맞는 히스토리 항목을 표시하는 함수
     private void ShowPage(int pageIndex)
     {
-        Get<Text>((int)Texts.HistoricalFigureNameText).GetComponent<Text>().text = Managers.Data.CardDict[pageIndex].name;
-        Get<Text>((int)Texts.DescriptionText).GetComponent<Text>().text = Managers.Data.CardDict[pageIndex].description;
+        Get<Text>((int)Texts.HistoricalFigureNameText).GetComponent<Text>().text = Managers.Data.cards[pageIndex].name;
+        Get<Text>((int)Texts.DescriptionText).GetComponent<Text>().text = Managers.Data.cards[pageIndex].description;
+        Get<Image>((int)Images.HistoricalFigureImg).sprite = Managers.Data.cards[pageIndex].imgNO;
     }
 
 }
