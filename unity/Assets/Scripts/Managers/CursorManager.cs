@@ -79,7 +79,7 @@ public class CursorManager : MonoBehaviour
     private void UpdateCursor()
     {
         Vector3 mousePosition = Input.mousePosition;
-        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        //Ray ray = Camera.main.ScreenPointToRay(mousePosition);
         RaycastHit hit;
 
         // 버튼 태그가 있는 오브젝트 위에 있을 때

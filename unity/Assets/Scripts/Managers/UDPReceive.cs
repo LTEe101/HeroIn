@@ -43,12 +43,6 @@ public class UDPReceive : MonoBehaviour, IMotionGameScript
 
                 // 데이터 분석
                 ParseData(receivedData);
-
-                if (printToConsole)
-                {
-                    print("Left Hand Data: " + leftHandData);
-                    print("Right Hand Data: " + rightHandData);
-                }
             }
             catch (Exception err)
             {
@@ -62,11 +56,13 @@ public class UDPReceive : MonoBehaviour, IMotionGameScript
     {
         if (receivedData.StartsWith("Left"))
         {
-            leftHandData = receivedData.Split(':')[1];
+            string data = receivedData.Split(':')[1];
+            leftHandData = data;
         }
         else if (receivedData.StartsWith("Right"))
         {
-            rightHandData = receivedData.Split(':')[1];
+            string data = receivedData.Split(':')[1];
+            rightHandData = data;
         }
     }
 

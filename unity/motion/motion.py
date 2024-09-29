@@ -51,6 +51,9 @@ while True:
         # 이미지의 가로 크기 가져오기 (좌우 반전 후)
         img_width = frame.shape[1]
 
+        # 각 손에 대한 데이터를 저장할 딕셔너리 초기화
+        hand_data = {'Left': 'NoData', 'Right': 'NoData'}
+
         if hands:
             for hand in hands:
                 data = []  # 각 손에 대한 데이터를 따로 저장
@@ -71,11 +74,18 @@ while True:
                     cv2.circle(frame, (cx, cy), 5, (0, 0, 255), cv2.FILLED)
                     cv2.putText(frame, f'{idx}', (cx + 10, cy), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
-                # 손의 타입 (왼손/오른손)을 추가하여 데이터를 전송
+                # 손의 타입 (왼손/오른손)을 추가하여 데이터를 저장
                 handType = hand["type"]  # "Left" 또는 "Right"
-                print(f'{handType} Hand Data: {data}')
-                print(f'{handType} Data Length: {len(data)}')
-                send_sock.sendto(str.encode(f'{handType}:{data}'), send_address)
+                hand_data[handType] = data  # 데이터 저장
+
+        # 각 손의 데이터를 전송
+        for handType in ['Left', 'Right']:
+            data = hand_data[handType]
+            if data == 'NoData':
+                message = f'{handType}:NoData'
+            else:
+                message = f'{handType}:{data}'
+            send_sock.sendto(str.encode(message), send_address)
 
         cv2.imshow("Image", frame)
 

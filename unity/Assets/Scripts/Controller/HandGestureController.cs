@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class HandGestureController : MonoBehaviour, IMotionGameScript
 {
-    [SerializeField] private Animator bowAnimator; 
+    [SerializeField] private Animator bowAnimator;
     [SerializeField] private ShootingManager shootingManager;
     private bool canDetectGesture = true;
     private const float GESTURE_COOLDOWN = 5f;
@@ -23,62 +24,82 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
     {
         if (!canDetectGesture) return;
 
-        Vector3[] leftHandPositions = HandTracking.Instance.leftHandPositions;
-        Vector3[] rightHandPositions = HandTracking.Instance.rightHandPositions;
+        HandTracking handTracking = HandTracking.Instance;
 
-        // 두 손 모두 인식된 경우
-        if (leftHandPositions.Length == 21 && rightHandPositions.Length == 21)
+        // 유효성 플래그를 사용하여 데이터가 유효한지 확인
+        if (handTracking.leftHandDataValid && handTracking.rightHandDataValid)
         {
-            bool leftFist = IsFistClosed(leftHandPositions);
-            bool rightFist = IsFistClosed(rightHandPositions);
-            bool leftGathered = IsFingersGathered(leftHandPositions);
-            bool rightGathered = IsFingersGathered(rightHandPositions);
-            bool isLeftHandOpen = IsHandOpen(leftHandPositions);
-            bool isRightHandOpen = IsHandOpen(rightHandPositions);
-            bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
+            Vector3[] leftHandPositions = handTracking.leftHandPositions;
+            Vector3[] rightHandPositions = handTracking.rightHandPositions;
 
-            // 앞 전 상태 유지 (두 손이 겹쳐져서 좌표 인식이 제대로 안 되는 경우)
-            if (IsHandOverlapping(leftHandPositions, rightHandPositions))
+            // 디버그 로그로 좌표값 출력 (선택 사항)
+            //Debug.Log("Left Hand Positions: " + string.Join(", ", Array.ConvertAll(leftHandPositions, v => v.ToString())));
+            //Debug.Log("Right Hand Positions: " + string.Join(", ", Array.ConvertAll(rightHandPositions, v => v.ToString())));
+
+            // 두 손 모두 인식된 경우
+            if (leftHandPositions.Length == 21 && rightHandPositions.Length == 21)
             {
+                bool leftFist = IsFistClosed(leftHandPositions);
+                bool rightFist = IsFistClosed(rightHandPositions);
+                bool leftGathered = IsFingersGathered(leftHandPositions);
+                bool rightGathered = IsFingersGathered(rightHandPositions);
+                bool isLeftHandOpen = IsHandOpen(leftHandPositions);
+                bool isRightHandOpen = IsHandOpen(rightHandPositions);
+                bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
+
+                // 앞 전 상태 유지 (두 손이 겹쳐져서 좌표 인식이 제대로 안 되는 경우)
+                if (IsHandOverlapping(leftHandPositions, rightHandPositions))
+                {
+                    Debug.Log("두 손 겹쳐짐, 이전 상태 유지");
+                }
+                // Aiming (두 손가락이 모아진 상태에서 앞뒤로 위치)
+                else if ((leftFist || leftGathered) && (rightFist || rightGathered) && isOneHandBehind)
+                {
+                    Debug.Log("두 손가락이 모아진 상태에서 앞뒤로 위치, 조준");
+                    bowAnimator.SetBool("Aiming", true);
+                }
+                // Shooting (앞 손은 주먹 쥐고 뒷 손은 펼치면 발사 요청)
+                else if (bowAnimator.GetBool("Aiming") && ((leftFist && isRightHandOpen) || (rightFist && isLeftHandOpen)))
+                {
+                    Debug.Log("앞 손 주먹 뒷 손 펼침, 발사 요청");
+                    bowAnimator.SetBool("Aiming", false);
+                    shootingManager.TryShoot(); // ShootingManager에 발사 요청
+                    StartCoroutine(GestureCooldown());
+                }
+                else
+                {
+                    bowAnimator.SetBool("Aiming", false);
+                    Debug.Log("두 손 인식, 대기 상태");
+                }
             }
-            // Aiming (두 손가락이 모아진 상태에서 앞뒤로 위치)
-            else if ((leftFist || leftGathered) && (rightFist || rightGathered) && isOneHandBehind)
+            // 한 손만 인식된 경우
+            else if (leftHandPositions.Length == 21 || rightHandPositions.Length == 21)
             {
-                Debug.Log("Ready to aim");
-                bowAnimator.SetBool("Aiming", true);
-            }
-            // Shooting (앞 손은 주먹 쥐고 뒷 손은 펼치면 발사 요청)
-            else if (bowAnimator.GetBool("Aiming") && ((leftFist && isRightHandOpen) || (rightFist && isLeftHandOpen)))
-            {
-                Debug.Log("Request to shoot");
-                bowAnimator.SetBool("Aiming", false);
-                shootingManager.TryShoot(); // ShootingManager에 발사 요청
-                StartCoroutine(GestureCooldown());
-            }
-            else
-            {
-                bowAnimator.SetBool("Aiming", false);
+                bool leftFist = leftHandPositions.Length == 21 && IsFistClosed(leftHandPositions);
+                bool rightFist = rightHandPositions.Length == 21 && IsFistClosed(rightHandPositions);
+
+                // Aiming (너무 포개져서 주먹쥔 한 손만 인식된 경우)
+                if (leftFist || rightFist)
+                {
+                    Debug.Log("주먹쥔 한 손만 인식, 조준");
+                    bowAnimator.SetBool("Aiming", true);
+                }
+                else
+                {
+                    bowAnimator.SetBool("Aiming", false);
+                    Debug.Log("한 손 인식, 대기 상태");
+                }
             }
         }
-        // 한 손만 인식된 경우 (두 손이 인식되지 않으면 기본 상태로 복귀) 잘 안 됨 왜이카노
-        else if (leftHandPositions.Length == 21 || rightHandPositions.Length == 21)
+        else
         {
-            bool leftFist = leftHandPositions.Length == 21 && IsFistClosed(leftHandPositions);
-            bool rightFist = rightHandPositions.Length == 21 && IsFistClosed(rightHandPositions);
-
-            // Aiming (너무 포개져서 주먹쥔 한 손만 인식된 경우)
-            if (leftFist || rightFist)
-            {
-                Debug.Log("One hand is making a fist. Ready to aim.");
-                bowAnimator.SetBool("Aiming", true);
-            }
-            else
-            {
-                bowAnimator.SetBool("Aiming", false);
-            }
+            // 손 데이터가 유효하지 않을 경우
+            bowAnimator.SetBool("Aiming", false);
+            Debug.LogWarning("손 데이터가 유효하지 않습니다.");
         }
     }
 
+    // 아래부터는 기존 메서드들 (변경 사항 없음)
     // 손이 앞뒤로 포개졌는지 확인
     bool IsHandOverlapping(Vector3[] leftPoints, Vector3[] rightPoints)
     {
@@ -94,8 +115,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         return xOverlap && yOverlap && zOverlap;
     }
 
-    // 손이 모아진 상태 확인
-    // 첫 번째 조건: 손가락 끝과 기저부의 거리 계산 (주먹 쥔 제스처)
+    // 손이 모아진 상태 확인 (주먹 쥔 제스처)
     bool IsFistClosed(Vector3[] points)
     {
         for (int i = 0; i < 4; i++)
@@ -103,23 +123,22 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
             Vector3 fingerTip = points[8 + (i * 4)];
             Vector3 fingerBase = points[5 + (i * 4)];
 
-            if (Vector3.Distance(fingerTip, fingerBase) > 0.5f) 
+            if (Vector3.Distance(fingerTip, fingerBase) > 0.5f)
             {
                 return false;
             }
         }
 
         return true;
-
     }
 
-    // 두 번째 조건: 손가락 끝들의 중심 거리 계산 (이탈리아 제스처)
+    // 손가락 끝들이 모여있는지 확인 (이탈리아 제스처)
     bool IsFingersGathered(Vector3[] points)
     {
         int[] fingerTipIndices = { 4, 8, 12, 16, 20 };
 
-        Vector3 middleTip = points[12]; 
-        float threshold = 0.5f; 
+        Vector3 middleTip = points[12];
+        float threshold = 0.5f;
 
         foreach (int index in fingerTipIndices)
         {
@@ -131,7 +150,6 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
 
         return true;
     }
-
 
     // 한 손이 다른 한 손의 뒤에 있는지 확인
     bool IsOneHandBehind(Vector3[] leftPoints, Vector3[] rightPoints)
@@ -187,12 +205,13 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         }
         return true;
     }
+
     private IEnumerator GestureCooldown()
     {
-        Debug.Log("Starting gesture cooldown");
+        Debug.Log("발사 후 대기 시작");
         canDetectGesture = false;
         yield return new WaitForSeconds(GESTURE_COOLDOWN);
         canDetectGesture = true;
-        Debug.Log("Gesture cooldown ended");
+        Debug.Log("발사 후 대기 끝");
     }
 }

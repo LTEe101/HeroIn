@@ -44,8 +44,8 @@ public class InputManager
                 _pressed = false;
             }
 
-            // 마우스 호버 처리
-            HandleMouseHover();
+            //// 마우스 호버 처리
+            //HandleMouseHover();
         }
         
     }
