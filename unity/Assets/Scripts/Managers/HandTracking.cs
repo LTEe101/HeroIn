@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HandTracking : MonoBehaviour
+public class HandTracking : MonoBehaviour, IMotionGameScript
 {
     public static HandTracking Instance; // Singleton instance
 
@@ -8,6 +8,12 @@ public class HandTracking : MonoBehaviour
 
     public Vector3[] leftHandPositions = new Vector3[21]; // 저장된 좌표 데이터
     public Vector3[] rightHandPositions = new Vector3[21]; // 저장된 좌표 데이터
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     void Awake()
     {

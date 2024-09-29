@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-public class UDPReceive : MonoBehaviour
+public class UDPReceive : MonoBehaviour, IMotionGameScript
 {
     Thread receiveThread;
     UdpClient client; 
@@ -14,6 +14,12 @@ public class UDPReceive : MonoBehaviour
     public bool printToConsole = false;
     public string leftHandData;
     public string rightHandData;
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     public void Start()
     {

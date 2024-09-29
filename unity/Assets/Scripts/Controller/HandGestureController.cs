@@ -1,12 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-public class HandGestureController : MonoBehaviour
+public class HandGestureController : MonoBehaviour, IMotionGameScript
 {
     [SerializeField] private Animator bowAnimator; 
     [SerializeField] private ShootingManager shootingManager;
     private bool canDetectGesture = true;
     private const float GESTURE_COOLDOWN = 5f;
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     void Update()
     {

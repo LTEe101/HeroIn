@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : MonoBehaviour, IMotionGameScript
 {
     public static EnemyManager Instance;
 
@@ -13,6 +13,13 @@ public class EnemyManager : MonoBehaviour
 
     private List<GameObject> activeEnemies = new List<GameObject>();
     private List<GameObject> runningEnemies = new List<GameObject>();
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
+
 
     private void Awake()
     {

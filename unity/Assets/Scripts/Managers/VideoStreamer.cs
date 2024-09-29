@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Net;
 
-public class VideoStreamer : MonoBehaviour
+public class VideoStreamer : MonoBehaviour, IMotionGameScript
 {
     public string ipAddress = "127.0.0.1";
     public int port = 5052;
@@ -10,6 +10,12 @@ public class VideoStreamer : MonoBehaviour
     private WebCamTexture webCamTexture;
     private const int MAX_PACKET_SIZE = 60000; // UDP 패킷 최대 크기보다 약간 작게 설정
     private const int MAX_IMAGE_SIZE = 640; // 더 작은 크기로 조정
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     void Start()
     {
