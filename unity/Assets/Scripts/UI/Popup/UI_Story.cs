@@ -86,11 +86,11 @@ public class UI_Story : UI_Popup
         if (dialog.choices != null && dialog.choices.Count > 0)
         {
 
-            BindEvent(textPanel, (PointerEventData data) => { ShowChoices(dialog.choices); }, Define.UIEvent.Click);
+            BindEvent(textPanel, (PointerEventData data) => { TextPanelSound();  ShowChoices(dialog.choices); }, Define.UIEvent.Click);
         }
         else
         {
-            BindEvent(textPanel, (PointerEventData data) => { OnDialogClick(dialog.next); }, Define.UIEvent.Click);
+            BindEvent(textPanel, (PointerEventData data) => { TextPanelSound();  OnDialogClick(dialog.next); }, Define.UIEvent.Click);
         }
     }
 
@@ -106,15 +106,23 @@ public class UI_Story : UI_Popup
             {
                 firstChoice.gameObject.SetActive(true);
                 firstChoice.GetComponentInChildren<Text>().text = choices[i].text;
-                BindEvent(firstChoice.gameObject, (PointerEventData data) => { OnChoiceSelected(choices[choiceIndex].next); }, Define.UIEvent.Click);
+                BindEvent(firstChoice.gameObject, (PointerEventData data) => { PlayButtonSound();  OnChoiceSelected(choices[choiceIndex].next); }, Define.UIEvent.Click);
             }
             else if (i == 1)
             {
                 secondChoice.gameObject.SetActive(true);
                 secondChoice.GetComponentInChildren<Text>().text = choices[i].text;
-                BindEvent(secondChoice.gameObject, (PointerEventData data) => { OnChoiceSelected(choices[choiceIndex].next); }, Define.UIEvent.Click);
+                BindEvent(secondChoice.gameObject, (PointerEventData data) => { PlayButtonSound(); OnChoiceSelected(choices[choiceIndex].next); }, Define.UIEvent.Click);
             }
         }
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("ProEffect/User_Interface_Menu/ui_menu_button_keystroke_01", Define.Sound.Effect, 0.2f);
+    }
+    private void TextPanelSound()
+    {
+        Managers.Sound.Play("ProEffect/User_Interface_Menu/ui_button_simple_click_03", Define.Sound.Effect, 0.1f);
     }
     public void OnChoiceSelected(int nextDialogId)
     {

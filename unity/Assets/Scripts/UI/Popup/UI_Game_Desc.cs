@@ -42,7 +42,8 @@ public class UI_Game_Desc : UI_Popup
         Bind<Button>(typeof(Buttons));
         Bind<Image>(typeof(Images));
 
-        BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => { 
+        BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => {
+            Managers.Sound.Play("ProEffect/User_Interface_Menu/ui_menu_button_keystroke_01", Define.Sound.Effect, 0.2f);
             ClosePopupUI();
             Managers.UI.ShowSceneUI<UI_Game_Score>();
         }, Define.UIEvent.Click);
