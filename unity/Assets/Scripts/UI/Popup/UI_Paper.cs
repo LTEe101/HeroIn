@@ -50,18 +50,14 @@ private int _currentNarrationIndex = 0; // 현재 보여줄 내레이션 인덱스
         Bind<Image>(typeof(Images));
         Bind<Button>(typeof(Buttons));
 
-        //CursorEventHelper.Initialize();
 
         // PrevButton 클릭 시 이전 내레이션 표시
-        BindEvent(GetButton((int)Buttons.PrevButton).gameObject, (PointerEventData data) => { ShowPreviousNarration(); }, Define.UIEvent.Click);
-        //CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.PrevButton).gameObject);
+        BindEvent(GetButton((int)Buttons.PrevButton).gameObject, (PointerEventData data) => { PlayButtonSound(); ShowPreviousNarration(); }, Define.UIEvent.Click);
 
         // NextButton 클릭 시 다음 내레이션 표시
-        BindEvent(GetButton((int)Buttons.NextButton).gameObject, (PointerEventData data) => { ShowNextNarration(); }, Define.UIEvent.Click);
-        //CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.NextButton).gameObject);
+        BindEvent(GetButton((int)Buttons.NextButton).gameObject, (PointerEventData data) => { PlayButtonSound(); ShowNextNarration();  }, Define.UIEvent.Click);
 
-        BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => { ShowNextNarration(); }, Define.UIEvent.Click);
-        //CursorEventHelper.AddCursorChangeEvents(GetButton((int)Buttons.StartButton).gameObject);
+        BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => { PlayButtonSound(); ShowNextNarration();  }, Define.UIEvent.Click);
     }
     private void Update()
     {
@@ -116,6 +112,10 @@ private int _currentNarrationIndex = 0; // 현재 보여줄 내레이션 인덱스
             UpdateButtons();
             UpdateNarration();
         }
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("ProEffect/User_Interface_Menu/ui_menu_button_keystroke_01", Define.Sound.Effect, 0.2f);
     }
 }
 
