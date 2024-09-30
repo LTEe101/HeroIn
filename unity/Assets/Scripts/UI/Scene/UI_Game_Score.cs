@@ -158,16 +158,17 @@ public class UI_Game_Score : UI_Scene
         CheckGameEnd();
     }
 
-    private void CheckGameEnd()
+    private IEnumerator CheckGameEnd()
+{
+    if (score >= 3)
     {
-        if (score >= 3)
-        {
-            yield return new WaitForSeconds(2f);
-            Managers.UI.ShowPopupUI<UI_Game_Finish>();
-            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f);
-            StartCoroutine(NextScene(4f));
-        }
+        yield return new WaitForSeconds(2f);
+        Managers.UI.ShowPopupUI<UI_Game_Finish>();
+        Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f);
+        StartCoroutine(NextScene(4f));
     }
+}
+
 
     private IEnumerator NextScene(float waitTime)
     {
