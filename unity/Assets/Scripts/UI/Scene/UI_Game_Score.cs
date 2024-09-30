@@ -109,9 +109,10 @@ public class UI_Game_Score : UI_Scene
         yield return new WaitForSeconds(animationLength + 0.4f);
         if (particleInstance == null)
         {
-        // 气惯 瓤苞 积己
-        particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
-        particleInstance.SetActive(true);
+            // 气惯 瓤苞 积己
+            particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
+            particleInstance.SetActive(true);
+            Managers.Sound.Play("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect, 0.2f);
         }
 
         Destroy(ball);
@@ -136,7 +137,8 @@ public class UI_Game_Score : UI_Scene
         {
             yield return new WaitForSeconds(2f);
             Managers.UI.ShowPopupUI<UI_Game_Finish>();
-            StartCoroutine(NextScene(5f));
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f);
+            StartCoroutine(NextScene(4f));
         }
     }
     private IEnumerator NextScene(float waitTime)
