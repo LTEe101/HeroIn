@@ -59,7 +59,8 @@ public class UI_User : UI_Popup
     public void OnCloseButtonClicked(PointerEventData data)
     {
         Managers.UI.ClosePopupUI(this);
-        CameraController.Instance.StartMoveToPositionAndRotation(_initialPosition, _initialRotation);
+         Camera.main.transform.position = _initialPosition;   // 카메라를 원래 위치로 되돌림
+        Camera.main.transform.rotation = _initialRotation;
     }
 
     public void OnHistoryBookButtonClicked(PointerEventData data)
