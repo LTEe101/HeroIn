@@ -184,7 +184,7 @@ public class UI_Game_Score : UI_Scene
         // 다음 씬으로 전환
         if (isGameTwo)
         {
-            Managers.Scene.LoadScene(Define.Scene.StoryFour);
+            //Managers.Scene.LoadScene(Define.Scene.StoryFour);
         }
         else
         {
