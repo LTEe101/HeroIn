@@ -27,6 +27,7 @@ public class UI_Game_Desc : UI_Popup
 
     private int currentIndex = 0;
     private GameInfo currentGameInfo;
+    public event Action OnStartGame;
 
     public override void Init()
     {
@@ -128,10 +129,14 @@ public class UI_Game_Desc : UI_Popup
 
     private void OnStartButtonClicked(PointerEventData data)
     {
+        if (currentGameInfo != null && currentGameInfo.id == 2)
+        {
+            OnStartGame?.Invoke();  // 게임 시작 이벤트 발생 (gameId가 2일 때만)
+        }
+
         ClosePopupUI();
         Managers.UI.ShowSceneUI<UI_Game_Score>();
     }
-
     private void OnNextButtonClicked(PointerEventData data)
     {
         if (currentIndex < currentGameInfo.descriptions.Count - 1)
