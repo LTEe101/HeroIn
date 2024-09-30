@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static PlayerController;
 
 public class MuseumScene : BaseScene
 {
@@ -42,17 +43,7 @@ public class MuseumScene : BaseScene
         }
     }
 
-    // 하이라이트를 원래 상태로 복구하는 함수
-    void ResetHighlight(GameObject hoveredObject)
-    {
-        if (hoveredObject != null)
-        {
-            // 원래 Scale로 복구
-            hoveredObject.transform.localScale = originalScale;
-            hoveredObject = null; // 하이라이트 객체 초기화
-
-        }
-    }
+    
     void ChangeOutlineColor(GameObject go, Color newColor)
     {
         // 오브젝트에서 Outline 컴포넌트를 가져옴
@@ -73,45 +64,29 @@ public class MuseumScene : BaseScene
     void OnPointerEnter(GameObject hoveredObject)
     {
         if (hoveredObject == null) return;
-        Debug.Log(hoveredObject.name);
-        switch (hoveredObject.name)
+        
+        if (hoveredObject.CompareTag("InteractableButton"))
         {
-            case "Spaceship":
-                // UI_Enter 활성화
+            if (hoveredObject.name.Equals("Spaceship"))
+            {
                 Util.FindChild(hoveredObject, "UI_Enter").SetActive(true);
-               
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            case "1592":
-                Debug.Log("test");
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            default:
-                break;
-
+            }
+            ChangeOutlineColor(hoveredObject, Color.white);
+            HighlightObject(hoveredObject);
         }
     }
     void OnPointerExit(GameObject hoveredObject)
     {
         if (hoveredObject == null) return;
-        switch (hoveredObject.name)
-        {
-            case "Spaceship":
-                // UI_Enter 비활성화
-                Util.FindChild(hoveredObject, "UI_Enter").SetActive(false);
-                
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            case "1592":
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            default:
-                break;
 
+        if (hoveredObject.CompareTag("InteractableButton"))
+        {
+            if (hoveredObject.name.Equals("Spaceship"))
+            {
+                Util.FindChild(hoveredObject, "UI_Enter").SetActive(false);
+            }
+            ChangeOutlineColor(hoveredObject, Color.black);
+            ResetHighlight(hoveredObject);
         }
     }
     // 마우스 호버 시 객체를 키우고 UI_Enter 출력하는 함수
@@ -126,7 +101,17 @@ public class MuseumScene : BaseScene
             hoveredObject.transform.localScale = originalScale * highlightScaleFactor; // Scale 증가
         }
     }
+    // 하이라이트를 원래 상태로 복구하는 함수
+    void ResetHighlight(GameObject hoveredObject)
+    {
+        if (hoveredObject != null)
+        {
+            // 원래 Scale로 복구
+            hoveredObject.transform.localScale = originalScale;
+            hoveredObject = null; // 하이라이트 객체 초기화
 
+        }
+    }
     // 마우스 클릭 시 호출되는 함수
     void OnMouseClicked()
     {

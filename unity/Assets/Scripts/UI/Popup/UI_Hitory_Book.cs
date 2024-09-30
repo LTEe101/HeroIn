@@ -85,9 +85,13 @@ public class UI_History_Book: UI_Popup
     // 페이지에 맞는 히스토리 항목을 표시하는 함수
     private void ShowPage(int pageIndex)
     {
-        Get<Text>((int)Texts.HistoricalFigureNameText).GetComponent<Text>().text = Managers.Data.cards[pageIndex].name;
-        Get<Text>((int)Texts.DescriptionText).GetComponent<Text>().text = Managers.Data.cards[pageIndex].description;
-        Get<Image>((int)Images.HistoricalFigureImg).sprite = Managers.Data.cards[pageIndex].imgNO;
+        // pageIndex가 리스트 범위 내에 있는지 확인
+        if (Managers.Data.cards.Count > 0)
+        {
+            Get<Text>((int)Texts.HistoricalFigureNameText).GetComponent<Text>().text = Managers.Data.cards[pageIndex].name;
+            Get<Text>((int)Texts.DescriptionText).GetComponent<Text>().text = Managers.Data.cards[pageIndex].description;
+            Get<Image>((int)Images.HistoricalFigureImg).sprite = Managers.Data.cards[pageIndex].imgNO;
+        }
     }
 
 }
