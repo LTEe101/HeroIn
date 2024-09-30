@@ -75,15 +75,7 @@ public class LoginScene : BaseScene
 
                  // 로그인 성공 후 유저 정보 가져오기
                  StartCoroutine(Managers.API.GetUserInfo(
-                     (userInfoResponse) => {
-                         // UserInfoResponse -> User로 변환
-                         User user = new User
-                         {
-                             name = userInfoResponse.userName,
-                             title = userInfoResponse.title, 
-                             imgNo = userInfoResponse.img
-                         };
-
+                     (user) => {
                          // 유저 정보 저장
                          Managers.Data.SetUserInfo(user);
                          Debug.Log("유저 정보 저장 성공: " + user.name);
@@ -96,6 +88,43 @@ public class LoginScene : BaseScene
                          Debug.LogError($"유저 정보 가져오기 실패: {error}");
                      }
                  ));
+
+                 StartCoroutine(Managers.API.GetUserCardInfo(
+                        userId,
+                        () => {
+                            // 카드 정보를 성공적으로 가져왔을 때 처리
+                            Debug.Log("카드 정보를 성공적으로 가져왔습니다.");
+
+                            // 가져온 카드 정보를 출력하거나 필요한 곳에 활용
+                            foreach (var card in Managers.Data.cards)
+                            {
+                                Debug.Log($"카드 이름: {card.name}, 설명: {card.description}");
+                            }
+                        },
+                        (error) => {
+                            // 카드 정보를 가져오는 데 실패했을 때 처리
+                            Debug.LogError($"카드 정보 가져오기 실패: {error}");
+                        }
+                    ));
+
+                 StartCoroutine(Managers.API.GetUserTitleInfo(
+                        userId,
+                        () => {
+                            // 카드 정보를 성공적으로 가져왔을 때 처리
+                            Debug.Log("업적 정보를 성공적으로 가져왔습니다.");
+
+                            // 가져온 카드 정보를 출력하거나 필요한 곳에 활용
+                            foreach (var title in Managers.Data.titles)
+                            {
+                                Debug.Log($"업적 이름: {title.userTitle}");
+                            }
+                         
+                        },
+                        (error) => {
+                            // 카드 정보를 가져오는 데 실패했을 때 처리
+                            Debug.LogError($"업적 정보 가져오기 실패: {error}");
+                        }
+                    ));
              },
              (error) => {
                  // 로그인 실패 시 처리
