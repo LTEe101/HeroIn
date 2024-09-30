@@ -45,7 +45,7 @@ public class InputManager
             }
 
             //// 마우스 호버 처리
-            //HandleMouseHover();
+            HandleMouseHover();
         }
         
     }

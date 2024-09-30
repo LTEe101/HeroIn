@@ -31,6 +31,12 @@ public class MotionGameScene : BaseScene
     {
         isGameStarted = true;
         Debug.Log("Game Started!");
+
+        // UI_Game_Score UI에 게임 모드를 전달
+        var gameScoreUI = Managers.UI.ShowSceneUI<UI_Game_Score>();
+
+        gameScoreUI.SetGameMode(true);
+
         EnableGameScripts();
     }
 

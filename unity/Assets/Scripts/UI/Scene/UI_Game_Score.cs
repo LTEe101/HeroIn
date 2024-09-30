@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
@@ -23,43 +22,74 @@ public class UI_Game_Score : UI_Scene
 
     private Animator[] anims;
     public System.Action onFinished;
+
+    // 게임 모드 구분 변수 추가 (게임 2일 경우 true로 설정)
+    private bool isGameTwo = false;
+    private EnemyManager enemyManager; // 게임 2에서 적이 제거될 때 점수를 추가하기 위해 필요
+
+    public void SetGameMode(bool gameTwo)
+    {
+        isGameTwo = gameTwo;
+    }
+
     void Start()
     {
         Init();
-        Managers.Input.MouseAction -= OnMouseClicked;
-        Managers.Input.MouseAction += OnMouseClicked;
-        boom = Managers.Resource.Instantiate($"CFXR Explosion 1");
-        boom.SetActive(false);
 
-        cannonBalls = GameObject.FindGameObjectsWithTag("CannonBall");
-        anims = new Animator[3];
-        for (int i = 0; i < 3; i++)
+        if (isGameTwo)
         {
-            if (cannonBalls[i] != null)
+            // 게임 2에서는 EnemyManager와 상호작용
+            enemyManager = EnemyManager.Instance;
+            if (enemyManager != null)
             {
-                anims[i] = cannonBalls[i].GetComponent<Animator>();
+                enemyManager.onEnemyDestroyed += OnEnemyDestroyed; // 적 제거 시 점수 증가
             }
         }
+        else
+        {
+            // 게임 1의 로직 (클릭 이벤트 처리)
+            Managers.Input.MouseAction -= OnMouseClicked;
+            Managers.Input.MouseAction += OnMouseClicked;
+            boom = Managers.Resource.Instantiate($"CFXR Explosion 1");
+            boom.SetActive(false);
 
-       
+            cannonBalls = GameObject.FindGameObjectsWithTag("CannonBall");
+            anims = new Animator[3];
+            for (int i = 0; i < 3; i++)
+            {
+                if (cannonBalls[i] != null)
+                {
+                    anims[i] = cannonBalls[i].GetComponent<Animator>();
+                }
+            }
+        }
     }
+
     public override void Init()
     {
         base.Init();
-
         Bind<Text>(typeof(Texts));
     }
+
+    // 게임 2에서 적이 제거될 때 점수 추가
+    private void OnEnemyDestroyed()
+    {
+        score++;
+        UpdateScoreText();
+        CheckGameEnd(); // 스코어가 3일 때 성공 팝업 띄우기
+    }
+
+    // 게임 1의 기존 클릭 및 애니메이션 처리 로직
     private UI_Game_Bar _bar = null;
     private bool hasScored = false;
     private void Update()
     {
-        if (isHolding)
+        if (!isGameTwo && isHolding)
         {
             holdTime += Time.deltaTime;
             if (_bar == null && target != null)
             {
                 _bar = Managers.UI.ShowPopupUI<UI_Game_Bar>();
-
                 _bar.SetBarImagePosition(target.name); // 설정한 위치로 BarImage 위치 설정
             }
 
@@ -69,6 +99,7 @@ public class UI_Game_Score : UI_Scene
             if (holdTime >= 2f && target != null && particleInstance == null && !hasScored)
             {
                 hasScored = true;
+
                 // 포탄 날라가는 효과
                 switch (target.name)
                 {
@@ -92,13 +123,14 @@ public class UI_Game_Score : UI_Scene
                         break;
                 }
             }
-            
         }
+
         if (Input.GetMouseButtonUp(0))
-        {   // 누르다 뗐을 시 초기화
+        {
             ResetHold();
         }
     }
+
     private IEnumerator PlayAnimationAndSpawnParticle(Animator animator, GameObject target)
     {
         GameObject ball = animator.gameObject;
@@ -107,24 +139,25 @@ public class UI_Game_Score : UI_Scene
         // 애니메이션 길이 가져오기
         float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animationLength + 0.4f);
+
         if (particleInstance == null)
         {
-        // 폭발 효과 생성
-        particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
-        particleInstance.SetActive(true);
+            // 폭발 효과 생성
+            particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
+            particleInstance.SetActive(true);
         }
 
         Destroy(ball);
-        
+
         // 득점
         score++;
         UpdateScoreText();
 
         if (_bar != null)
         {
-        // 게이지 UI 없애기
-        _bar.ClosePopupUI();
-        _bar = null;
+            // 게이지 UI 없애기
+            _bar.ClosePopupUI();
+            _bar = null;
         }
 
         // 배 없애기
@@ -132,21 +165,36 @@ public class UI_Game_Score : UI_Scene
         isHolding = false;
         hasScored = false;
 
-        if (score == 3)
+        CheckGameEnd(); // 스코어가 3일 때 성공 팝업 띄우기
+    }
+
+    private void CheckGameEnd()
+    {
+        if (score >= 3) // 스코어가 3 이상이면 성공 팝업
         {
-            yield return new WaitForSeconds(2f);
-            Managers.UI.ShowPopupUI<UI_Game_Finish>();
-            StartCoroutine(NextScene(5f));
+            Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
+            StartCoroutine(NextScene(5f)); // 5초 후에 다음 씬으로 전환
         }
     }
+
     private IEnumerator NextScene(float waitTime)
     {
         yield return new WaitForSeconds(waitTime); // 대기
-        Managers.Scene.LoadScene(Define.Scene.StoryFour); // 다음 씬으로 전환
+
+        // 다음 씬으로 전환
+        if (isGameTwo)
+        {
+            Managers.Scene.LoadScene(Define.Scene.StoryFour);
+        }
+        else
+        {
+            Managers.Scene.LoadScene(Define.Scene.StoryFour); 
+        }
     }
+
     void OnMouseClicked(Define.MouseEvent evt)
     {
-        if (evt == Define.MouseEvent.Press) // 클릭 시작
+        if (!isGameTwo && evt == Define.MouseEvent.Press) // 게임 1일 때만 동작
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             int mask = (1 << 7); // 레이어 마스크 (7번 레이어가 Target임을 가정)
@@ -159,11 +207,13 @@ public class UI_Game_Score : UI_Scene
             }
         }
     }
+
     private void ResetHold()
     {
         holdTime = 0f;
         target = null; // 클릭한 오브젝트 초기화
         isHolding = false;
+
         if (_bar != null)
         {
             _bar.ClosePopupUI();
@@ -173,6 +223,6 @@ public class UI_Game_Score : UI_Scene
 
     private void UpdateScoreText()
     {
-        Get<Text>((int)Texts.ScoreText).GetComponent<Text>().text = score.ToString();
+        Get<Text>((int)Texts.ScoreText).text = score.ToString();
     }
 }
