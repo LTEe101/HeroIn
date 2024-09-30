@@ -12,8 +12,8 @@ public class UI_Game_Score : UI_Scene
     }
 
     int score = 0;
-    private float holdTime = 0f; 
-    private bool isHolding = false; 
+    private float holdTime = 0f;
+    private bool isHolding = false;
     private GameObject target;
     private GameObject particleInstance;
     private GameObject boom;
@@ -24,7 +24,7 @@ public class UI_Game_Score : UI_Scene
     public System.Action onFinished;
 
     private bool isGameTwo = false;
-    private EnemyManager enemyManager; 
+    private EnemyManager enemyManager;
 
     public void SetGameMode(bool gameTwo)
     {
@@ -72,11 +72,12 @@ public class UI_Game_Score : UI_Scene
     {
         score++;
         UpdateScoreText();
-        CheckGameEnd();
+        StartCoroutine(CheckGameEnd()); // 코루틴으로 호출
     }
 
     private UI_Game_Bar _bar = null;
     private bool hasScored = false;
+
     private void Update()
     {
         if (!isGameTwo && isHolding)
@@ -91,6 +92,7 @@ public class UI_Game_Score : UI_Scene
             float fillAmount = holdTime / 2f;
             _bar.SetFillAmount(fillAmount);
 
+            // 게이지가 다 찼을 때
             if (holdTime >= 2f && target != null && particleInstance == null && !hasScored)
             {
                 hasScored = true;
@@ -119,6 +121,7 @@ public class UI_Game_Score : UI_Scene
             }
         }
 
+        // 마우스를 뗐을 때 게이지 UI를 닫음
         if (Input.GetMouseButtonUp(0))
         {
             ResetHold();
@@ -145,33 +148,34 @@ public class UI_Game_Score : UI_Scene
         score++;
         UpdateScoreText();
 
+        Destroy(target); // 타겟 삭제
+        isHolding = false;
+        hasScored = false;
+
+        // 애니메이션이 끝났을 때 게이지 닫기
         if (_bar != null)
         {
             _bar.ClosePopupUI();
             _bar = null;
         }
 
-        Destroy(target);
-        isHolding = false;
-        hasScored = false;
-
-        CheckGameEnd();
+        StartCoroutine(CheckGameEnd()); // 코루틴으로 호출
     }
 
-    private void CheckGameEnd()
+    private IEnumerator CheckGameEnd()
     {
         if (score >= 3)
         {
-            yield return new WaitForSeconds(2f);
-            Managers.UI.ShowPopupUI<UI_Game_Finish>();
-            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f);
-            StartCoroutine(NextScene(4f));
+            yield return new WaitForSeconds(2f); // 2초 대기
+            Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f); // 성공 소리 재생
+            StartCoroutine(NextScene(4f)); // 4초 후에 다음 씬으로 전환
         }
     }
 
     private IEnumerator NextScene(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime); 
+        yield return new WaitForSeconds(waitTime);
 
         if (isGameTwo)
         {
@@ -179,7 +183,7 @@ public class UI_Game_Score : UI_Scene
         }
         else
         {
-            Managers.Scene.LoadScene(Define.Scene.StoryFour); 
+            Managers.Scene.LoadScene(Define.Scene.StoryFour);
         }
     }
 
@@ -205,6 +209,7 @@ public class UI_Game_Score : UI_Scene
         target = null;
         isHolding = false;
 
+        // 클릭이 중단되면 게이지 닫기
         if (_bar != null)
         {
             _bar.ClosePopupUI();
