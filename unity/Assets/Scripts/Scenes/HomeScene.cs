@@ -2,27 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using static PlayerController;
 
 public class HomeScene : BaseScene
 {
-    private Vector3 _initialPosition = new Vector3(-10f, 1.910354f, -2.25f);
-
-    private Quaternion _initialRotation = Quaternion.Euler(6f, 0.0f, 0.0f); // 초기 회전
-
-    private Vector3 _targetPosition = new Vector3(-10.18889f, 2.267206f, -0.639335f); // 목표 위치
-
-    private Quaternion _targetRotation = Quaternion.Euler(-1.082f, 0.104f, -0.001f); // 목표 회전
-
     private Vector3 _originalScale; // 객체의 원래 Scale을 저장할 변수
-
     private float _highlightScaleFactor = 1.02f; // 하이라이트 시 커질 비율
-
+    private Vector3 _targetPosition = new Vector3(-10.18889f, 2.3f, -0.639335f); // 목표 위치
+    private Quaternion _targetRotation = Quaternion.Euler(-1.082f, 0.104f, -0.001f); // 목표 회전
     private GameObject _mainTV;
     private TextMeshPro _storyYear;
     private TextMeshPro _storyName;
     private TextMeshPro _historicalFigure;
     private Color _originalColor;
     private GameObject _hitObject;
+
     enum MonitorStatus
     {
         Close,
@@ -52,31 +46,9 @@ public class HomeScene : BaseScene
             _storyName = storyNameObject.GetComponent<TextMeshPro>();
             _historicalFigure = historicalFigureObject.GetComponent<TextMeshPro>();
         }
-
-        // Singleton 패턴으로 접근
-        if (CameraController.Instance != null)
-        {
-            // 초기 위치 및 회전 설정
-            CameraController.Instance.transform.position = _initialPosition;
-            CameraController.Instance.transform.rotation = _initialRotation;
-        }
-        else
-        {
-            Debug.LogError("CameraController 인스턴스를 찾을 수 없습니다.");
-        }
     }
-
-    void Update()
-    {
-        // CameraController의 상태가 Move이거나 UI 스택이 존재하면 회전하지 않음
-        if (CameraController.Instance.Status == CameraController.CameraStatus.Move || Managers.UI.GetStackCount() > 0) return;
-
-    }
-
-
     public override void Clear()
     {
-        // 필요 시 구현
     }
 
     // 마우스 입력 처리 메서드
@@ -88,64 +60,62 @@ public class HomeScene : BaseScene
                 OnMouseClicked();
                 break;
             case Define.MouseEvent.PointerEnter:
-                OnPointerEnter(Managers.Input.HoveredObject); // 현재 호버된 객체 밝게 하기
+                OnPointerEnter(Managers.Input.HoveredObject); 
                 break;
             case Define.MouseEvent.PointerExit:
-                OnPointerExit(Managers.Input.HoveredObject); // 하이라이트 리셋
+                OnPointerExit(Managers.Input.HoveredObject);
                 break;
         }
     }
-    
+
     // 마우스 클릭 시 처리 메서드
     void OnMouseClicked()
     {
-        if (CameraController.Instance == null) return;
-
-        Ray ray = CameraController.Instance.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        // CameraController의 상태가 Move인 경우 클릭 무시
-        if (CameraController.Instance.Status == CameraController.CameraStatus.Move)
+        if (_hitObject != null && _originalColor != default(Color))
         {
-            Debug.Log("카메라 이동이 끝나고 클릭하세요");
+            Renderer renderer = _hitObject.GetComponent<Renderer>();
+            renderer.material.color = _originalColor;
+            _originalColor = default(Color);
+        }
+
+        _hitObject = Managers.Input.HoveredObject;
+
+        // Exit는 상태에 상관없이 동작
+        if (_hitObject.name == "Exit")
+        {
+            Managers.Scene.LoadScene(Define.Scene.Museum);
+            Debug.Log("나가기");
             return;
         }
 
-        if (Physics.Raycast(ray, out hit))
+        // 나머지 버튼은 Watch 상태일 때만 동작
+        if (PlayerController.Instance.State != PlayerState.Watch)
         {
-            if (_hitObject != null && _originalColor != default(Color))
-            {
-                Renderer renderer = _hitObject.GetComponent<Renderer>();
-                renderer.material.color = _originalColor;
-                _originalColor = default(Color); 
-            }
-
-            _hitObject = hit.collider.gameObject;
-
-            switch (_hitObject.name)
-            {
-                case "UserButton":
-                    if (_monitorStatus != MonitorStatus.Close) CloseMonitory();
-                    StartCoroutine(MoveCameraAndShowUI<UI_User>());
-                    break;
-                case "1592":
-                    OnStoryButton(MonitorStatus.Story1592, "1592", "한산도 대첩", "이순신 장군");
-                    break;
-                case "1919":
-                    OnStoryButton(MonitorStatus.Story1919, "1919", "3.1운동", "유관순 열사");
-                    break;
-                case "Start":
-                    LoadScene();
-                    break;
-                case "Exit":
-                    Managers.Scene.LoadScene(Define.Scene.Museum);
-                    Debug.Log("나가기");
-                    break;
-                default:
-                    Debug.Log("해당 오브젝트에 대한 팝업이 없습니다.");
-                    break;
-            }
+            Debug.Log("현재 Watch 상태가 아닙니다.");
+            return;
         }
+
+        // 상태가 Watch일 때 처리
+        switch (_hitObject.name)
+        {
+            case "UserButton":
+                if (_monitorStatus != MonitorStatus.Close) CloseMonitory();
+                StartCoroutine(MoveCameraAndShowUI<UI_User>());
+                break;
+            case "1592":
+                OnStoryButton(MonitorStatus.Story1592, "1592", "한산도 대첩", "이순신 장군");
+                break;
+            case "1919":
+                OnStoryButton(MonitorStatus.Story1919, "1919", "3.1운동", "유관순 열사");
+                break;
+            case "Start":
+                LoadScene();
+                break;
+            default:
+                Debug.Log("해당 오브젝트에 대한 팝업이 없습니다.");
+                break;
+        }
+        
     }
 
     // 버튼 컬러를 밝게 하는 메서드
@@ -188,18 +158,6 @@ public class HomeScene : BaseScene
         _monitorStatus = MonitorStatus.Close;
     }
 
-    // 하이라이트를 원래 상태로 복구하는 함수
-    void ResetHighlight(GameObject hoveredObject)
-    {
-        if (hoveredObject != null)
-        {
-            // 원래 Scale로 복구
-            hoveredObject.transform.localScale = _originalScale;
-            hoveredObject = null; // 하이라이트 객체 초기화
-
-        }
-    }
-
     void ChangeOutlineColor(GameObject go, Color newColor)
     {
         // 오브젝트에서 Outline 컴포넌트를 가져옴
@@ -220,73 +178,29 @@ public class HomeScene : BaseScene
     void OnPointerEnter(GameObject hoveredObject)
     {
         if (hoveredObject == null) return;
-        switch (hoveredObject.name)
+        Debug.Log(hoveredObject.name);
+        if (hoveredObject.name == "Exit")
         {
-            case "UserButton":
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            case "1592":
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            case "1919":
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            case "Start":
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            case "Exit":
-                HighlightObject(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.white);
-                break;
-            default:
-                break;
-
+            ChangeOutlineColor(hoveredObject, Color.white);
+        }
+        if (PlayerController.Instance.State != PlayerState.Watch)
+        {
+            Debug.Log("현재 Watch 상태가 아닙니다.");
+            return;
+        }
+        if (hoveredObject.CompareTag("InteractableButton"))
+        {
+            ChangeOutlineColor(hoveredObject, Color.white);
         }
     }
+
     void OnPointerExit(GameObject hoveredObject)
     {
         if (hoveredObject == null) return;
-        switch (hoveredObject.name)
-        {
-            case "UserButton":
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            case "1592":
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            case "1919":
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            case "Start":
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            case "Exit":
-                ResetHighlight(hoveredObject);
-                ChangeOutlineColor(hoveredObject, Color.black);
-                break;
-            default:
-                break;
-        }
-    }
 
-    // 마우스 호버 시 객체를 키우고 UI_Enter 출력하는 함수
-    void HighlightObject(GameObject hoveredObject)
-    {
-        if (hoveredObject != null)
+        if (hoveredObject.CompareTag("InteractableButton"))
         {
-            // 원래 Scale 저장
-            _originalScale = hoveredObject.transform.localScale;
-
-            // 하이라이트 Scale 적용
-            hoveredObject.transform.localScale = _originalScale * _highlightScaleFactor; // Scale 증가
+            ChangeOutlineColor(hoveredObject, Color.black);
         }
     }
 
@@ -294,10 +208,27 @@ public class HomeScene : BaseScene
     IEnumerator MoveCameraAndShowUI<T>() where T : UI_Popup
     {
         Managers.UI.CloseAllPopupUI();
-        // 카메라 이동
-        yield return StartCoroutine(CameraController.Instance.MoveToPositionAndRotation(_targetPosition, _targetRotation));
 
-        // 이동이 완료된 후 UI 띄우기
+        // 현재 카메라 위치 및 회전
+        Vector3 startPosition = Camera.main.transform.position;
+        Quaternion startRotation = Camera.main.transform.rotation;
+
+        float duration = 1.0f; // 카메라 이동에 걸리는 시간
+        float elapsedTime = 0.0f;
+
+        // 카메라를 부드럽게 목표 위치와 회전으로 이동
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            // 카메라의 위치와 회전을 보간하여 부드럽게 이동
+            Camera.main.transform.position = Vector3.Lerp(startPosition, _targetPosition, elapsedTime / duration);
+            Camera.main.transform.rotation = Quaternion.Slerp(startRotation, _targetRotation, elapsedTime / duration);
+
+            yield return null; // 프레임마다 기다림
+        }
+
+        // 카메라 이동이 완료된 후 UI 띄우기
         Managers.UI.ShowPopupUI<T>();
     }
 
