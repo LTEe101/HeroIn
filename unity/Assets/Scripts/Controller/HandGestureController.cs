@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +8,12 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
     [SerializeField] private ShootingManager shootingManager;
     private bool canDetectGesture = true;
     private const float GESTURE_COOLDOWN = 5f;
+
+    // 이전 프레임의 손 상태 저장
+    private bool previousLeftFist = false;
+    private bool previousRightFist = false;
+    private bool previousIsLeftHandOpen = false;
+    private bool previousIsRightHandOpen = false;
 
     public bool IsEnabled
     {
@@ -45,66 +52,148 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         {
             // 손 데이터가 모두 유효하지 않음
             bowAnimator.SetBool("Aiming", false);
-            Debug.LogWarning("손 데이터가 유효하지 않습니다.");
         }
     }
 
     private void ProcessBothHands(Vector3[] leftHandPositions, Vector3[] rightHandPositions)
     {
-        bool leftFist = IsFistClosed(leftHandPositions);
-        bool rightFist = IsFistClosed(rightHandPositions);
-        bool leftGathered = IsFingersGathered(leftHandPositions);
-        bool rightGathered = IsFingersGathered(rightHandPositions);
-        bool isLeftHandOpen = IsHandOpen(leftHandPositions);
-        bool isRightHandOpen = IsHandOpen(rightHandPositions);
+        float leftAverageAngle = GetAverageFingerAngle(leftHandPositions);
+        float rightAverageAngle = GetAverageFingerAngle(rightHandPositions);
+
+        bool isLeftHandOpen = IsHandOpen(leftAverageAngle);
+        bool isRightHandOpen = IsHandOpen(rightAverageAngle);
+
+        // 'Open' 아니면 'Fist'로 판단
+        bool leftFist = !isLeftHandOpen;
+        bool rightFist = !isRightHandOpen;
+
         bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
 
-        // 앞 전 상태 유지 (두 손이 겹쳐져서 좌표 인식이 제대로 안 되는 경우)
+        // 이전 상태와 비교하여 동일한 경우에만 업데이트
+        bool stableLeftFist = (leftFist == previousLeftFist) ? leftFist : previousLeftFist;
+        bool stableRightFist = (rightFist == previousRightFist) ? rightFist : previousRightFist;
+        bool stableIsLeftHandOpen = (isLeftHandOpen == previousIsLeftHandOpen) ? isLeftHandOpen : previousIsLeftHandOpen;
+        bool stableIsRightHandOpen = (isRightHandOpen == previousIsRightHandOpen) ? isRightHandOpen : previousIsRightHandOpen;
+
+        // 이전 상태 업데이트
+        previousLeftFist = leftFist;
+        previousRightFist = rightFist;
+        previousIsLeftHandOpen = isLeftHandOpen;
+        previousIsRightHandOpen = isRightHandOpen;
+
+        // 좌우 손 상태와 평균 각도 출력 (디버그용)
+        // Debug.Log($"Left Hand - State: {(stableIsLeftHandOpen ? "Open" : "Fist")}, Average Angle: {leftAverageAngle:F2} degrees");
+        // Debug.Log($"Right Hand - State: {(stableIsRightHandOpen ? "Open" : "Fist")}, Average Angle: {rightAverageAngle:F2} degrees");
+
         if (IsHandOverlapping(leftHandPositions, rightHandPositions))
         {
-            Debug.Log("두 손 겹쳐짐, 이전 상태 유지");
+            // 두 손이 겹침, 이전 상태 유지
         }
-        // Aiming (두 손가락이 모아진 상태에서 앞뒤로 위치)
-        else if ((leftFist || leftGathered) && (rightFist || rightGathered) && isOneHandBehind)
+        else if (stableLeftFist && stableRightFist && isOneHandBehind)
         {
-            Debug.Log("두 손가락이 모아진 상태에서 앞뒤로 위치, 조준");
             bowAnimator.SetBool("Aiming", true);
         }
-        // Shooting (앞 손은 주먹 쥐고 뒷 손은 펼치면 발사 요청)
-        else if (bowAnimator.GetBool("Aiming") && ((leftFist && isRightHandOpen) || (rightFist && isLeftHandOpen)))
+        else if (bowAnimator.GetBool("Aiming") && ((stableLeftFist && stableIsRightHandOpen) || (stableRightFist && stableIsLeftHandOpen)))
         {
-            Debug.Log("앞 손 주먹 뒷 손 펼침, 발사 요청");
             bowAnimator.SetBool("Aiming", false);
-            shootingManager.TryShoot(); // ShootingManager에 발사 요청
+            shootingManager.TryShoot(); // 발사 요청
             StartCoroutine(GestureCooldown());
         }
         else
         {
             bowAnimator.SetBool("Aiming", false);
-            Debug.Log("두 손 인식, 대기 상태");
         }
     }
 
     private void ProcessSingleHand(Vector3[] handPositions, string handType)
     {
-        bool fist = IsFistClosed(handPositions);
-        bool gathered = IsFingersGathered(handPositions);
+        float averageAngle = GetAverageFingerAngle(handPositions);
 
-        // Aiming (주먹 쥔 손 또는 손가락이 모아진 손)
-        if (fist || gathered)
+        bool isHandOpen = IsHandOpen(averageAngle);
+        bool fist = !isHandOpen;
+
+        // 이전 상태와 비교하여 동일한 경우에만 업데이트
+        bool stableFist = (fist == (handType == "Left" ? previousLeftFist : previousRightFist)) ? fist : (handType == "Left" ? previousLeftFist : previousRightFist);
+
+        // 이전 상태 업데이트
+        if (handType == "Left")
         {
-            Debug.Log($"{handType} 손 주먹 또는 손가락 모음 인식, 조준");
+            previousLeftFist = fist;
+            previousIsLeftHandOpen = isHandOpen;
+        }
+        else
+        {
+            previousRightFist = fist;
+            previousIsRightHandOpen = isHandOpen;
+        }
+
+        // 손 상태와 평균 각도 출력 (디버그용)
+        // Debug.Log($"{handType} Hand - State: {(isHandOpen ? "Open" : "Fist")}, Average Angle: {averageAngle:F2} degrees");
+
+        if (stableFist)
+        {
             bowAnimator.SetBool("Aiming", true);
         }
         else
         {
             bowAnimator.SetBool("Aiming", false);
-            Debug.Log($"{handType} 손 인식, 대기 상태");
         }
     }
 
-    // 아래부터는 기존 메서드들 (변경 사항 없음)
-    // 손이 앞뒤로 포개졌는지 확인
+    // 네 손가락의 평균 각도를 계산하는 함수 (엄지손가락 제외)
+    float GetAverageFingerAngle(Vector3[] points)
+    {
+        if (points == null || points.Length != 21)
+            return -1f; // 유효하지 않은 데이터
+
+        float totalAngle = 0f;
+        int angleCount = 0;
+
+        // 각 손가락에 대해 두 개의 각도 계산 (엄지손가락 제외)
+        totalAngle += GetFingerAngle(points, 0, 5, 6);   // 검지
+        totalAngle += GetFingerAngle(points, 0, 9, 10);  // 중지
+        totalAngle += GetFingerAngle(points, 0, 13, 14); // 약지
+        totalAngle += GetFingerAngle(points, 0, 17, 18); // 새끼
+        angleCount += 4;
+
+        totalAngle += GetFingerAngle(points, 5, 6, 7);    // 검지
+        totalAngle += GetFingerAngle(points, 9, 10, 11);  // 중지
+        totalAngle += GetFingerAngle(points, 13, 14, 15); // 약지
+        totalAngle += GetFingerAngle(points, 17, 18, 19); // 새끼
+        angleCount += 4;
+
+        // 평균 각도 계산
+        float averageAngle = totalAngle / angleCount;
+
+        return averageAngle;
+    }
+
+    // 세 개의 포인트로 정의된 두 벡터 사이의 각도를 계산하는 함수
+    float GetFingerAngle(Vector3[] points, int index1, int index2, int index3)
+    {
+        Vector3 point1 = points[index1];
+        Vector3 point2 = points[index2];
+        Vector3 point3 = points[index3];
+
+        Vector3 vector1 = (point2 - point1).normalized;
+        Vector3 vector2 = (point3 - point2).normalized;
+
+        float angle = Vector3.Angle(vector1, vector2);
+
+        return angle;
+    }
+
+    // 평균 각도에 따라 손이 펼쳐져 있는지 확인하는 함수
+    bool IsHandOpen(float averageAngle)
+    {
+        if (averageAngle < 0f)
+            return false; // 유효하지 않은 데이터
+
+        // 손을 펼친 것으로 판단하는 임계값 설정 (필요에 따라 조정)
+        return averageAngle >= 0f && averageAngle <= 40f;
+    }
+
+    // 두 손이 겹쳐져 있는지 확인하는 함수
     bool IsHandOverlapping(Vector3[] leftPoints, Vector3[] rightPoints)
     {
         Vector3 leftHandMin = GetHandMin(leftPoints);
@@ -119,57 +208,13 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         return xOverlap && yOverlap && zOverlap;
     }
 
-    // 손이 모아진 상태 확인 (주먹 쥔 제스처)
-    bool IsFistClosed(Vector3[] points)
-    {
-        // 포인트가 유효한지 확인
-        if (points == null || points.Length != 21 || points[0] == Vector3.zero)
-            return false;
-
-        for (int i = 0; i < 4; i++)
-        {
-            Vector3 fingerTip = points[8 + (i * 4)];
-            Vector3 fingerBase = points[5 + (i * 4)];
-
-            if (Vector3.Distance(fingerTip, fingerBase) > 0.5f)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // 손가락 끝들이 모여있는지 확인 (이탈리아 제스처)
-    bool IsFingersGathered(Vector3[] points)
-    {
-        // 포인트가 유효한지 확인
-        if (points == null || points.Length != 21 || points[0] == Vector3.zero)
-            return false;
-
-        int[] fingerTipIndices = { 4, 8, 12, 16, 20 };
-
-        Vector3 middleTip = points[12];
-        float threshold = 0.5f;
-
-        foreach (int index in fingerTipIndices)
-        {
-            if (Vector3.Distance(points[index], middleTip) >= threshold)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // 한 손이 다른 한 손의 뒤에 있는지 확인
+    // 한 손이 다른 한 손의 뒤에 있는지 확인하는 함수
     bool IsOneHandBehind(Vector3[] leftPoints, Vector3[] rightPoints)
     {
         Vector3 leftHandCenter = GetHandCenter(leftPoints);
         Vector3 rightHandCenter = GetHandCenter(rightPoints);
 
-        return leftHandCenter.z > rightHandCenter.z || rightHandCenter.z > leftHandCenter.z;
+        return Mathf.Abs(leftHandCenter.z - rightHandCenter.z) > 0.1f; // 임계값 조정 가능
     }
 
     Vector3 GetHandMin(Vector3[] points)
@@ -202,32 +247,10 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         return sum / points.Length;
     }
 
-    // 손이 펴졌는지 확인
-    bool IsHandOpen(Vector3[] points)
-    {
-        // 포인트가 유효한지 확인
-        if (points == null || points.Length != 21 || points[0] == Vector3.zero)
-            return false;
-
-        for (int i = 0; i < 4; i++)
-        {
-            Vector3 fingerTip = points[8 + (i * 4)];
-            Vector3 fingerBase = points[5 + (i * 4)];
-
-            if (Vector3.Distance(fingerTip, fingerBase) < 0.4f) // 거리 기준 조정
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private IEnumerator GestureCooldown()
     {
-        Debug.Log("발사 후 대기 시작");
         canDetectGesture = false;
         yield return new WaitForSeconds(GESTURE_COOLDOWN);
         canDetectGesture = true;
-        Debug.Log("발사 후 대기 끝");
     }
 }
