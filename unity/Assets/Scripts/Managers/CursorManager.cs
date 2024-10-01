@@ -99,8 +99,8 @@ public class CursorManager : MonoBehaviour
         // 호버된 객체가 있는지 확인
         if (hoveredObject != null)
         {
-            // 버튼 태그가 있는 객체이거나, 레이어 7의 객체이면 호버 커서로 변경
-            if ( hoveredObject.layer == 7)
+            // 레이어 7의 객체이면 호버 커서로 변경
+            if ( hoveredObject.layer == 7 || hoveredObject.name == "Exit")
             {
                 ApplyCursor(_hoverCursor);  // 호버 커서로 변경
                 _currentState = CursorState.Hover;

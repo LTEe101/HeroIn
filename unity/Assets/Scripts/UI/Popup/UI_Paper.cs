@@ -61,7 +61,6 @@ private int _currentNarrationIndex = 0; // 현재 보여줄 내레이션 인덱스
     }
     private void Update()
     {
-        //CursorEventHelper.UpdateCursor();
     }
 
     // 내레이션을 업데이트하는 함수

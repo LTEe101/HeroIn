@@ -59,12 +59,14 @@ public class UI_History_Book: UI_Popup
     // CloseButton 이벤트
     public void OnCloseButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         Managers.UI.ClosePopupUI(this);
     }
 
     // NextButton 이벤트
     public void OnNextButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         if (currentPage < totalPages - 1)
         {
             currentPage++;
@@ -75,6 +77,7 @@ public class UI_History_Book: UI_Popup
     // PreviousButton 이벤트
     public void OnPreviousButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         if (currentPage > 0)
         {
             currentPage--;
@@ -93,5 +96,8 @@ public class UI_History_Book: UI_Popup
             Get<Image>((int)Images.HistoricalFigureImg).sprite = Managers.Data.cards[pageIndex].imgNO;
         }
     }
-
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Organic_Plastic_Thin_Generic_1", Define.Sound.Effect, 1.0f);
+    }
 }
