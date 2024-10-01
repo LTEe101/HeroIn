@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
@@ -12,8 +13,8 @@ public class UI_Game_Score : UI_Scene
     }
 
     int score = 0;
-    private float holdTime = 0f;
-    private bool isHolding = false;
+    private float holdTime = 0f; // 클릭 시간
+    private bool isHolding = false; // 꾹 누르고 있는지 여부
     private GameObject target;
     private GameObject particleInstance;
     private GameObject boom;
@@ -23,8 +24,9 @@ public class UI_Game_Score : UI_Scene
     private Animator[] anims;
     public System.Action onFinished;
 
+    // 게임 모드 구분 변수 (게임 2일 경우 true로 설정)
     private bool isGameTwo = false;
-    private EnemyManager enemyManager;
+    private EnemyManager enemyManager; // 게임 2에서 적이 제거될 때 점수를 추가하기 위해 필요
 
     public void SetGameMode(bool gameTwo)
     {
@@ -37,14 +39,16 @@ public class UI_Game_Score : UI_Scene
 
         if (isGameTwo)
         {
+            // 게임 2에서는 EnemyManager와 상호작용
             enemyManager = EnemyManager.Instance;
             if (enemyManager != null)
             {
-                enemyManager.onEnemyDestroyed += OnEnemyDestroyed;
+                enemyManager.onEnemyDestroyed += OnEnemyDestroyed; // 적 제거 시 점수 증가
             }
         }
         else
         {
+            // 게임 1의 로직 (클릭 이벤트 처리)
             Managers.Input.MouseAction -= OnMouseClicked;
             Managers.Input.MouseAction += OnMouseClicked;
             boom = Managers.Resource.Instantiate($"CFXR Explosion 1");
@@ -68,16 +72,17 @@ public class UI_Game_Score : UI_Scene
         Bind<Text>(typeof(Texts));
     }
 
+    // 게임 2에서 적이 제거될 때 점수 추가
     private void OnEnemyDestroyed()
     {
         score++;
         UpdateScoreText();
-        StartCoroutine(CheckGameEnd()); // 코루틴으로 호출
+        CheckGameEnd(); // 스코어가 3일 때 성공 팝업 띄우기
     }
 
+    // 게임 1의 기존 클릭 및 애니메이션 처리 로직
     private UI_Game_Bar _bar = null;
     private bool hasScored = false;
-
     private void Update()
     {
         if (!isGameTwo && isHolding)
@@ -86,17 +91,17 @@ public class UI_Game_Score : UI_Scene
             if (_bar == null && target != null)
             {
                 _bar = Managers.UI.ShowPopupUI<UI_Game_Bar>();
-                _bar.SetBarImagePosition(target.name);
+                _bar.SetBarImagePosition(target.name); // 설정한 위치로 BarImage 위치 설정
             }
 
             float fillAmount = holdTime / 2f;
             _bar.SetFillAmount(fillAmount);
 
-            // 게이지가 다 찼을 때
             if (holdTime >= 2f && target != null && particleInstance == null && !hasScored)
             {
                 hasScored = true;
 
+                // 포탄 날라가는 효과
                 switch (target.name)
                 {
                     case "TargetShip3":
@@ -121,7 +126,6 @@ public class UI_Game_Score : UI_Scene
             }
         }
 
-        // 마우스를 뗐을 때 게이지 UI를 닫음
         if (Input.GetMouseButtonUp(0))
         {
             ResetHold();
@@ -133,55 +137,58 @@ public class UI_Game_Score : UI_Scene
         GameObject ball = animator.gameObject;
         animator.SetTrigger("ShootTrigger");
 
+        // 애니메이션 길이 가져오기
         float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animationLength + 0.4f);
 
         if (particleInstance == null)
         {
+            // 폭발 효과 생성
             particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
             particleInstance.SetActive(true);
+
+            // 게임 1 효과음 재생
             Managers.Sound.Play("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect, 0.2f);
         }
 
         Destroy(ball);
 
+        // 득점
         score++;
         UpdateScoreText();
 
-        Destroy(target); // 타겟 삭제
-        isHolding = false;
-        hasScored = false;
-
-        // 애니메이션이 끝났을 때 게이지 닫기
         if (_bar != null)
         {
+            // 게이지 UI 없애기
             _bar.ClosePopupUI();
             _bar = null;
         }
 
-        StartCoroutine(CheckGameEnd()); // 코루틴으로 호출
+        // 배 없애기
+        Destroy(target);
+        isHolding = false;
+        hasScored = false;
+
+        CheckGameEnd(); // 스코어가 3일 때 성공 팝업 띄우기
     }
 
-    private IEnumerator CheckGameEnd()
+    private void CheckGameEnd()
     {
-        if (score >= 3)
+        if (score >= 3) // 스코어가 3 이상이면 성공 팝업
         {
-            yield return new WaitForSeconds(2f); // 2초 대기
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f);
+
             Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
-            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f); // 성공 소리 재생
-            StartCoroutine(NextScene(4f)); // 4초 후에 다음 씬으로 전환
+            StartCoroutine(NextScene(5f)); // 5초 후에 다음 씬으로 전환
         }
     }
 
     private IEnumerator NextScene(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(waitTime); // 대기
 
-        if (isGameTwo)
-        {
-            //Managers.Scene.LoadScene(Define.Scene.StoryFour);
-        }
-        else
+        // 다음 씬으로 전환
+        if (!isGameTwo)
         {
             Managers.Scene.LoadScene(Define.Scene.StoryFour);
         }
@@ -189,16 +196,16 @@ public class UI_Game_Score : UI_Scene
 
     void OnMouseClicked(Define.MouseEvent evt)
     {
-        if (!isGameTwo && evt == Define.MouseEvent.Press)
+        if (!isGameTwo && evt == Define.MouseEvent.Press) // 게임 1일 때만 동작
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int mask = (1 << 7);
+            int mask = (1 << 7); // 레이어 마스크 (7번 레이어가 Target임을 가정)
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 100.0f, mask))
             {
-                target = hit.collider.gameObject;
-                isHolding = true;
+                target = hit.collider.gameObject; // 클릭한 오브젝트 저장
+                isHolding = true; // 꾹 누르기 시작
             }
         }
     }
@@ -206,10 +213,9 @@ public class UI_Game_Score : UI_Scene
     private void ResetHold()
     {
         holdTime = 0f;
-        target = null;
+        target = null; // 클릭한 오브젝트 초기화
         isHolding = false;
 
-        // 클릭이 중단되면 게이지 닫기
         if (_bar != null)
         {
             _bar.ClosePopupUI();
@@ -219,6 +225,6 @@ public class UI_Game_Score : UI_Scene
 
     private void UpdateScoreText()
     {
-        Get<Text>((int)Texts.ScoreText).text = score.ToString();
+        Get<Text>((int)Texts.ScoreText).GetComponent<Text>().text = score.ToString();
     }
 }
