@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
 using NativeWebSocket;
+using System;
 
 public class VideoStreamer : MonoBehaviour, IMotionGameScript
 {
@@ -43,15 +44,38 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         {
             // 서버로부터 수신한 메시지 처리
             string message = System.Text.Encoding.UTF8.GetString(bytes);
+            LogReceivedData(message);  // 수신된 데이터 로깅
             ParseData(message);
         };
 
         // 웹소켓 연결 시도
-        await websocket.Connect();
+        await ConnectWebSocket();
 
         // 웹캠 시작
-        webCamTexture = new WebCamTexture();
-        webCamTexture.Play();
+        if (WebCamTexture.devices.Length > 0)
+        {
+            webCamTexture = new WebCamTexture();
+            webCamTexture.Play();
+        }
+        else
+        {
+            Debug.LogWarning("사용 가능한 웹캠이 없습니다.");
+        }
+    }
+
+    async Task ConnectWebSocket()
+    {
+        try
+        {
+            await websocket.Connect();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"WebSocket 연결 실패: {e.Message}");
+            // 연결 재시도 로직 추가
+            await Task.Delay(5000); // 5초 후 재시도
+            await ConnectWebSocket();
+        }
     }
 
     void Update()
@@ -63,7 +87,7 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         }
 #endif
 
-        if (webCamTexture.isPlaying && webCamTexture.didUpdateThisFrame)
+        if (webCamTexture != null && webCamTexture.isPlaying && webCamTexture.didUpdateThisFrame)
         {
             SendFrame();
         }
@@ -71,6 +95,12 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
 
     async void SendFrame()
     {
+        if (webCamTexture == null)
+        {
+            Debug.LogWarning("웹캠 텍스처가 없습니다.");
+            return;
+        }
+
         Texture2D resizedTexture = ResizeTexture(webCamTexture, MAX_IMAGE_SIZE);
 
         byte[] jpgData = resizedTexture.EncodeToJPG(75);
@@ -95,15 +125,36 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
     // 데이터를 분석하여 왼손과 오른손 데이터를 분리
     private void ParseData(string receivedData)
     {
-        if (receivedData.StartsWith("Left"))
+        try
         {
-            string data = receivedData.Split(':')[1];
-            leftHandData = data;
+            string[] parts = receivedData.Split(':');
+            if (parts.Length != 2)
+            {
+                Debug.LogWarning($"잘못된 데이터 형식: {receivedData}");
+                return;
+            }
+
+            string handType = parts[0];
+            string data = parts[1];
+
+            if (handType == "Left")
+            {
+                leftHandData = data;
+                Debug.Log($"왼손 데이터 업데이트: {data}");  // 왼손 데이터 로깅
+            }
+            else if (handType == "Right")
+            {
+                rightHandData = data;
+                Debug.Log($"오른손 데이터 업데이트: {data}");  // 오른손 데이터 로깅
+            }
+            else
+            {
+                Debug.LogWarning($"알 수 없는 손 타입: {handType}");
+            }
         }
-        else if (receivedData.StartsWith("Right"))
+        catch (Exception e)
         {
-            string data = receivedData.Split(':')[1];
-            rightHandData = data;
+            Debug.LogError($"데이터 파싱 오류: {e.Message}");
         }
     }
 
@@ -149,7 +200,7 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
 
     async void OnApplicationQuit()
     {
-        if (websocket != null)
+        if (websocket != null && websocket.State == WebSocketState.Open)
         {
             await websocket.Close();
         }
@@ -157,5 +208,10 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         {
             webCamTexture.Stop();
         }
+    }
+
+    private void LogReceivedData(string message)
+    {
+        Debug.Log($"수신된 데이터: {message}");
     }
 }
