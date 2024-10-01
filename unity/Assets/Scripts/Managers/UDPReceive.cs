@@ -5,15 +5,21 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-public class UDPReceive : MonoBehaviour
+public class UDPReceive : MonoBehaviour, IMotionGameScript
 {
     Thread receiveThread;
     UdpClient client; 
-    public int port = 5052;
+    public int port = 5053;
     public bool startRecieving = true;
     public bool printToConsole = false;
     public string leftHandData;
     public string rightHandData;
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     public void Start()
     {
@@ -37,12 +43,6 @@ public class UDPReceive : MonoBehaviour
 
                 // 데이터 분석
                 ParseData(receivedData);
-
-                if (printToConsole)
-                {
-                    print("Left Hand Data: " + leftHandData);
-                    print("Right Hand Data: " + rightHandData);
-                }
             }
             catch (Exception err)
             {
@@ -56,11 +56,13 @@ public class UDPReceive : MonoBehaviour
     {
         if (receivedData.StartsWith("Left"))
         {
-            leftHandData = receivedData.Split(':')[1];
+            string data = receivedData.Split(':')[1];
+            leftHandData = data;
         }
         else if (receivedData.StartsWith("Right"))
         {
-            rightHandData = receivedData.Split(':')[1];
+            string data = receivedData.Split(':')[1];
+            rightHandData = data;
         }
     }
 

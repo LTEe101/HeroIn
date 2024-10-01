@@ -175,7 +175,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ArrowShooter : MonoBehaviour
+public class ArrowShooter : MonoBehaviour, IMotionGameScript
 {
     [SerializeField] private Animator bowAnimator;
     [SerializeField] private GameObject existingArrow;
@@ -188,6 +188,12 @@ public class ArrowShooter : MonoBehaviour
     private LineRenderer trajectoryLine;
     private Transform currentTarget;
     private Vector3 lastTargetPosition;
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     void Start()
     {

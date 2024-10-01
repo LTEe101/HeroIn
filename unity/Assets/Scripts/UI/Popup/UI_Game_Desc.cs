@@ -27,6 +27,7 @@ public class UI_Game_Desc : UI_Popup
 
     private int currentIndex = 0;
     private GameInfo currentGameInfo;
+    public event Action OnStartGame;
 
     public override void Init()
     {
@@ -69,13 +70,6 @@ public class UI_Game_Desc : UI_Popup
         }
 
         Debug.Log($"Updating content for game: {currentGameInfo.title}, Description count: {currentGameInfo.descriptions.Count}");
-
-
-        BindEvent(GetButton((int)Buttons.StartButton).gameObject, (PointerEventData data) => {
-            Managers.Sound.Play("ProEffect/User_Interface_Menu/ui_menu_button_keystroke_01", Define.Sound.Effect, 0.2f);
-            ClosePopupUI();
-            Managers.UI.ShowSceneUI<UI_Game_Score>();
-        }, Define.UIEvent.Click);
 
         if (currentIndex >= 0 && currentIndex < currentGameInfo.descriptions.Count)
         {
@@ -123,15 +117,18 @@ public class UI_Game_Desc : UI_Popup
         {
             Debug.LogError($"Invalid currentIndex: {currentIndex}");
         }
-
     }
 
     private void OnStartButtonClicked(PointerEventData data)
     {
+        if (currentGameInfo != null && currentGameInfo.id == 2)
+        {
+            OnStartGame?.Invoke();  // 게임 시작 이벤트 발생 (gameId가 2일 때만)
+        }
+
         ClosePopupUI();
         Managers.UI.ShowSceneUI<UI_Game_Score>();
     }
-
     private void OnNextButtonClicked(PointerEventData data)
     {
         if (currentIndex < currentGameInfo.descriptions.Count - 1)
