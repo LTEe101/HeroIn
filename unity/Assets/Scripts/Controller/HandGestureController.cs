@@ -44,14 +44,14 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         {
             ProcessBothHands(leftHandPositions, rightHandPositions);
         }
-        else if (isLeftHandValid)
-        {
-            ProcessSingleHand(leftHandPositions, "Left");
-        }
-        else if (isRightHandValid)
-        {
-            ProcessSingleHand(rightHandPositions, "Right");
-        }
+        //else if (isLeftHandValid)
+        //{
+        //    ProcessSingleHand(leftHandPositions, "Left");
+        //}
+        //else if (isRightHandValid)
+        //{
+        //    ProcessSingleHand(rightHandPositions, "Right");
+        //}
         else
         {
             bowAnimator.SetBool("Aiming", false);
@@ -76,24 +76,27 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         previousLeftHandStableState = stableLeftHandState;
         previousRightHandStableState = stableRightHandState;
 
-        //Debug.Log($"Left Hand - Average Angle: {leftAverageAngle:F2} degrees - Stable State: {stableLeftHandState}");
-        //Debug.Log($"Right Hand - Average Angle: {rightAverageAngle:F2} degrees - Stable State: {stableRightHandState}");
+        Debug.Log($"Left Hand - Average Angle: {leftAverageAngle:F2} degrees - Stable State: {stableLeftHandState}");
+        Debug.Log($"Right Hand - Average Angle: {rightAverageAngle:F2} degrees - Stable State: {stableRightHandState}");
 
         bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
 
         if (stableLeftHandState == "Fist" && stableRightHandState == "Fist" && isOneHandBehind)
         {
             bowAnimator.SetBool("Aiming", true);
+            Debug.Log("조준");
         }
         else if (bowAnimator.GetBool("Aiming") && ((stableLeftHandState == "Fist" && stableRightHandState == "Open") || (stableLeftHandState == "Open" && stableRightHandState == "Fist")))
         {
             bowAnimator.SetBool("Aiming", false);
+            Debug.Log("발사");
             shootingManager.TryShoot(); // 발사 요청
             StartCoroutine(GestureCooldown());
         }
         else
         {
             bowAnimator.SetBool("Aiming", false);
+            Debug.Log("그냥 있어");
         }
     }
 
@@ -113,12 +116,14 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
             if (stableLeftHandState == "Fist")
             {
                 bowAnimator.SetBool("Aiming", true);
+                Debug.Log("조준");
             }
             else if (stableLeftHandState == "Open")
             {
                 if (bowAnimator.GetBool("Aiming"))
                 {
                     bowAnimator.SetBool("Aiming", false);
+                    Debug.Log("발사");
                     shootingManager.TryShoot(); // 발사 요청
                     StartCoroutine(GestureCooldown());
                 }
@@ -239,7 +244,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         Vector3 leftHandCenter = GetHandCenter(leftPoints);
         Vector3 rightHandCenter = GetHandCenter(rightPoints);
 
-        return Mathf.Abs(leftHandCenter.z - rightHandCenter.z) > 0.1f;
+        return Mathf.Abs(leftHandCenter.z - rightHandCenter.z) > 0.05f;
     }
 
     Vector3 GetHandMin(Vector3[] points)

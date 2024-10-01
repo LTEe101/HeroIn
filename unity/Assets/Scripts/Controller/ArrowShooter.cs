@@ -11,6 +11,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     [SerializeField] private float searchRadius = 30f;
     [SerializeField] private float arrowLifetime = 1.3f;
 
+    [SerializeField] private Vector3 neckOffset = new Vector3(0, 1.5f, 0); // 목 위치 오프셋
+
     private Rigidbody arrowRb;
     private LineRenderer trajectoryLine;
     private Transform currentTarget;
@@ -34,7 +36,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         if (currentTarget != null)
         {
-            lastTargetPosition = currentTarget.position;
+            // 적의 목 위치를 계산하기 위해 오프셋을 추가
+            lastTargetPosition = currentTarget.position + neckOffset;
             Debug.DrawLine(firePoint.position, lastTargetPosition, Color.red);
         }
     }
@@ -133,7 +136,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
     private void ResetArrow()
     {
-        
+
         existingArrow.transform.position = firePoint.position;
         existingArrow.transform.rotation = firePoint.rotation;
         arrowRb.velocity = Vector3.zero;
@@ -153,8 +156,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         if (currentTarget != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(firePoint.position, currentTarget.position);
-            Gizmos.DrawSphere(currentTarget.position, 0.5f);
+            Gizmos.DrawLine(firePoint.position, lastTargetPosition);
+            Gizmos.DrawSphere(lastTargetPosition, 0.5f);
         }
     }
 }
