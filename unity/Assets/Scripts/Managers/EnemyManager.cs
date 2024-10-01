@@ -6,11 +6,12 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
     public static EnemyManager Instance;
 
     [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private int maxEnemies = 3; // 동시에 존재할 수 있는 적의 최대 수
+    [SerializeField] private int maxEnemies = 3; // 총 생성할 적의 수
     [SerializeField] private Vector3 spawnAreaSize = new Vector3(5f, 0f, 8f); // 스폰 영역 크기
     [SerializeField] private Vector3 spawnAreaRotation = Vector3.zero; // 스폰 영역 회전값
 
     private List<GameObject> activeEnemies = new List<GameObject>(); // 활성화된 적 리스트
+    private int enemiesSpawned = 0; // 생성된 적의 수
     public System.Action onEnemyDestroyed; // 적이 제거될 때 호출될 콜백
 
     public bool IsEnabled
@@ -35,11 +36,12 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
     // 적 생성 메서드
     private void SpawnEnemy()
     {
-        if (activeEnemies.Count < maxEnemies) // 최대 적 수를 넘지 않을 때만 생성
+        if (enemiesSpawned < maxEnemies) // 총 생성된 적의 수가 최대치에 도달하지 않았을 때만 생성
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, enemyPrefab.transform.rotation);
             activeEnemies.Add(enemy); // 활성화된 적 리스트에 추가
+            enemiesSpawned++; // 생성된 적의 수 증가
         }
     }
 
