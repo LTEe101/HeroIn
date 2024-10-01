@@ -13,6 +13,9 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
     [SerializeField] private Vector3 neckOffset = new Vector3(0, 1.5f, 0); // 목 위치 오프셋
 
+    // 회전 오프셋 추가 (필요에 따라 조정)
+    [SerializeField] private Vector3 rotationOffset = Vector3.zero; // 예: new Vector3(0, 90, 0)
+
     private Rigidbody arrowRb;
     private LineRenderer trajectoryLine;
     private Transform currentTarget;
@@ -77,21 +80,23 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         }
 
         existingArrow.transform.position = firePoint.position;
-        existingArrow.transform.rotation = firePoint.rotation;
 
-        arrowRb.isKinematic = true; // 물리 시뮬레이션을 비활성화
+        // 화살의 초기 방향을 설정
+        Vector3 targetPosition = lastTargetPosition;
+        Vector3 direction = (targetPosition - firePoint.position).normalized;
+
+        // 회전 오프셋을 적용하여 화살의 tip이 목표를 향하도록 설정
+        Quaternion lookRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(rotationOffset);
+        existingArrow.transform.rotation = lookRotation;
+
+        // 물리 시뮬레이션을 비활성화
+        arrowRb.isKinematic = true;
         arrowRb.useGravity = false;
 
         if (bowAnimator != null)
         {
             bowAnimator.SetTrigger("Shoot");
         }
-
-        Vector3 targetPosition = lastTargetPosition;
-
-        // 화살의 초기 방향을 설정
-        Vector3 direction = (targetPosition - firePoint.position).normalized;
-        existingArrow.transform.forward = direction;
 
         // 등속 운동으로 화살 발사
         StartCoroutine(MoveArrow(targetPosition));
@@ -104,24 +109,14 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         float elapsedTime = 0f;
         float totalTime = 0.8f; // 화살이 목표에 도달하는 데 걸리는 총 시간
         Vector3 startPosition = firePoint.position;
-        //List<Vector3> trajectoryPoints = new List<Vector3>();
 
         while (elapsedTime < totalTime)
         {
             float t = elapsedTime / totalTime;
-            //Vector3 newPosition = Vector3.Lerp(startPosition, targetPosition, t);
             existingArrow.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
 
-            // 화살의 방향 조정
-            Vector3 direction = (targetPosition - existingArrow.transform.position).normalized;
-            existingArrow.transform.rotation = Quaternion.Slerp(existingArrow.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 2f);
-
-
-            // 궤적 추가
-            //trajectoryPoints.Add(newPosition);
-            //trajectoryLine.positionCount = trajectoryPoints.Count;
-            //trajectoryLine.SetPositions(trajectoryPoints.ToArray());
-
+            // 이동 중 회전 업데이트를 제거하여 비정상적인 회전 방지
+            // 필요 시 단 한 번만 회전 설정
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -136,9 +131,13 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
     private void ResetArrow()
     {
-
         existingArrow.transform.position = firePoint.position;
-        existingArrow.transform.rotation = firePoint.rotation;
+
+        // Reset rotation based on firePoint's forward direction with rotation offset
+        Vector3 initialDirection = firePoint.forward;
+        Quaternion resetRotation = Quaternion.LookRotation(initialDirection) * Quaternion.Euler(rotationOffset);
+        existingArrow.transform.rotation = resetRotation;
+
         arrowRb.velocity = Vector3.zero;
         arrowRb.isKinematic = true;
     }
