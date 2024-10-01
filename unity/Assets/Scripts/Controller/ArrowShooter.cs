@@ -8,7 +8,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     [SerializeField] private Transform firePoint;
     [SerializeField] private float arrowSpeed = 25f; // 화살 속도 증가
     [SerializeField] private float searchRadius = 30f;
-    [SerializeField] private float arrowLifetime = 0.8f;
+    [SerializeField] private float arrowLifetime = 0.5f;
 
     [SerializeField] private Vector3 neckOffset = new Vector3(0, 1.5f, 0);
     [SerializeField] private Vector3 rotationOffset = Vector3.zero;
@@ -55,6 +55,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         // 화살이 발사 중이면 애니메이션 상태를 확인하지 않고 바로 리턴
         if (isArrowActive)
         {
+            // 화살이 발사 중이면 레이저를 비활성화 (줄을 없앰)
+            trajectoryLine.positionCount = 0;
             return;
         }
 
@@ -65,7 +67,11 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
             if (currentTarget != null)
             {
                 lastTargetPosition = currentTarget.position + neckOffset;
-                Debug.DrawLine(firePoint.position, lastTargetPosition, Color.red);
+
+                // 목표를 향한 빨간 줄 그리기
+                trajectoryLine.positionCount = 2;
+                trajectoryLine.SetPosition(0, firePoint.position);     // 시작점
+                trajectoryLine.SetPosition(1, lastTargetPosition);     // 끝점
             }
         }
 
@@ -255,11 +261,11 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     private void SetupTrajectoryLine()
     {
         trajectoryLine = gameObject.AddComponent<LineRenderer>();
-        trajectoryLine.startWidth = 0.05f;
-        trajectoryLine.endWidth = 0.05f;
+        trajectoryLine.startWidth = 0.02f;
+        trajectoryLine.endWidth = 0.02f;
         trajectoryLine.material = new Material(Shader.Find("Sprites/Default"));
-        trajectoryLine.startColor = Color.blue;
-        trajectoryLine.endColor = Color.blue;
+        trajectoryLine.startColor = Color.red;  // 빨간색 레이저 효과
+        trajectoryLine.endColor = Color.red;    // 빨간색 레이저 효과
     }
 
     private Transform FindClosestTarget()
