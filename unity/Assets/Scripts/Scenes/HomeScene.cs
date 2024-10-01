@@ -83,6 +83,7 @@ public class HomeScene : BaseScene
         // Exit는 상태에 상관없이 동작
         if (_hitObject.name == "Exit")
         {
+            Managers.Sound.Play("ProEffect/Doors/door_lock_close_01", Define.Sound.Effect, 0.8f);
             Managers.Scene.LoadScene(Define.Scene.Museum);
             Debug.Log("나가기");
             return;
@@ -100,6 +101,7 @@ public class HomeScene : BaseScene
         {
             case "UserButton":
                 if (_monitorStatus != MonitorStatus.Close) CloseMonitory();
+                PlayButtonSound();
                 StartCoroutine(MoveCameraAndShowUI<UI_User>());
                 break;
             case "1592":
@@ -109,6 +111,7 @@ public class HomeScene : BaseScene
                 OnStoryButton(MonitorStatus.Story1919, "1919", "3.1운동", "유관순 열사");
                 break;
             case "Start":
+                Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Mouse_Huge_Generic_3", Define.Sound.Effect, 0.8f);
                 LoadScene();
                 break;
             default:
@@ -116,6 +119,10 @@ public class HomeScene : BaseScene
                 break;
         }
         
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Mouse_Huge_Generic_3", Define.Sound.Effect, 0.8f);
     }
 
     // 버튼 컬러를 밝게 하는 메서드
@@ -129,6 +136,7 @@ public class HomeScene : BaseScene
     // 스토리 버튼 메서드
     void OnStoryButton(MonitorStatus status, string storyYear, string storyName, string historicalFigure)
     {
+        PlayButtonSound();
         if (_monitorStatus == status) // 화면에 출력되어 있는 화면 버튼 누른 경우
         {
             CloseMonitory();

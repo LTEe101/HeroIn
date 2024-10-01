@@ -7,7 +7,8 @@ public class SoundManager
     AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
     Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
     Dictionary<string, float> _audioVolumes = new Dictionary<string, float>(); // 음량을 저장할 딕셔너리 추가
-
+    private bool _isMuted = false;
+    private float _masterVolume = 1.0f; // 전체 볼륨 값을 저장할 변수
     // MP3 Player   -> AudioSource
     // MP3 음원     -> AudioClip
     // 관객(귀)     -> AudioListener
@@ -30,6 +31,8 @@ public class SoundManager
 
             _audioSources[(int)Define.Sound.Bgm].loop = true;
         }
+        AudioListener.volume = _masterVolume;
+
     }
 
     public void Clear()
@@ -42,7 +45,7 @@ public class SoundManager
         _audioClips.Clear();
     }
 
-    public void Play(string path, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f, float volume = 1.0f)
+    public void Play(string path, Define.Sound type = Define.Sound.Effect, float volume = 1.0f, float pitch = 1.0f)
     {
         // 특정 AudioClip의 음량을 설정
         SetAudioVolume(path, volume, type);
@@ -65,6 +68,7 @@ public class SoundManager
             audioSource.pitch = pitch;
             audioSource.clip = audioClip;
             audioSource.volume = GetAudioVolume(audioClip.name, type); // 음량 설정
+            audioSource.mute = _isMuted;
             audioSource.Play();
         }
         else
@@ -72,6 +76,7 @@ public class SoundManager
             AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
             audioSource.pitch = pitch;
             audioSource.volume = GetAudioVolume(audioClip.name, type); // 음량 설정
+            audioSource.mute = _isMuted;
             audioSource.PlayOneShot(audioClip);
         }
     }
@@ -83,6 +88,10 @@ public class SoundManager
         if (_audioVolumes.ContainsKey(soundTypeName))
         {
             _audioVolumes[soundTypeName] = volume;
+        }
+        else
+        {
+            _audioVolumes.Add(soundTypeName, volume); // 추가된 부분: 처음 음량이 설정될 때 딕셔너리에 값 추가
         }
     }
 
@@ -117,5 +126,34 @@ public class SoundManager
 			Debug.Log($"AudioClip Missing ! {path}");
 
 		return audioClip;
+    }
+    public void SetVolume(float volume)
+    {
+        _masterVolume = volume;
+        AudioListener.volume = _masterVolume; // AudioListener의 볼륨을 조정
+    }
+
+    public float GetVolume()
+    {
+        return _masterVolume;
+    }
+    public void ToggleMute()
+    {
+        _isMuted = !_isMuted;
+
+        foreach (AudioSource audioSource in _audioSources)
+        {
+            if (audioSource != null)
+            {
+                audioSource.mute = _isMuted; // 모든 AudioSource의 음소거 상태를 갱신
+            }
+        }
+
+        Debug.Log($"Sound muted: {_isMuted}");
+    }
+
+    public bool IsMuted()
+    {
+        return _isMuted;
     }
 }

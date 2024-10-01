@@ -140,7 +140,7 @@ public class UI_Game_Desc : UI_Popup
             UpdateContent();
         }
     }
-
+      
     private void OnPrevButtonClicked(PointerEventData data)
     {
         if (currentIndex > 0)

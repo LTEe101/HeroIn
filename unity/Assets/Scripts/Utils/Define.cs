@@ -32,6 +32,12 @@ public class Define
          After
      }
 
+    public enum ConfirmType
+    {
+        Home,
+        Exit
+    }
+
     public enum Sound
     {
         Bgm,
