@@ -76,8 +76,8 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         previousLeftHandStableState = stableLeftHandState;
         previousRightHandStableState = stableRightHandState;
 
-        Debug.Log($"Left Hand - Average Angle: {leftAverageAngle:F2} degrees - Stable State: {stableLeftHandState}");
-        Debug.Log($"Right Hand - Average Angle: {rightAverageAngle:F2} degrees - Stable State: {stableRightHandState}");
+        //Debug.Log($"Left Hand - Average Angle: {leftAverageAngle:F2} degrees - Stable State: {stableLeftHandState}");
+        //Debug.Log($"Right Hand - Average Angle: {rightAverageAngle:F2} degrees - Stable State: {stableRightHandState}");
 
         bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
 
@@ -241,12 +241,44 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
     // 한 손이 다른 한 손의 뒤에 있는지 확인하는 함수
     private bool IsOneHandBehind(Vector3[] leftPoints, Vector3[] rightPoints)
     {
+        // 왼손과 오른손의 손바닥 중심 좌표를 구합니다.
         Vector3 leftHandCenter = GetHandCenter(leftPoints);
         Vector3 rightHandCenter = GetHandCenter(rightPoints);
 
-        Debug.Log(Mathf.Abs(leftHandCenter.z - rightHandCenter.z));
-        return Mathf.Abs(leftHandCenter.z - rightHandCenter.z) > 0.01f;
+        // 손바닥의 중심 좌표와 손가락 끝의 z축 값 차이도 확인합니다.
+        float leftHandZ = leftHandCenter.z;
+        float rightHandZ = rightHandCenter.z;
+
+        // 손바닥 중심의 z축 차이를 기준으로 한 손이 뒤에 있는지 판단합니다.
+        if (leftHandZ < rightHandZ)
+        {
+            // 왼손이 오른손 뒤에 있는지 확인
+            return AreFingersBehind(leftPoints, rightPoints);
+        }
+        else if (rightHandZ < leftHandZ)
+        {
+            // 오른손이 왼손 뒤에 있는지 확인
+            return AreFingersBehind(rightPoints, leftPoints);
+        }
+
+        // 그렇지 않으면 false를 반환합니다.
+        return false;
     }
+
+    private bool AreFingersBehind(Vector3[] backHandPoints, Vector3[] frontHandPoints)
+    {
+        // 손가락 끝의 z축 값을 확인하여 손가락도 뒤에 있는지 확인합니다.
+        for (int i = 5; i <= 20; i += 4)  // 5, 9, 13, 17: 각 손가락 기점
+        {
+            if (backHandPoints[i].z >= frontHandPoints[i].z)
+            {
+                return false;  // 하나라도 앞에 있으면 뒤에 있는 것이 아님
+            }
+        }
+        return true;  // 모든 손가락이 뒤에 있으면 true
+    }
+
+
 
     Vector3 GetHandMin(Vector3[] points)
     {
