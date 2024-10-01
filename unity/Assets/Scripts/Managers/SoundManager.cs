@@ -156,4 +156,9 @@ public class SoundManager
     {
         return _isMuted;
     }
+    public void StopBGM()
+    {
+        _audioSources[(int)Define.Sound.Bgm].Stop();
+    }
+
 }
