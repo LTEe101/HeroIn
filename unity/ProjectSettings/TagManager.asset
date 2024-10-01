@@ -11,6 +11,7 @@ TagManager:
   - Button
   - Enemy
   - InteractableButton
+  - Arrow
   layers:
   - Default
   - TransparentFX

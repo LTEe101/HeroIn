@@ -244,7 +244,8 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         Vector3 leftHandCenter = GetHandCenter(leftPoints);
         Vector3 rightHandCenter = GetHandCenter(rightPoints);
 
-        return Mathf.Abs(leftHandCenter.z - rightHandCenter.z) > 0.05f;
+        Debug.Log(Mathf.Abs(leftHandCenter.z - rightHandCenter.z));
+        return Mathf.Abs(leftHandCenter.z - rightHandCenter.z) > 0.01f;
     }
 
     Vector3 GetHandMin(Vector3[] points)
