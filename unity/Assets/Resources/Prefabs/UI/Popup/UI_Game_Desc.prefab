@@ -534,11 +534,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 50
+    m_FontSize: 43
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 100
+    m_MaxSize: 60
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -743,7 +743,7 @@ RectTransform:
   m_GameObject: {fileID: 5511652155942572750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7175589, y: 0.89884746, z: 0.89884746}
+  m_LocalScale: {x: 1.0252482, y: 1.2842733, z: 1.2842733}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9027316572561133970}
