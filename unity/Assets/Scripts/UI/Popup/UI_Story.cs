@@ -30,6 +30,8 @@ public class UI_Story : UI_Popup
     private int _currentDialogIndex;  // 현재 대사 인덱스
     private int _scenarioNumber;
     private Dictionary<string, Camera> _speakerCameras = new Dictionary<string, Camera>();
+    private Coroutine _typingCoroutine;
+    private bool _isTyping;
     private void InitSpeakerCameras()
     {
         _speakerCameras["병사"] = GameObject.Find("SoldierCamera").GetComponent<Camera>();
@@ -47,6 +49,7 @@ public class UI_Story : UI_Popup
         // speaker에 맞는 카메라만 활성화
         if (_speakerCameras.ContainsKey(speaker))
         {
+            Debug.Log($"Switching to camera for speaker: {speaker}");
             _speakerCameras[speaker].enabled = true;
         }
         else
@@ -76,24 +79,93 @@ public class UI_Story : UI_Popup
     private void DisplayDialog(Dialog dialog)
     {
         Get<Text>((int)Texts.SpeakerText).GetComponent<Text>().text = dialog.speaker;
-        Get<Text>((int)Texts.StoryText).GetComponent<Text>().text = dialog.text;
+        if (_typingCoroutine != null)
+        {
+            StopCoroutine(_typingCoroutine);
+            _typingCoroutine = null;
+        }
+
+        _typingCoroutine = StartCoroutine(TypeTextEffect(dialog.text));
 
         // speaker에 맞는 카메라로 전환
         SwitchToSpeakerCamera(dialog.speaker);
 
         textPanel.SetActive(true);
         choicePanel.SetActive(false);
-        if (dialog.choices != null && dialog.choices.Count > 0)
-        {
 
-            BindEvent(textPanel, (PointerEventData data) => { TextPanelSound();  ShowChoices(dialog.choices); }, Define.UIEvent.Click);
+        // TextPanel 클릭 이벤트를 초기화하여 중복 방지
+        var textPanelButton = textPanel.GetComponent<Button>();
+        if (textPanelButton != null)
+        {
+            textPanelButton.onClick.RemoveAllListeners(); // 기존 이벤트 제거
         }
         else
         {
-            BindEvent(textPanel, (PointerEventData data) => { TextPanelSound();  OnDialogClick(dialog.next); }, Define.UIEvent.Click);
+            // Button 컴포넌트가 없으면 추가
+            textPanelButton = textPanel.AddComponent<Button>();
+        }
+
+        if (dialog.choices != null && dialog.choices.Count > 0)
+        {
+
+            textPanelButton.onClick.AddListener(() => {
+                TextPanelSound();
+                HandleTextClick(dialog.text, () => ShowChoices(dialog.choices));
+            });
+        }
+        else
+        {
+            textPanelButton.onClick.AddListener(() => {
+                TextPanelSound();
+                HandleTextClick(dialog.text, () => OnDialogClick(dialog.next));
+            });
         }
     }
+    IEnumerator TypeTextEffect(string fullText)
+    {
+        _isTyping = true;
+        Text storyText = Get<Text>((int)Texts.StoryText).GetComponent<Text>();
+        storyText.text = "";  // 텍스트를 비우고 시작
 
+        foreach (char letter in fullText.ToCharArray())
+        {
+            storyText.text += letter;  // 한 글자씩 추가
+            LayoutRebuilder.ForceRebuildLayoutImmediate(storyText.rectTransform);  // 텍스트 레이아웃 강제 업데이트
+            yield return new WaitForSeconds(0.04f);  // 글자 간격 조절 (0.1초)
+
+            if (!_isTyping)
+                yield break;
+        }
+        _isTyping = false;
+        _typingCoroutine = null;
+    }
+    private void FinishTyping(string fullText)
+    {
+        // 타이핑 효과 중인 Coroutine 중지
+        if (_typingCoroutine != null)
+        {
+            StopCoroutine(_typingCoroutine);
+            _typingCoroutine = null;
+        }
+
+        // 전체 텍스트를 한 번에 출력
+        Text storyText = Get<Text>((int)Texts.StoryText).GetComponent<Text>();
+        storyText.text = fullText;
+        _isTyping = false;
+    }
+    private void HandleTextClick(string fullText, System.Action onTypingComplete)
+    {
+        if (_isTyping)
+        {
+            // 타이핑 중이면 전체 텍스트를 한 번에 보여줌
+            FinishTyping(fullText);
+        }
+        else
+        {
+            // 타이핑이 끝났으면 다음 이벤트 실행
+            onTypingComplete.Invoke();
+        }
+    }
     private void ShowChoices(List<Choice> choices)
     {
         textPanel.SetActive(false);  // 대화 패널을 숨김
@@ -146,7 +218,7 @@ public class UI_Story : UI_Popup
                     Managers.Scene.LoadScene(Define.Scene.GameOne);
                     break;
                 case 4:
-                    Managers.Scene.LoadScene(Define.Scene.StoryFive);
+                    Managers.Scene.LoadScene(Define.Scene.ShipView);
                     break;
                 case 5:
                     Managers.Scene.LoadScene(Define.Scene.StorySix);

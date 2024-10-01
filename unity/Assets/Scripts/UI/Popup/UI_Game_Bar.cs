@@ -49,7 +49,6 @@ public class UI_Game_Bar : UI_Popup
             float halfScreenWidth = screenWidth / 2f;   // 가로 화면의 절반
             float halfScreenHeight = screenHeight / 2f; // 세로 화면의 절반
 
-            // 가로를 8등분, 세로를 4등분
             float sectionWidth = screenWidth / 9f;
             float sectionHeight = screenHeight / 6f;
 
@@ -59,15 +58,12 @@ public class UI_Game_Bar : UI_Popup
             switch (targetName)
             {
                 case "TargetShip1":
-                    // 4번째 위치 (화면의 좌측이므로 음수)
                     newPosition = new Vector2(-halfScreenWidth + sectionWidth * 3.5f, yPosition);
                     break;
                 case "TargetShip2":
-                    // 5번째 위치 (중앙 근처, 좌측 끝)
                     newPosition = new Vector2(-halfScreenWidth + sectionWidth * 4.8f, yPosition);
                     break;
                 case "TargetShip3":
-                    // 6번째 위치 (화면의 우측, 양수)
                     newPosition = new Vector2(-halfScreenWidth + sectionWidth * 6.2f, yPosition);
                     break;
                 default:

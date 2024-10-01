@@ -25,6 +25,7 @@ public class Define
         GameOne,
         MetaverseWar,
         MotionGame,
+        ShipView,
     }
      public enum StoryType
      {

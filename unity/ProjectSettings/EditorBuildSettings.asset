@@ -47,4 +47,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOne.unity
     guid: a778ba6ce2c00f147ad90eea9a9b556c
+  - enabled: 1
+    path: Assets/Scenes/ShipView.unity
+    guid: f57ed9f85c1db174b9c443d9883a81aa
   m_configObjects: {}
