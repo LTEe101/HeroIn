@@ -160,10 +160,15 @@ public class UI_Game_Score : UI_Scene
             particleInstance.SetActive(true);
 
             // 게임 1 효과음 재생
-            Managers.Sound.Play("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect, 0.2f);
+            AudioClip audioClip = Managers.Sound.GetOrAddAudioClip("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect);
+            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.2f);
+            Destroy(ball);
+            Destroy(target);
+            if (audioClip != null)
+            {
+                yield return new WaitForSeconds(audioClip.length); // 효과음 길이만큼 대기
+            }
         }
-
-        Destroy(ball);
 
         // 득점
         score++;
@@ -176,7 +181,7 @@ public class UI_Game_Score : UI_Scene
         }
 
         // 배 없애기
-        Destroy(target);
+        
         isHolding = false;
         hasScored = false;
 
@@ -187,7 +192,7 @@ public class UI_Game_Score : UI_Scene
     {
         if (score >= 3) // 스코어가 3 이상이면 성공 팝업
         {
-            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.4f);
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_02", Define.Sound.Effect);
 
             Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
             StartCoroutine(NextScene(5f)); // 5초 후에 다음 씬으로 전환
