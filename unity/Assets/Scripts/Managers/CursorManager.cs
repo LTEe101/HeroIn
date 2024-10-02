@@ -8,8 +8,6 @@ public class CursorManager : MonoBehaviour
     private Texture2D _defaultCursor;  // 기본 커서 이미지
     [SerializeField]
     private Texture2D _hoverCursor;
-    private int cursorWidth = 128;
-    private int cursorHeight = 128;
     private enum CursorState
     {
         Default,
@@ -99,8 +97,8 @@ public class CursorManager : MonoBehaviour
         // 호버된 객체가 있는지 확인
         if (hoveredObject != null)
         {
-            // 버튼 태그가 있는 객체이거나, 레이어 7의 객체이면 호버 커서로 변경
-            if ( hoveredObject.layer == 7)
+            // 레이어 7의 객체이면 호버 커서로 변경
+            if ( hoveredObject.layer == 7 || hoveredObject.name == "Exit")
             {
                 ApplyCursor(_hoverCursor);  // 호버 커서로 변경
                 _currentState = CursorState.Hover;
@@ -117,29 +115,8 @@ public class CursorManager : MonoBehaviour
     }
     private void ApplyCursor(Texture2D cursorTexture)
     {
-        Texture2D resizedCursor = ResizeTexture(cursorTexture, cursorWidth, cursorHeight);
+        Texture2D resizedCursor = cursorTexture;
         Cursor.SetCursor(resizedCursor, Vector2.zero, CursorMode.ForceSoftware);
-    }
-    private Texture2D ResizeTexture(Texture2D originalTexture, int width, int height)
-    {
-        Texture2D resizedTexture = new Texture2D(width, height);
-        Color[] pixels = originalTexture.GetPixels();
-        Color[] resizedPixels = resizedTexture.GetPixels();
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                // 크기를 비율로 조정하여 새로운 픽셀 색상을 설정
-                int originalX = Mathf.FloorToInt(x * ((float)originalTexture.width / width));
-                int originalY = Mathf.FloorToInt(y * ((float)originalTexture.height / height));
-                resizedPixels[y * width + x] = originalTexture.GetPixel(originalX, originalY);
-            }
-        }
-
-        resizedTexture.SetPixels(resizedPixels);
-        resizedTexture.Apply();
-        return resizedTexture;
     }
 
 }

@@ -25,12 +25,19 @@ public class Define
         GameOne,
         MetaverseWar,
         MotionGame,
+        ShipView,
     }
      public enum StoryType
      {
          Before,
          After
      }
+
+    public enum ConfirmType
+    {
+        Home,
+        Exit
+    }
 
     public enum Sound
     {

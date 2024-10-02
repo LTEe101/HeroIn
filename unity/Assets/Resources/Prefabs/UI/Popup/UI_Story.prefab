@@ -67,9 +67,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 80
+    m_FontSize: 60
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 80
     m_Alignment: 4
@@ -473,10 +473,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3796175771306766547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.071264856, y: 0.14989845}
-  m_AnchorMax: {x: 0.9397946, y: 0.5692488}
-  m_AnchoredPosition: {x: -7.5, y: 0.036987305}
-  m_SizeDelta: {x: 15.697144, y: 6.6455994}
+  m_AnchorMin: {x: 0.033, y: 0.15529571}
+  m_AnchorMax: {x: 0.96400005, y: 0.69370437}
+  m_AnchoredPosition: {x: 0.8720703, y: -6.0000076}
+  m_SizeDelta: {x: 1.7441001, y: 1.3644981}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5112117405055919673
 CanvasRenderer:
@@ -508,9 +508,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 40
+    m_FontSize: 44
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 4
     m_MaxSize: 80
     m_Alignment: 0
@@ -629,10 +629,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3796175771306766547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.058794547, y: 0.5692488}
-  m_AnchorMax: {x: 0.264, y: 0.8394975}
-  m_AnchoredPosition: {x: -1.0699463, y: 3.0049973}
-  m_SizeDelta: {x: -5.4332886, y: -0.7092972}
+  m_AnchorMin: {x: 0.033, y: 0.69370437}
+  m_AnchorMax: {x: 0.27130947, y: 0.88556445}
+  m_AnchoredPosition: {x: 0.46801758, y: 2.4990005}
+  m_SizeDelta: {x: -0.37750053, y: 6.292}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &446644420815213419
 CanvasRenderer:
@@ -664,11 +664,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 40
+    m_FontSize: 50
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 3
-    m_MaxSize: 70
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -820,9 +820,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 80
+    m_FontSize: 60
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 80
     m_Alignment: 4

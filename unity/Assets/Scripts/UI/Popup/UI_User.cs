@@ -53,18 +53,25 @@ public class UI_User : UI_Popup
 
     public void OnButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         Managers.UI.ShowPopupUI<UI_History>();
     }
 
     public void OnCloseButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         Managers.UI.ClosePopupUI(this);
-         Camera.main.transform.position = _initialPosition;   // 카메라를 원래 위치로 되돌림
+        Camera.main.transform.position = _initialPosition;   // 카메라를 원래 위치로 되돌림
         Camera.main.transform.rotation = _initialRotation;
     }
 
     public void OnHistoryBookButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         Managers.UI.ShowPopupUI<UI_History_Book>();
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Organic_Plastic_Thin_Generic_1", Define.Sound.Effect, 1.0f);
     }
 }

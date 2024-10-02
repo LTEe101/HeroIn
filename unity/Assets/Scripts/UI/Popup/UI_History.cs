@@ -53,13 +53,15 @@ public class UI_History : UI_Popup
     // CloseButton 이벤트
     public void OnCloseButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         Managers.UI.ClosePopupUI(this);
     }
 
     // NextButton 이벤트
     public void OnNextButtonClicked(PointerEventData data)
     {
-        if(currentPage < totalPages - 1)
+        PlayButtonSound();
+        if (currentPage < totalPages - 1)
         {
             currentPage++;
             ShowPage(currentPage);
@@ -69,6 +71,7 @@ public class UI_History : UI_Popup
     // PreviousButton 이벤트
     public void OnPreviousButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         if (currentPage > 0)
         {
             currentPage--;
@@ -102,5 +105,8 @@ public class UI_History : UI_Popup
             rectTransform.anchoredPosition = new Vector2(startPosition.x, startPosition.y - (i - startItem) * yOffset); // 초기 위치에서 Y축 간격 설정
         }
     }
-
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Organic_Plastic_Thin_Generic_1", Define.Sound.Effect, 1.0f);
+    }
 }

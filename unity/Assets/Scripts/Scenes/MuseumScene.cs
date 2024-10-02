@@ -115,6 +115,7 @@ public class MuseumScene : BaseScene
     // 마우스 클릭 시 호출되는 함수
     void OnMouseClicked()
     {
+       
         GameObject currentHovered = Managers.Input.HoveredObject;
 
         if (currentHovered != null)
@@ -124,9 +125,11 @@ public class MuseumScene : BaseScene
             switch (hitObjectName)
             {
                 case "Spaceship":
+                    Managers.Sound.Play("ProEffect/Doors/door_lock_close_01", Define.Sound.Effect, 0.8f);
                     Managers.Scene.LoadScene(Define.Scene.Home);
                     break;
                 case "1592":
+                    PlayButtonSound();
                     Managers.UI.ShowPopupUI<UI_Museum_1592>();
                     break;
                 default:
@@ -140,5 +143,9 @@ public class MuseumScene : BaseScene
     {
         // 씬이 종료될 때 호출되는 함수, 필요에 따라 추가 작업 가능
         Managers.Input.Clear(); // InputManager의 이벤트를 클리어
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Organic_Plastic_Thin_Generic_1", Define.Sound.Effect, 1.0f);
     }
 }

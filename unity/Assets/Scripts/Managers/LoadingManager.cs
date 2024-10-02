@@ -1,11 +1,20 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadingManager : MonoBehaviour
 {
-    // 다음 씬을 비동기적으로 로드
-    public void LoadScene(string sceneName)
+    public List<string> soundPaths = new List<string>
+    {
+        "2000Effect/MECHS - MACHINES - SERVOS - (103)/MECH Machine Movement 03",
+        "2000Effect/MECHS - MACHINES - SERVOS - (103)/MECH Machine Movement 03",
+        "2000Effect/MECHS - MACHINES - SERVOS - (103)/MECH Machine Movement 03",
+        "2000Effect/MECHS - MACHINES - SERVOS - (103)/MECH Servo Motor Power Up Long 03",
+        "2000Effect/MECHS - MACHINES - SERVOS - (103)/MECH Servo Motor Power Down Long 04"
+    };
+// 다음 씬을 비동기적으로 로드
+public void LoadScene(string sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));
     }
@@ -33,8 +42,10 @@ public class LoadingManager : MonoBehaviour
 
         Debug.Log("로딩 진행률 90% 도달");
 
+        yield return StartCoroutine(PlaySoundEffects());
+
         // 원하는 대기 시간 (예: 1초)
-        while (time < 5f)
+        while (time < 3f)
         {
             time += Time.deltaTime;
             yield return null;
@@ -46,4 +57,15 @@ public class LoadingManager : MonoBehaviour
         operation.allowSceneActivation = true;
         Debug.Log("allowSceneActivation을 true로 설정하여 씬 활성화");
     }
- }   
+    IEnumerator PlaySoundEffects()
+    {
+        foreach (string path in soundPaths)
+        {
+            // SoundManager의 Play를 사용하여 사운드 재생
+            Managers.Sound.Play(path, Define.Sound.Effect, 0.4f);
+
+            // 사운드 파일 길이만큼 대기 (여기서는 임의로 1초로 설정)
+            yield return new WaitForSeconds(1.0f);  // 또는 각 사운드 파일 길이만큼 대기
+        }
+    }
+}   
