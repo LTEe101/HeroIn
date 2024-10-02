@@ -7,8 +7,7 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
 
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int maxEnemies = 3; // 총 생성할 적의 수
-    [SerializeField] private Vector3 spawnAreaSize = new Vector3(5f, 0f, 8f); // 스폰 영역 크기
-    [SerializeField] private Vector3 spawnAreaRotation = Vector3.zero; // 스폰 영역 회전값
+    [SerializeField] private Vector3[] spawnAreaPositions = new Vector3[2]; // 두 개의 고정된 스폰 위치
 
     private List<GameObject> activeEnemies = new List<GameObject>(); // 활성화된 적 리스트
     private int enemiesSpawned = 0; // 생성된 적의 수
@@ -64,19 +63,12 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
         }
     }
 
-    // 스폰 위치 계산
+    // 스폰 위치 계산 (두 개의 위치 중 랜덤 선택)
     private Vector3 GetRandomSpawnPosition()
     {
-        Vector3 randomPoint = new Vector3(
-            Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2),
-            Random.Range(-spawnAreaSize.y / 2, spawnAreaSize.y / 2),
-            Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)
-        );
-
-        // 회전 적용
-        randomPoint = Quaternion.Euler(spawnAreaRotation) * randomPoint;
-
-        return transform.position + randomPoint;
+        // 배열에서 무작위로 하나의 스폰 위치 선택
+        int randomIndex = Random.Range(0, spawnAreaPositions.Length);
+        return spawnAreaPositions[randomIndex];
     }
 
     // 가장 가까운 적 반환
@@ -102,8 +94,11 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Matrix4x4 rotationMatrix = Matrix4x4.TRS(transform.position, Quaternion.Euler(spawnAreaRotation), Vector3.one);
-        Gizmos.matrix = rotationMatrix;
-        Gizmos.DrawWireCube(Vector3.zero, spawnAreaSize); // 스폰 영역을 기즈모로 표시
+
+        // 두 개의 고정된 스폰 위치를 기즈모로 표시
+        foreach (Vector3 spawnPosition in spawnAreaPositions)
+        {
+            Gizmos.DrawSphere(spawnPosition, 0.5f); // 각 스폰 위치에 구 형태의 기즈모 그리기
+        }
     }
 }
