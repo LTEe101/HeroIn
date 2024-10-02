@@ -50,4 +50,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ShipView.unity
     guid: f57ed9f85c1db174b9c443d9883a81aa
+  - enabled: 1
+    path: Assets/Scenes/MotionGame.unity
+    guid: d908749d357693e44ba50e7113730bfd
+  - enabled: 1
+    path: Assets/Scenes/MetaverseWar.unity
+    guid: 658e4f18d5f269041ae927f7d93297aa
   m_configObjects: {}
