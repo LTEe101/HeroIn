@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5301958365738405417}
   - component: {fileID: 4100306214361877148}
   - component: {fileID: 8798595211866661910}
+  - component: {fileID: 3783039006399112623}
   m_Layer: 5
   m_Name: ChoiceText
   m_TagString: Untagged
@@ -35,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -190, y: -88}
+  m_SizeDelta: {x: -190, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4100306214361877148
 CanvasRenderer:
@@ -67,9 +68,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 80
+    m_FontSize: 60
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 80
     m_Alignment: 4
@@ -79,6 +80,20 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uB450\uBC88\uC9F8 \uC120\uD0DD\uC9C0"
+--- !u!114 &3783039006399112623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268551553681850559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &2394520323153869273
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,10 +488,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3796175771306766547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.071264856, y: 0.14989845}
-  m_AnchorMax: {x: 0.9397946, y: 0.5692488}
-  m_AnchoredPosition: {x: -7.5, y: 0.036987305}
-  m_SizeDelta: {x: 15.697144, y: 6.6455994}
+  m_AnchorMin: {x: 0.033, y: 0.15529571}
+  m_AnchorMax: {x: 0.96400005, y: 0.69370437}
+  m_AnchoredPosition: {x: 0.8720703, y: -6.0000076}
+  m_SizeDelta: {x: 1.7441001, y: 1.3644981}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5112117405055919673
 CanvasRenderer:
@@ -508,9 +523,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 40
+    m_FontSize: 44
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 4
     m_MaxSize: 80
     m_Alignment: 0
@@ -629,10 +644,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3796175771306766547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.058794547, y: 0.5692488}
-  m_AnchorMax: {x: 0.264, y: 0.8394975}
-  m_AnchoredPosition: {x: -1.0699463, y: 3.0049973}
-  m_SizeDelta: {x: -5.4332886, y: -0.7092972}
+  m_AnchorMin: {x: 0.033, y: 0.69370437}
+  m_AnchorMax: {x: 0.27130947, y: 0.88556445}
+  m_AnchoredPosition: {x: 0.46801758, y: 2.4990005}
+  m_SizeDelta: {x: -0.37750053, y: 6.292}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &446644420815213419
 CanvasRenderer:
@@ -664,11 +679,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 40
+    m_FontSize: 50
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 3
-    m_MaxSize: 70
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 300
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -764,6 +779,7 @@ GameObject:
   - component: {fileID: 3422627509443428727}
   - component: {fileID: 5818105808233128927}
   - component: {fileID: 9124249756407021266}
+  - component: {fileID: 7877904016530218510}
   m_Layer: 5
   m_Name: ChoiceText
   m_TagString: Untagged
@@ -788,7 +804,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -190, y: -88}
+  m_SizeDelta: {x: -190, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5818105808233128927
 CanvasRenderer:
@@ -820,9 +836,9 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 1dcf6f2060872914ea181df3e3b57e70, type: 3}
-    m_FontSize: 80
+    m_FontSize: 60
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 80
     m_Alignment: 4
@@ -832,3 +848,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uCCAB\uBC88\uC9F8 \uC120\uD0DD\uC9C0"
+--- !u!114 &7877904016530218510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8323837809244163397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2

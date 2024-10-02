@@ -27,7 +27,7 @@ public class UI_Game_Score : UI_Scene
     // 게임 모드 구분 변수 (게임 2일 경우 true로 설정)
     private bool isGameTwo = false;
     private EnemyManager enemyManager; // 게임 2에서 적이 제거될 때 점수를 추가하기 위해 필요
-
+    private Slider _totalBar;
     public void SetGameMode(bool gameTwo)
     {
         isGameTwo = gameTwo;
@@ -81,21 +81,33 @@ public class UI_Game_Score : UI_Scene
     }
 
     // 게임 1의 기존 클릭 및 애니메이션 처리 로직
-    private UI_Game_Bar _bar = null;
+    private GameObject _gameBarBox;
     private bool hasScored = false;
     private void Update()
     {
         if (!isGameTwo && isHolding)
         {
             holdTime += Time.deltaTime;
-            if (_bar == null && target != null)
+            
+            if (_gameBarBox == null && target != null)
             {
-                _bar = Managers.UI.ShowPopupUI<UI_Game_Bar>();
-                _bar.SetBarImagePosition(target.name); // 설정한 위치로 BarImage 위치 설정
+                _gameBarBox = Managers.Resource.Instantiate("GameBarBox");
+                _gameBarBox.transform.SetParent(target.transform, false); // 부모로 설정
+
+                if (_gameBarBox != null)
+                {
+                    Transform uiGameBar = _gameBarBox.transform.GetChild(0); // 첫 번째 자식 (UI_Game_Bar)
+                    if (uiGameBar != null)
+                    {
+                        _totalBar = uiGameBar.GetChild(0).GetComponent<Slider>(); // 첫 번째 자식 (TotalBar)에서 Slider 가져옴
+                    }
+                }
             }
 
-            float fillAmount = holdTime / 2f;
-            _bar.SetFillAmount(fillAmount);
+            if (_totalBar != null)
+            {
+                _totalBar.value = Mathf.Clamp01(holdTime / 2f); // 2초 동안 슬라이더가 다 차도록 설정
+            }
 
             if (holdTime >= 2f && target != null && particleInstance == null && !hasScored)
             {
@@ -148,24 +160,28 @@ public class UI_Game_Score : UI_Scene
             particleInstance.SetActive(true);
 
             // 게임 1 효과음 재생
-            Managers.Sound.Play("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect, 0.2f);
+            AudioClip audioClip = Managers.Sound.GetOrAddAudioClip("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect);
+            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.2f);
+            Destroy(ball);
+            Destroy(target);
+            if (audioClip != null)
+            {
+                yield return new WaitForSeconds(audioClip.length); // 효과음 길이만큼 대기
+            }
         }
-
-        Destroy(ball);
 
         // 득점
         score++;
         UpdateScoreText();
 
-        if (_bar != null)
+        if (_gameBarBox != null)
         {
-            // 게이지 UI 없애기
-            _bar.ClosePopupUI();
-            _bar = null;
+            Destroy(_gameBarBox);
+            _gameBarBox = null;
         }
 
         // 배 없애기
-        Destroy(target);
+        
         isHolding = false;
         hasScored = false;
 
@@ -176,7 +192,7 @@ public class UI_Game_Score : UI_Scene
     {
         if (score >= 3) // 스코어가 3 이상이면 성공 팝업
         {
-            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.2f);
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_02", Define.Sound.Effect);
 
             Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
             StartCoroutine(NextScene(5f)); // 5초 후에 다음 씬으로 전환
@@ -215,11 +231,10 @@ public class UI_Game_Score : UI_Scene
         holdTime = 0f;
         target = null; // 클릭한 오브젝트 초기화
         isHolding = false;
-
-        if (_bar != null)
+        if (_gameBarBox != null)
         {
-            _bar.ClosePopupUI();
-            _bar = null;
+            Destroy(_gameBarBox); // GameBarBox 인스턴스 삭제
+            _gameBarBox = null;
         }
     }
 

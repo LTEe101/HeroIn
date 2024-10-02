@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class HandTracking : MonoBehaviour, IMotionGameScript
 {
-    public static HandTracking Instance; // Singleton instance
+    public static HandTracking Instance; // 싱글톤 인스턴스
 
-    public UDPReceive udpReceive;
+    public VideoStreamer videoStreamer;
 
     public Vector3[] leftHandPositions = new Vector3[21]; // 저장된 좌표 데이터
     public Vector3[] rightHandPositions = new Vector3[21]; // 저장된 좌표 데이터
@@ -20,7 +20,7 @@ public class HandTracking : MonoBehaviour, IMotionGameScript
 
     void Awake()
     {
-        // Singleton pattern
+        // 싱글톤 패턴
         if (Instance == null)
         {
             Instance = this;
@@ -34,12 +34,12 @@ public class HandTracking : MonoBehaviour, IMotionGameScript
 
     void Update()
     {
-        // UDP 프로토콜로 전송된 데이터를 받아온다.
-        string leftdata = udpReceive.leftHandData;
-        string rightdata = udpReceive.rightHandData;
+        // WebSocket을 통해 전송된 데이터를 받아온다.
+        string leftdata = videoStreamer.leftHandData;
+        string rightdata = videoStreamer.rightHandData;
 
         // 왼손 데이터 처리
-        if (leftdata == "NoData")
+        if (leftdata == "NoData" || string.IsNullOrEmpty(leftdata))
         {
             leftHandDataValid = false;
 
@@ -68,7 +68,7 @@ public class HandTracking : MonoBehaviour, IMotionGameScript
             }
             else
             {
-                Debug.LogWarning("Left hand data is invalid.");
+                Debug.LogWarning("왼손 데이터가 유효하지 않습니다.");
                 leftHandDataValid = false;
 
                 // 왼손 데이터 초기화
@@ -80,7 +80,7 @@ public class HandTracking : MonoBehaviour, IMotionGameScript
         }
 
         // 오른손 데이터 처리
-        if (rightdata == "NoData")
+        if (rightdata == "NoData" || string.IsNullOrEmpty(rightdata))
         {
             rightHandDataValid = false;
 
@@ -109,7 +109,7 @@ public class HandTracking : MonoBehaviour, IMotionGameScript
             }
             else
             {
-                Debug.LogWarning("Right hand data is invalid.");
+                Debug.LogWarning("오른손 데이터가 유효하지 않습니다.");
                 rightHandDataValid = false;
 
                 // 오른손 데이터 초기화
@@ -120,7 +120,6 @@ public class HandTracking : MonoBehaviour, IMotionGameScript
             }
         }
     }
-
 
     private string CleanData(string data)
     {

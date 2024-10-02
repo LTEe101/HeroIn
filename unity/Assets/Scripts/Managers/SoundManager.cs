@@ -102,7 +102,7 @@ public class SoundManager
         return _audioVolumes.ContainsKey(soundTypeName) ? _audioVolumes[soundTypeName] : 1.0f; // 기본값 1.0f 반환
     }
 
-    AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)
+    public AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)
     {
 		if (path.Contains("Sounds/") == false)
 			path = $"Sounds/{path}";
@@ -156,4 +156,9 @@ public class SoundManager
     {
         return _isMuted;
     }
+    public void StopBGM()
+    {
+        _audioSources[(int)Define.Sound.Bgm].Stop();
+    }
+
 }

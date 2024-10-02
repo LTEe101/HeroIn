@@ -62,7 +62,7 @@ public void LoadScene(string sceneName)
         foreach (string path in soundPaths)
         {
             // SoundManager의 Play를 사용하여 사운드 재생
-            Managers.Sound.Play(path, Define.Sound.Effect, 0.6f);
+            Managers.Sound.Play(path, Define.Sound.Effect, 0.4f);
 
             // 사운드 파일 길이만큼 대기 (여기서는 임의로 1초로 설정)
             yield return new WaitForSeconds(1.0f);  // 또는 각 사운드 파일 길이만큼 대기
