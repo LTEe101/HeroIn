@@ -1,193 +1,38 @@
-//using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
-
-//public class ArrowShooter : MonoBehaviour
-//{
-//    [SerializeField] private Animator bowAnimator;
-//    [SerializeField] private GameObject existingArrow;
-//    [SerializeField] private Transform firePoint;
-//    [SerializeField] private float arrowSpeed = 0.02f; // 속도를 더 낮춤
-//    [SerializeField] private float searchRadius = 30f;
-//    [SerializeField] private float arrowLifetime = 5f;
-
-//    private Rigidbody arrowRb;
-//    private LineRenderer trajectoryLine;
-//    private Transform currentTarget;
-//    private Vector3 lastTargetPosition;
-
-//    void Start()
-//    {
-//        SetupArrow();
-//        SetupTrajectoryLine();
-//    }
-
-//    void Update()
-//    {
-//        currentTarget = FindClosestTarget();
-
-//        if (currentTarget != null)
-//        {
-//            lastTargetPosition = currentTarget.position;
-//            Debug.DrawLine(firePoint.position, lastTargetPosition, Color.red);
-//        }
-//    }
-
-//    private void SetupArrow()
-//    {
-//        if (existingArrow != null)
-//        {
-//            arrowRb = existingArrow.GetComponent<Rigidbody>();
-//            if (arrowRb == null)
-//            {
-//                Debug.LogError("No Rigidbody found on the arrow!");
-//            }
-//        }
-//        else
-//        {
-//            Debug.LogError("Existing arrow not assigned in the inspector!");
-//        }
-//    }
-
-//    private void SetupTrajectoryLine()
-//    {
-//        trajectoryLine = gameObject.AddComponent<LineRenderer>();
-//        trajectoryLine.startWidth = 0.05f;
-//        trajectoryLine.endWidth = 0.05f;
-//        trajectoryLine.material = new Material(Shader.Find("Sprites/Default"));
-//        trajectoryLine.startColor = Color.blue;
-//        trajectoryLine.endColor = Color.blue;
-//    }
-
-//    public void Shoot()
-//    {
-//        if (existingArrow == null || arrowRb == null)
-//        {
-//            Debug.LogError("Arrow or its Rigidbody is missing!");
-//            return;
-//        }
-
-//        existingArrow.transform.position = firePoint.position;
-//        existingArrow.transform.rotation = firePoint.rotation;
-
-//        arrowRb.isKinematic = true; // 물리 시뮬레이션을 비활성화
-//        arrowRb.useGravity = false;
-
-//        if (bowAnimator != null)
-//        {
-//            bowAnimator.SetTrigger("Shoot");
-//        }
-
-//        Vector3 targetPosition = lastTargetPosition;
-
-//        // 화살의 초기 방향을 설정
-//        Vector3 direction = (targetPosition - firePoint.position).normalized;
-//        existingArrow.transform.forward = direction;
-
-//        // 등속 운동으로 화살 발사
-//        StartCoroutine(MoveArrow(targetPosition));
-
-//        Debug.Log($"Arrow fired. Direction: {direction}, Target: {targetPosition}");
-//    }
-
-//    private IEnumerator MoveArrow(Vector3 targetPosition)
-//    {
-//        float distanceTraveled = 0f;
-//        float totalDistance = Vector3.Distance(firePoint.position, targetPosition);
-//        Vector3 startPosition = firePoint.position;
-//        //List<Vector3> trajectoryPoints = new List<Vector3>();
-
-//        while (distanceTraveled < totalDistance)
-//        {
-//            float t = distanceTraveled / totalDistance;
-//            Vector3 newPosition = Vector3.Lerp(startPosition, targetPosition, t);
-
-//            existingArrow.transform.position = newPosition;
-
-//            // 화살의 방향을 현재 이동 방향으로 부드럽게 조정
-//            Vector3 direction = (targetPosition - existingArrow.transform.position).normalized;
-//            existingArrow.transform.rotation = Quaternion.Slerp(existingArrow.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 5f);
-
-//            // 궤적 추가
-//            //trajectoryPoints.Add(newPosition);
-//            //trajectoryLine.positionCount = trajectoryPoints.Count;
-//            //trajectoryLine.SetPositions(trajectoryPoints.ToArray());
-
-//            distanceTraveled += arrowSpeed * Time.deltaTime;
-//            yield return null;
-//        }
-
-//        // 목표 지점에 도달하면 화살 멈춤
-//        existingArrow.transform.position = targetPosition;
-
-//        yield return new WaitForSeconds(arrowLifetime);
-//        ResetArrow();
-//        trajectoryLine.positionCount = 0; // 궤적 초기화
-//    }
-
-//    private void ResetArrow()
-//    {
-//        existingArrow.transform.position = firePoint.position;
-//        existingArrow.transform.rotation = firePoint.rotation;
-//        arrowRb.velocity = Vector3.zero;
-//        arrowRb.isKinematic = true;
-//    }
-
-//    private Transform FindClosestTarget()
-//    {
-//        Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius);
-//        Transform closestTarget = null;
-//        float closestDistance = Mathf.Infinity;
-
-//        foreach (var hitCollider in hitColliders)
-//        {
-//            if (hitCollider.CompareTag("Enemy"))
-//            {
-//                float distance = Vector3.Distance(firePoint.position, hitCollider.transform.position);
-//                if (distance < closestDistance)
-//                {
-//                    closestDistance = distance;
-//                    closestTarget = hitCollider.transform;
-//                }
-//            }
-//        }
-
-//        return closestTarget;
-//    }
-
-//    void OnDrawGizmos()
-//    {
-//        Gizmos.color = Color.yellow;
-//        Gizmos.DrawWireSphere(transform.position, searchRadius);
-
-//        if (currentTarget != null)
-//        {
-//            Gizmos.color = Color.red;
-//            Gizmos.DrawLine(firePoint.position, currentTarget.position);
-//            Gizmos.DrawSphere(currentTarget.position, 0.5f);
-//        }
-//    }
-//}
-
-
-
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class ArrowShooter : MonoBehaviour, IMotionGameScript
 {
     [SerializeField] private Animator bowAnimator;
     [SerializeField] private GameObject existingArrow;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private float arrowSpeed = 1f; // 속도를 더 낮춤
+    [SerializeField] private float arrowSpeed = 25f; // 화살 속도 증가
     [SerializeField] private float searchRadius = 30f;
-    [SerializeField] private float arrowLifetime = 1.3f;
+    [SerializeField] private float arrowLifetime = 0.5f;
 
+    [SerializeField] private Vector3 neckOffset = new Vector3(0, 1.5f, 0);
+    [SerializeField] private Vector3 rotationOffset = Vector3.zero;
+
+    [SerializeField] private GameObject targetIndicatorPrefab; // 타겟 표적 prefab
+
+    private GameObject currentTargetIndicator; // 현재 활성화된 표적 인스턴스
     private Rigidbody arrowRb;
-    private LineRenderer trajectoryLine;
     private Transform currentTarget;
     private Vector3 lastTargetPosition;
+
+    private Coroutine moveArrowCoroutine;
+    private bool isArrowActive = false; // 화살이 발사 중인지 여부 추적
+
+    private Vector3 initialArrowPosition;
+    private Quaternion initialArrowRotation;
+
+    private Vector3 AimingArrowPosition = new Vector3(-386.18f, 15.04f, -18.68f);
+    private Quaternion AimingArrowRotation = new Quaternion(0.52234f, 0.45622f, -0.54248f, -0.47407f);
+
+    [SerializeField] private float positionLerpSpeed = 5f;
+    [SerializeField] private float rotationLerpSpeed = 5f;
+
+    private bool isInitialSetupComplete = false;
 
     public bool IsEnabled
     {
@@ -198,18 +43,202 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     void Start()
     {
         SetupArrow();
-        SetupTrajectoryLine();
+
+        if (existingArrow != null)
+        {
+            initialArrowPosition = existingArrow.transform.position;
+            initialArrowRotation = existingArrow.transform.rotation;
+        }
     }
 
     void Update()
     {
-        currentTarget = FindClosestTarget();
-
-        if (currentTarget != null)
+        // 화살이 발사 중이면 애니메이션 상태를 확인하지 않고 바로 리턴
+        if (isArrowActive)
         {
-            lastTargetPosition = currentTarget.position;
-            Debug.DrawLine(firePoint.position, lastTargetPosition, Color.red);
+            // 화살이 발사 중이면 표적을 비활성화
+            if (currentTargetIndicator != null)
+            {
+                Destroy(currentTargetIndicator);
+            }
+            return;
         }
+
+        if (!isArrowActive)
+        {
+            currentTarget = FindClosestTarget();
+
+            if (currentTarget != null)
+            {
+                lastTargetPosition = currentTarget.position + neckOffset;
+
+                // 표적 표시
+                if (currentTargetIndicator == null)
+                {
+                    currentTargetIndicator = Instantiate(targetIndicatorPrefab, lastTargetPosition, Quaternion.identity);
+                    currentTargetIndicator.transform.localScale = Vector3.one * 3;
+                }
+                else
+                {
+                    currentTargetIndicator.transform.position = lastTargetPosition;
+                }
+            }
+            else
+            {
+                // 목표가 없을 때 표적 제거
+                if (currentTargetIndicator != null)
+                {
+                    Destroy(currentTargetIndicator);
+                }
+            }
+        }
+
+        AnimatorStateInfo stateInfo = bowAnimator.GetCurrentAnimatorStateInfo(0);
+
+        // 부드러운 초기 위치 세팅을 진행
+        if (!isInitialSetupComplete)
+        {
+            existingArrow.transform.position = Vector3.Lerp(
+                existingArrow.transform.position,
+                initialArrowPosition,
+                Time.deltaTime * positionLerpSpeed
+            );
+
+            existingArrow.transform.rotation = Quaternion.Slerp(
+                existingArrow.transform.rotation,
+                initialArrowRotation,
+                Time.deltaTime * rotationLerpSpeed
+            );
+
+            if (Vector3.Distance(existingArrow.transform.position, initialArrowPosition) < 0.01f &&
+                Quaternion.Angle(existingArrow.transform.rotation, initialArrowRotation) < 1f)
+            {
+                isInitialSetupComplete = true;
+            }
+        }
+
+        // Aiming 상태일 때 부드럽게 이동
+        if (stateInfo.IsName("Aiming") && isInitialSetupComplete)
+        {
+            existingArrow.transform.position = Vector3.Lerp(
+                existingArrow.transform.position,
+                AimingArrowPosition,
+                Time.deltaTime * positionLerpSpeed
+            );
+
+            existingArrow.transform.rotation = Quaternion.Slerp(
+                existingArrow.transform.rotation,
+                AimingArrowRotation,
+                Time.deltaTime * rotationLerpSpeed
+            );
+        }
+        // Idle 상태로 돌아갈 때 초기 위치로 부드럽게 이동
+        else if (stateInfo.IsName("Idle_Battle_BowAndArrow") && isInitialSetupComplete)
+        {
+            existingArrow.transform.position = Vector3.Lerp(
+                existingArrow.transform.position,
+                initialArrowPosition,
+                Time.deltaTime * positionLerpSpeed
+            );
+
+            existingArrow.transform.rotation = Quaternion.Slerp(
+                existingArrow.transform.rotation,
+                initialArrowRotation,
+                Time.deltaTime * rotationLerpSpeed
+            );
+        }
+    }
+
+    public void Shoot()
+    {
+        if (existingArrow == null || arrowRb == null)
+        {
+            Debug.LogError("Arrow or its Rigidbody is missing!");
+            return;
+        }
+
+        if (currentTarget == null)
+        {
+            Debug.LogWarning("No target to shoot at!");
+            return;
+        }
+
+        existingArrow.transform.parent = null;
+
+        float spawnOffsetDistance = 0.2f;
+        Vector3 spawnPosition = firePoint.position + firePoint.forward * spawnOffsetDistance;
+        existingArrow.transform.position = spawnPosition;
+
+        Vector3 targetPosition = lastTargetPosition;
+        Vector3 direction = (targetPosition - spawnPosition).normalized;
+
+        Quaternion lookRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(rotationOffset);
+        existingArrow.transform.rotation = lookRotation;
+
+        arrowRb.isKinematic = false;
+        arrowRb.useGravity = false; // 중력은 끄고 일직선으로 발사
+        arrowRb.velocity = direction * arrowSpeed;
+
+        isArrowActive = true; // 발사 중 상태로 설정
+
+        // 발사 시 표적 제거
+        if (currentTargetIndicator != null)
+        {
+            Destroy(currentTargetIndicator);
+        }
+
+        if (bowAnimator != null)
+        {
+            bowAnimator.SetTrigger("Shoot");
+        }
+
+        if (moveArrowCoroutine != null)
+        {
+            StopCoroutine(moveArrowCoroutine);
+        }
+
+        moveArrowCoroutine = StartCoroutine(DeactivateArrowAfterLifetime());
+
+        Debug.Log($"Arrow fired. Direction: {direction}, Target: {targetPosition}");
+    }
+
+    private IEnumerator DeactivateArrowAfterLifetime()
+    {
+        yield return new WaitForSeconds(arrowLifetime);
+        ResetArrow();
+    }
+
+    private void ResetArrow()
+    {
+        if (existingArrow == null || arrowRb == null)
+            return;
+
+        Debug.Log("Resetting arrow to fire point.");
+
+        if (moveArrowCoroutine != null)
+        {
+            StopCoroutine(moveArrowCoroutine);
+            moveArrowCoroutine = null;
+        }
+
+        existingArrow.transform.parent = firePoint;
+
+        arrowRb.velocity = Vector3.zero;
+        arrowRb.angularVelocity = Vector3.zero;
+        arrowRb.isKinematic = true;
+        arrowRb.useGravity = false;
+
+        existingArrow.transform.position = initialArrowPosition;
+        existingArrow.transform.rotation = initialArrowRotation;
+
+        // 스케일 초기화 (필요 시)
+        existingArrow.transform.localScale = Vector3.one * 2;
+
+        // trajectoryLine.positionCount = 0; // 제거됨
+
+        isArrowActive = false; // 발사 상태 해제
+
+        Debug.Log("Arrow has been reset to fire point.");
     }
 
     private void SetupArrow()
@@ -221,6 +250,31 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
             {
                 Debug.LogError("No Rigidbody found on the arrow!");
             }
+            else
+            {
+                arrowRb.isKinematic = true;
+                arrowRb.useGravity = false;
+            }
+
+            Collider arrowCollider = existingArrow.GetComponent<Collider>();
+            if (arrowCollider != null)
+            {
+                PhysicMaterial noBounceMaterial = Resources.Load<PhysicMaterial>("NoBounce");
+                if (noBounceMaterial != null)
+                {
+                    arrowCollider.material = noBounceMaterial;
+                }
+                else
+                {
+                    Debug.LogError("NoBounce PhysicMaterial not found in Resources!");
+                }
+
+                arrowCollider.isTrigger = false;
+            }
+            else
+            {
+                Debug.LogError("No Collider found on the arrow!");
+            }
         }
         else
         {
@@ -228,94 +282,44 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         }
     }
 
-    private void SetupTrajectoryLine()
-    {
-        trajectoryLine = gameObject.AddComponent<LineRenderer>();
-        trajectoryLine.startWidth = 0.05f;
-        trajectoryLine.endWidth = 0.05f;
-        trajectoryLine.material = new Material(Shader.Find("Sprites/Default"));
-        trajectoryLine.startColor = Color.blue;
-        trajectoryLine.endColor = Color.blue;
-    }
-
-    public void Shoot()
-    {
-        if (existingArrow == null || arrowRb == null)
-        {
-            Debug.LogError("Arrow or its Rigidbody is missing!");
-            return;
-        }
-
-        existingArrow.transform.position = firePoint.position;
-        existingArrow.transform.rotation = firePoint.rotation;
-
-        arrowRb.isKinematic = true; // 물리 시뮬레이션을 비활성화
-        arrowRb.useGravity = false;
-
-        if (bowAnimator != null)
-        {
-            bowAnimator.SetTrigger("Shoot");
-        }
-
-        Vector3 targetPosition = lastTargetPosition;
-
-        // 화살의 초기 방향을 설정
-        Vector3 direction = (targetPosition - firePoint.position).normalized;
-        existingArrow.transform.forward = direction;
-
-        // 등속 운동으로 화살 발사
-        StartCoroutine(MoveArrow(targetPosition));
-
-        Debug.Log($"Arrow fired. Direction: {direction}, Target: {targetPosition}");
-    }
-
-    private IEnumerator MoveArrow(Vector3 targetPosition)
-    {
-        float elapsedTime = 0f;
-        float totalTime = 0.8f; // 화살이 목표에 도달하는 데 걸리는 총 시간
-        Vector3 startPosition = firePoint.position;
-        //List<Vector3> trajectoryPoints = new List<Vector3>();
-
-        while (elapsedTime < totalTime)
-        {
-            float t = elapsedTime / totalTime;
-            //Vector3 newPosition = Vector3.Lerp(startPosition, targetPosition, t);
-            existingArrow.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
-
-            // 화살의 방향 조정
-            Vector3 direction = (targetPosition - existingArrow.transform.position).normalized;
-            existingArrow.transform.rotation = Quaternion.Slerp(existingArrow.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 2f);
-
-
-            // 궤적 추가
-            //trajectoryPoints.Add(newPosition);
-            //trajectoryLine.positionCount = trajectoryPoints.Count;
-            //trajectoryLine.SetPositions(trajectoryPoints.ToArray());
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // 목표 지점에 도달하면 화살 멈춤
-        existingArrow.transform.position = targetPosition;
-
-        yield return new WaitForSeconds(arrowLifetime);
-        ResetArrow();
-        trajectoryLine.positionCount = 0; // 궤적 초기화
-    }
-
-    private void ResetArrow()
-    {
-        
-        existingArrow.transform.position = firePoint.position;
-        existingArrow.transform.rotation = firePoint.rotation;
-        arrowRb.velocity = Vector3.zero;
-        arrowRb.isKinematic = true;
-    }
-
     private Transform FindClosestTarget()
     {
         return EnemyManager.Instance.GetNearestEnemy(transform.position);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!isArrowActive)
+            return;
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Arrow hit the enemy!");
+
+            if (moveArrowCoroutine != null)
+            {
+                StopCoroutine(moveArrowCoroutine);
+                moveArrowCoroutine = null;
+            }
+
+            existingArrow.transform.position = lastTargetPosition;
+            existingArrow.transform.parent = collision.transform;
+
+            arrowRb.isKinematic = true;
+            arrowRb.velocity = Vector3.zero;
+            arrowRb.angularVelocity = Vector3.zero;
+            arrowRb.useGravity = false;
+
+            isArrowActive = false;
+
+            // trajectoryLine.positionCount = 0; // 제거됨
+
+            // 표적 제거
+            if (currentTargetIndicator != null)
+            {
+                Destroy(currentTargetIndicator);
+            }
+        }
     }
 
     void OnDrawGizmos()
@@ -326,8 +330,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         if (currentTarget != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(firePoint.position, currentTarget.position);
-            Gizmos.DrawSphere(currentTarget.position, 0.5f);
+            // Gizmos.DrawLine(firePoint.position, lastTargetPosition); // 제거됨
+            // Gizmos.DrawSphere(lastTargetPosition, 0.5f); // 제거됨
         }
     }
 }
