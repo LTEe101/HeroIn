@@ -13,8 +13,8 @@ public class UI_Game_Score : UI_Scene
     }
 
     int score = 0;
-    private float holdTime = 0f; // Å¬¸¯ ½Ã°£
-    private bool isHolding = false; // ²Ú ´©¸£°í ÀÖ´ÂÁö ¿©ºÎ
+    private float holdTime = 0f; // Å¬ï¿½ï¿½ ï¿½Ã°ï¿½
+    private bool isHolding = false; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private GameObject target;
     private GameObject particleInstance;
     private GameObject boom;
@@ -24,9 +24,9 @@ public class UI_Game_Score : UI_Scene
     private Animator[] anims;
     public System.Action onFinished;
 
-    // °ÔÀÓ ¸ðµå ±¸ºÐ º¯¼ö (°ÔÀÓ 2ÀÏ °æ¿ì true·Î ¼³Á¤)
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ trueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     private bool isGameTwo = false;
-    private EnemyManager enemyManager; // °ÔÀÓ 2¿¡¼­ ÀûÀÌ Á¦°ÅµÉ ¶§ Á¡¼ö¸¦ Ãß°¡ÇÏ±â À§ÇØ ÇÊ¿ä
+    private EnemyManager enemyManager; // ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Åµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
     private Slider _totalBar;
     public void SetGameMode(bool gameTwo)
     {
@@ -39,16 +39,16 @@ public class UI_Game_Score : UI_Scene
 
         if (isGameTwo)
         {
-            // °ÔÀÓ 2¿¡¼­´Â EnemyManager¿Í »óÈ£ÀÛ¿ë
+            // ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ EnemyManagerï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½
             enemyManager = EnemyManager.Instance;
             if (enemyManager != null)
             {
-                enemyManager.onEnemyDestroyed += OnEnemyDestroyed; // Àû Á¦°Å ½Ã Á¡¼ö Áõ°¡
+                enemyManager.onEnemyDestroyed += OnEnemyDestroyed; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
         }
         else
         {
-            // °ÔÀÓ 1ÀÇ ·ÎÁ÷ (Å¬¸¯ ÀÌº¥Æ® Ã³¸®)
+            // ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Å¬ï¿½ï¿½ ï¿½Ìºï¿½Æ® Ã³ï¿½ï¿½)
             Managers.Input.MouseAction -= OnMouseClicked;
             Managers.Input.MouseAction += OnMouseClicked;
             boom = Managers.Resource.Instantiate($"CFXR Explosion 1");
@@ -72,15 +72,15 @@ public class UI_Game_Score : UI_Scene
         Bind<Text>(typeof(Texts));
     }
 
-    // °ÔÀÓ 2¿¡¼­ ÀûÀÌ Á¦°ÅµÉ ¶§ Á¡¼ö Ãß°¡
+    // ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Åµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     private void OnEnemyDestroyed()
     {
         score++;
         UpdateScoreText();
-        CheckGameEnd(); // ½ºÄÚ¾î°¡ 3ÀÏ ¶§ ¼º°ø ÆË¾÷ ¶ç¿ì±â
+        CheckGameEnd(); // ï¿½ï¿½ï¿½Ú¾î°¡ 3ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
-    // °ÔÀÓ 1ÀÇ ±âÁ¸ Å¬¸¯ ¹× ¾Ö´Ï¸ÞÀÌ¼Ç Ã³¸® ·ÎÁ÷
+    // ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private GameObject _gameBarBox;
     private bool hasScored = false;
     private void Update()
@@ -92,28 +92,28 @@ public class UI_Game_Score : UI_Scene
             if (_gameBarBox == null && target != null)
             {
                 _gameBarBox = Managers.Resource.Instantiate("GameBarBox");
-                _gameBarBox.transform.SetParent(target.transform, false); // ºÎ¸ð·Î ¼³Á¤
+                _gameBarBox.transform.SetParent(target.transform, false); // ï¿½Î¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                 if (_gameBarBox != null)
                 {
-                    Transform uiGameBar = _gameBarBox.transform.GetChild(0); // Ã¹ ¹øÂ° ÀÚ½Ä (UI_Game_Bar)
+                    Transform uiGameBar = _gameBarBox.transform.GetChild(0); // Ã¹ ï¿½ï¿½Â° ï¿½Ú½ï¿½ (UI_Game_Bar)
                     if (uiGameBar != null)
                     {
-                        _totalBar = uiGameBar.GetChild(0).GetComponent<Slider>(); // Ã¹ ¹øÂ° ÀÚ½Ä (TotalBar)¿¡¼­ Slider °¡Á®¿È
+                        _totalBar = uiGameBar.GetChild(0).GetComponent<Slider>(); // Ã¹ ï¿½ï¿½Â° ï¿½Ú½ï¿½ (TotalBar)ï¿½ï¿½ï¿½ï¿½ Slider ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     }
                 }
             }
 
             if (_totalBar != null)
             {
-                _totalBar.value = Mathf.Clamp01(holdTime / 2f); // 2ÃÊ µ¿¾È ½½¶óÀÌ´õ°¡ ´Ù Â÷µµ·Ï ¼³Á¤
+                _totalBar.value = Mathf.Clamp01(holdTime / 2f); // 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
 
             if (holdTime >= 2f && target != null && particleInstance == null && !hasScored)
             {
                 hasScored = true;
 
-                // Æ÷Åº ³¯¶ó°¡´Â È¿°ú
+                // ï¿½ï¿½Åº ï¿½ï¿½ï¿½ó°¡´ï¿½ È¿ï¿½ï¿½
                 switch (target.name)
                 {
                     case "TargetShip3":
@@ -149,23 +149,23 @@ public class UI_Game_Score : UI_Scene
         GameObject ball = animator.gameObject;
         animator.SetTrigger("ShootTrigger");
 
-        // ¾Ö´Ï¸ÞÀÌ¼Ç ±æÀÌ °¡Á®¿À±â
+        // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animationLength + 0.4f);
 
         if (particleInstance == null)
         {
-            // Æø¹ß È¿°ú »ý¼º
+            // ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
             particleInstance.SetActive(true);
 
-            // °ÔÀÓ 1 È¿°úÀ½ Àç»ý
+            // ï¿½ï¿½ï¿½ï¿½ 1 È¿ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             Managers.Sound.Play("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect, 0.2f);
         }
 
         Destroy(ball);
 
-        // µæÁ¡
+        // ï¿½ï¿½ï¿½ï¿½
         score++;
         UpdateScoreText();
 
@@ -175,30 +175,30 @@ public class UI_Game_Score : UI_Scene
             _gameBarBox = null;
         }
 
-        // ¹è ¾ø¾Ö±â
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½Ö±ï¿½
         Destroy(target);
         isHolding = false;
         hasScored = false;
 
-        CheckGameEnd(); // ½ºÄÚ¾î°¡ 3ÀÏ ¶§ ¼º°ø ÆË¾÷ ¶ç¿ì±â
+        CheckGameEnd(); // ï¿½ï¿½ï¿½Ú¾î°¡ 3ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     private void CheckGameEnd()
     {
-        if (score >= 3) // ½ºÄÚ¾î°¡ 3 ÀÌ»óÀÌ¸é ¼º°ø ÆË¾÷
+        if (score >= 3) // ï¿½ï¿½ï¿½Ú¾î°¡ 3 ï¿½Ì»ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½
         {
             Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_03", Define.Sound.Effect, 1.4f);
 
-            Managers.UI.ShowPopupUI<UI_Game_Finish>(); // ¼º°ø ÆË¾÷ Ç¥½Ã
-            StartCoroutine(NextScene(5f)); // 5ÃÊ ÈÄ¿¡ ´ÙÀ½ ¾ÀÀ¸·Î ÀüÈ¯
+            Managers.UI.ShowPopupUI<UI_Game_Finish>(); // ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½ Ç¥ï¿½ï¿½
+            StartCoroutine(NextScene(5f)); // 5ï¿½ï¿½ ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         }
     }
 
     private IEnumerator NextScene(float waitTime)
     {
-        yield return new WaitForSeconds(waitTime); // ´ë±â
+        yield return new WaitForSeconds(waitTime); // ï¿½ï¿½ï¿½
 
-        // ´ÙÀ½ ¾ÀÀ¸·Î ÀüÈ¯
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         if (!isGameTwo)
         {
             Managers.Scene.LoadScene(Define.Scene.StoryFour);
@@ -207,16 +207,16 @@ public class UI_Game_Score : UI_Scene
 
     void OnMouseClicked(Define.MouseEvent evt)
     {
-        if (!isGameTwo && evt == Define.MouseEvent.Press) // °ÔÀÓ 1ÀÏ ¶§¸¸ µ¿ÀÛ
+        if (!isGameTwo && evt == Define.MouseEvent.Press) // ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int mask = (1 << 7); // ·¹ÀÌ¾î ¸¶½ºÅ© (7¹ø ·¹ÀÌ¾î°¡ TargetÀÓÀ» °¡Á¤)
+            int mask = (1 << 7); // ï¿½ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½Å© (7ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾î°¡ Targetï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 100.0f, mask))
             {
-                target = hit.collider.gameObject; // Å¬¸¯ÇÑ ¿ÀºêÁ§Æ® ÀúÀå
-                isHolding = true; // ²Ú ´©¸£±â ½ÃÀÛ
+                target = hit.collider.gameObject; // Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+                isHolding = true; // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             }
         }
     }
@@ -224,11 +224,11 @@ public class UI_Game_Score : UI_Scene
     private void ResetHold()
     {
         holdTime = 0f;
-        target = null; // Å¬¸¯ÇÑ ¿ÀºêÁ§Æ® ÃÊ±âÈ­
+        target = null; // Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­
         isHolding = false;
         if (_gameBarBox != null)
         {
-            Destroy(_gameBarBox); // GameBarBox ÀÎ½ºÅÏ½º »èÁ¦
+            Destroy(_gameBarBox); // GameBarBox ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½
             _gameBarBox = null;
         }
     }
