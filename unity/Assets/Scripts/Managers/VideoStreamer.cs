@@ -151,16 +151,16 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
             if (handType == "Left")
             {
                 leftHandData = data;
-                Debug.Log($"왼손 데이터 업데이트: {data}");  // 왼손 데이터 로깅
+                //Debug.Log($"왼손 데이터 업데이트: {data}");  // 왼손 데이터 로깅
             }
             else if (handType == "Right")
             {
                 rightHandData = data;
-                Debug.Log($"오른손 데이터 업데이트: {data}");  // 오른손 데이터 로깅
+                //Debug.Log($"오른손 데이터 업데이트: {data}");  // 오른손 데이터 로깅
             }
             else
             {
-                Debug.LogWarning($"알 수 없는 손 타입: {handType}");
+                //Debug.LogWarning($"알 수 없는 손 타입: {handType}");
             }
         }
         catch (Exception e)
@@ -223,7 +223,7 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
 
     private void LogReceivedData(string message)
     {
-        Debug.Log($"수신된 데이터: {message}");
+        //Debug.Log($"수신된 데이터: {message}");
     }
 
     private void OnDisable()

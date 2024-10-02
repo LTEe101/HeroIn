@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +33,6 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
         SpawnEnemy(); // 게임 시작 시 한 명의 적만 생성
     }
 
-    // 적 생성 메서드
     private void SpawnEnemy()
     {
         if (enemiesSpawned < maxEnemies) // 총 생성된 적의 수가 최대치에 도달하지 않았을 때만 생성
@@ -41,6 +41,21 @@ public class EnemyManager : MonoBehaviour, IMotionGameScript
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, enemyPrefab.transform.rotation);
             activeEnemies.Add(enemy); // 활성화된 적 리스트에 추가
             enemiesSpawned++; // 생성된 적의 수 증가
+
+            // 적이 생성된 직후 캔버스 활성화 시도
+            StartCoroutine(ActivateCanvasImmediately(enemy));
+        }
+    }
+
+    // 캔버스 활성화 코루틴
+    private IEnumerator ActivateCanvasImmediately(GameObject enemy)
+    {
+        yield return new WaitForEndOfFrame(); // 1프레임 대기 후 실행
+
+        EnemyController enemyController = enemy.GetComponent<EnemyController>();
+        if (enemyController != null)
+        {
+            enemyController.ActivateCanvas(); // 적이 생성된 후 즉시 캔버스 활성화
         }
     }
 
