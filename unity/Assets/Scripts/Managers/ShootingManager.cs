@@ -2,10 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootingManager : MonoBehaviour
+public class ShootingManager : MonoBehaviour, IMotionGameScript
 {
     [SerializeField] private ArrowShooter arrowShooter;
     private bool canShoot = true;
+
+    public bool IsEnabled
+    {
+        get { return enabled; }
+        set { enabled = value; }
+    }
 
     public void TryShoot()
     {

@@ -39,13 +39,20 @@ public class UI_Museum_1592 : UI_Popup
     // CloseButton 이벤트
     void OnCloseButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
         ClosePopupUI();
     }
 
     // EnterButton 이벤트
     void OnEnterButtonClicked(PointerEventData data)
     {
+        PlayButtonSound();
+        Managers.Scene.LoadScene(Define.Scene.MetaverseWar);
         // 메타버스 입장
         Debug.Log("메타버스 입장");
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("UIClickEffect/Button/SFX_UI_Button_Organic_Plastic_Thin_Generic_1", Define.Sound.Effect, 1.0f);
     }
 }

@@ -80,9 +80,10 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         float rayDistance = 1.0f; // 레이캐스트의 거리
         LayerMask wallLayer = LayerMask.GetMask("Wall"); // Wall 레이어 설정
-       
+        LayerMask targetLayer = LayerMask.GetMask("Target");
+
         // 플레이어 전방으로 레이캐스트를 쏨
-        if (Physics.Raycast(transform.position, dir.normalized, out hit, rayDistance, wallLayer | _layerMask))
+        if (Physics.Raycast(transform.position, dir.normalized, out hit, rayDistance, wallLayer | _layerMask | targetLayer))
         {
             Debug.Log("벽과 충돌: " + hit.collider.name);
             State = PlayerState.Idle; // 벽에 부딪히면 이동 멈춤
@@ -206,6 +207,11 @@ public class PlayerController : MonoBehaviour
         Debug.Log("OnInteract"); // 상호작용 시 디버그 메시지 출력
         Debug.Log($"OnInteract, {callbackContext.phase} {_curInteractable}"); // 상호작용 상태와 현재 상호작용 가능한 오브젝트 정보 출력
 
+        SetLayerTo("1592", 7);
+        SetLayerTo("1919", 7);
+        SetLayerTo("Start", 7);
+        SetLayerTo("UserButton", 7);
+
         // 상호작용 입력이 시작되고, 상호작용 가능한 오브젝트가 존재할 때
         if (callbackContext.phase == InputActionPhase.Performed && _curInteractable != null)
         {
@@ -214,6 +220,7 @@ public class PlayerController : MonoBehaviour
                 ExitWatchState(); // Watch 상태에서 나옴
                 UpdateCameraPosition();
                 SetRenderersEnabled(true);
+                
             }
             else if (_curInteractable != null)
             {
@@ -230,12 +237,32 @@ public class PlayerController : MonoBehaviour
             //_curInteractable = null; // 상호작용 가능한 오브젝트 정보도 초기화 (현재는 주석 처리됨)
         }
     }
+    void SetLayerTo(string objectName, int layerNum)
+    {
+        // 이름으로 오브젝트를 찾음
+        GameObject obj = GameObject.Find(objectName);
+
+        if (obj != null)
+        {
+            // 레이어를 layerNum으로 설정
+            obj.layer = layerNum;
+            Debug.Log($"{objectName}의 레이어를 0으로 설정했습니다.");
+        }
+        else
+        {
+            Debug.LogWarning($"{objectName} 오브젝트를 찾을 수 없습니다.");
+        }
+    }
 
     // Watch 상태에서 나오는 함수
     void ExitWatchState()
     {
         Debug.Log("Watch 상태 종료, Idle 상태로 전환");
         State = PlayerState.Idle; // 상태를 Idle로 전환
+        SetLayerTo("1592", 0);
+        SetLayerTo("1919", 0);
+        SetLayerTo("Start", 0);
+        SetLayerTo("UserButton", 0);
     }
 
     void HandleMovement()

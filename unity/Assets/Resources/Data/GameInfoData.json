@@ -14,11 +14,11 @@
       "title": "화살을 쏘아 적군을 물리치기",
       "descriptions": [
         {
-          "desc": "한 손으로 활을 잡고, 한 손으로는 화살을 당기며\n적을 향해 조준하세요.",
+          "desc": "왼손으로 활을 잡고, 오른손으로는 줄을 당겨 조준하세요.",
           "image": "Art/Image/Game2_Aiming"
         },
         {
-          "desc": "화살을 쥔 손을 펴서 화살을 발사해보세요!",
+          "desc": "손을 펴서 화살을 발사해보세요!",
           "image": "Art/Image/Game2_Shoot"
         }
       ]

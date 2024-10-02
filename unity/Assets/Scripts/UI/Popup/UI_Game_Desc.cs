@@ -27,6 +27,7 @@ public class UI_Game_Desc : UI_Popup
 
     private int currentIndex = 0;
     private GameInfo currentGameInfo;
+    public event Action OnStartGame;
 
     public override void Init()
     {
@@ -36,17 +37,12 @@ public class UI_Game_Desc : UI_Popup
         Bind<Button>(typeof(Buttons));
         Bind<Image>(typeof(Images));
 
-        Debug.Log($"TitleText bound: {Get<Text>((int)Texts.TitleText) != null}");
-        Debug.Log($"DescText bound: {Get<Text>((int)Texts.DescText) != null}");
-        Debug.Log($"GameScenePhoto bound: {Get<Image>((int)Images.GameScenePhoto) != null}");
-
         BindEvent(GetButton((int)Buttons.StartButton).gameObject, OnStartButtonClicked);
         BindEvent(GetButton((int)Buttons.NextButton).gameObject, OnNextButtonClicked);
         BindEvent(GetButton((int)Buttons.PrevButton).gameObject, OnPrevButtonClicked);
     }
     public void LoadInfos(int gameId)
     {
-        Debug.Log($"LoadInfos called with gameId: {gameId}");
         if (Managers.Data.GameInfos.TryGetValue(gameId, out currentGameInfo))
         {
             Debug.Log($"GameInfo found: {currentGameInfo.title}");
@@ -68,7 +64,6 @@ public class UI_Game_Desc : UI_Popup
             return;
         }
 
-        Debug.Log($"Updating content for game: {currentGameInfo.title}, Description count: {currentGameInfo.descriptions.Count}");
 
         if (currentIndex >= 0 && currentIndex < currentGameInfo.descriptions.Count)
         {
@@ -120,10 +115,14 @@ public class UI_Game_Desc : UI_Popup
 
     private void OnStartButtonClicked(PointerEventData data)
     {
+        if (currentGameInfo != null && currentGameInfo.id == 2)
+        {
+            OnStartGame?.Invoke();  // 게임 시작 이벤트 발생 (gameId가 2일 때만)
+        }
+
         ClosePopupUI();
         Managers.UI.ShowSceneUI<UI_Game_Score>();
     }
-
     private void OnNextButtonClicked(PointerEventData data)
     {
         if (currentIndex < currentGameInfo.descriptions.Count - 1)
@@ -132,7 +131,7 @@ public class UI_Game_Desc : UI_Popup
             UpdateContent();
         }
     }
-
+      
     private void OnPrevButtonClicked(PointerEventData data)
     {
         if (currentIndex > 0)
