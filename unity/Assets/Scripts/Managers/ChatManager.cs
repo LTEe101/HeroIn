@@ -13,7 +13,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     [SerializeField] private TMP_Text chatMessagePrefab; // 채팅 메시지를 표시할 TextMeshPro 프리팹
     [SerializeField] private Transform content; // Scroll View의 Content (채팅 메시지들이 추가될 부모 오브젝트)
     [SerializeField] private ScrollRect scrollRect; // ScrollRect 컴포넌트
-    private string userName; // 기본 사용자 이름
     private PhotonPlayerController localPlayerController; // 로컬 플레이어 컨트롤러 저장
     private static ChatManager _instance;
     public static ChatManager Instance { get { return _instance; } }
@@ -31,7 +30,6 @@ public class ChatManager : MonoBehaviour, IChatClientListener
 
     void Start()
     {
-        userName = "Player" + Random.Range(1000, 9999);
         ConnectToPhotonChat();
         inputField.onEndEdit.AddListener(HandleInputEndEdit);
         inputField.onSelect.AddListener(HandleInputSelect);
@@ -71,6 +69,11 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Photon Chat에 연결하는 함수
     void ConnectToPhotonChat()
     {
+        string userName = PhotonNetwork.NickName; // PhotonNetwork의 NickName을 가져옴
+        if (string.IsNullOrEmpty(userName))
+        {
+            userName = Managers.Data.userInfo.name; // 만약 NickName이 비어있다면 기본값 설정
+        }
         chatClient = new ChatClient(this);
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", new AuthenticationValues(userName));
     }
