@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,11 @@ public class SceneManagerEx
 
 	public void LoadScene(Define.Scene type)
     {
+        if (PhotonNetwork.IsConnected && CurrentScene.name == "@MetaverseWarScene")
+        {
+            PhotonNetwork.Disconnect();  // 포톤 서버 연결 끊기
+        }
+
         Managers.Clear();
 
         SceneManager.LoadScene(GetSceneName(type));

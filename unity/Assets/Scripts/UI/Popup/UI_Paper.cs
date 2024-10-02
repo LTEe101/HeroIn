@@ -97,6 +97,15 @@ private int _currentNarrationIndex = 0; // 현재 보여줄 내레이션 인덱스
             }
             else
             {
+                StartCoroutine(Managers.API.AddHistoryTitle(
+                    1, 
+                    Managers.Data.userInfo.userId, 
+                    () => {
+                        // 업적 저장에 성공했을 때 처리
+                        Debug.Log("업적 저장 성공: ");
+                    }
+                ));
+
                 Managers.Sound.StopBGM();
                 // 타임머신으로 돌아가기
                 Managers.Scene.LodingLoadScene(Define.Scene.Home);

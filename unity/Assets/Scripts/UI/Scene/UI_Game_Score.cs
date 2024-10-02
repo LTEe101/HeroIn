@@ -228,6 +228,27 @@ public class UI_Game_Score : UI_Scene
                 isHolding = true; // 꾹 누르기 시작
             }
         }
+        if (evt == Define.MouseEvent.PointerEnter)
+        {
+            // Outline 컴포넌트가 있는지 확인
+            Outline outline = Managers.Input.HoveredObject.GetComponent<Outline>();
+            if (outline != null)
+            {
+                // 아웃라인 모드를 OutlineAll 설정
+                outline.OutlineMode = Outline.Mode.OutlineAll;
+            }
+        }
+        if (evt == Define.MouseEvent.PointerExit)
+        {
+            // Outline 컴포넌트가 있는지 확인
+            Outline outline = Managers.Input.HoveredObject.GetComponent<Outline>();
+            if (outline != null)
+            {
+                // 아웃라인 모드를 OutlineHidden로 설정
+                outline.OutlineMode = Outline.Mode.OutlineHidden;
+            }
+        }
+
     }
 
     private void ResetHold()

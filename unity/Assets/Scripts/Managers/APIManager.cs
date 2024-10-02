@@ -21,12 +21,19 @@ public class APIManager : MonoBehaviour
             userLoginPw = userLoginPw,
             userName = userName
         };
-
+        Texture2D texture;
         // JSON 형식으로 변환
         string jsonData = JsonUtility.ToJson(userDto);
-
-        // 이미지의 텍스처에서 바이트 배열을 추출
-        Texture2D texture = userImage.sprite.texture;
+        if (userImage.sprite.name == "UI_Icon_Plus")
+        {
+            // Resources 폴더에서 이미지 로드
+            texture = Resources.Load<Sprite>("Art/Image/Logo").texture;
+        }
+        else
+        {
+            texture = userImage.sprite.texture;
+        }
+           
         byte[] imageBytes = texture.EncodeToPNG();
 
         // 멀티파트 폼 데이터 생성
@@ -296,28 +303,17 @@ public class APIManager : MonoBehaviour
     }
 
     // 게임 클리어 시 업적 저장 함수
-    public IEnumerator AddHistoryTitle(int checkId, string userId, System.Action<string> onSuccess, System.Action<string> onError)
+    public IEnumerator AddHistoryTitle(long checkId, string userId, System.Action onSuccess)
     {
-        // 요청 데이터를 담을 클래스 생성
-        HistoryTitleRequest historyTitle = new HistoryTitleRequest
-        {
-            checkId = checkId,
-            userId = userId
-        };
+        // 쿼리 스트링 형식으로 URL에 파라미터 추가
+        string urlWithParams = $"{apiUrl}user/addcard?checkId={checkId}&userId={userId}";
+        // UnityWebRequest로 POST 요청을 보냅니다 (쿼리 스트링 사용)
+        UnityWebRequest request = new UnityWebRequest(urlWithParams, "POST");
 
-        // 요청 데이터를 JSON 형식으로 변환
-        string jsonData = JsonUtility.ToJson(historyTitle);
+        // 요청을 보냅니다.
+        yield return request.SendWebRequest();
 
-        // POST 요청을 보내는 메서드 호출
-        yield return SendRequest(apiUrl + "user/addcard", "POST", jsonData, (response) =>
-        {
-            Debug.Log("업적 저장 성공: " + response);
-            onSuccess?.Invoke(response);
-        }, (error) =>
-        {
-            Debug.LogError("업적 저장 실패: " + error);
-            onError?.Invoke(error);
-        });
+        onSuccess?.Invoke();
     }
 
     public IEnumerator UpdateUserTitle(string userId, string title, System.Action onSuccess, System.Action<string> onError)

@@ -171,11 +171,6 @@ public class JoinScene : BaseScene
             Managers.UI.ShowPopupUI<UI_Alert>(null, new object[] { "비밀번호가 달라요" });
             return;
         }
-        else if (imgNo.sprite.name == "UI_Icon_Plus")
-        {
-            Managers.UI.ShowPopupUI<UI_Alert>(null, new object[] { "이미지를 등록해주세요" });
-            return;
-        }
 
         // 팝업을 띄우고 확인 버튼 클릭 시 회원가입 진행
         var popup = Managers.UI.ShowPopupUI<UI_Check_Alert>(null, new object[] { "회원가입을 진행하시겠습니까?" });
