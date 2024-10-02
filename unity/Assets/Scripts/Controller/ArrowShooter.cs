@@ -13,8 +13,10 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     [SerializeField] private Vector3 neckOffset = new Vector3(0, 1.5f, 0);
     [SerializeField] private Vector3 rotationOffset = Vector3.zero;
 
+    [SerializeField] private GameObject targetIndicatorPrefab; // 타겟 표적 prefab
+
+    private GameObject currentTargetIndicator; // 현재 활성화된 표적 인스턴스
     private Rigidbody arrowRb;
-    private LineRenderer trajectoryLine;
     private Transform currentTarget;
     private Vector3 lastTargetPosition;
 
@@ -41,7 +43,6 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     void Start()
     {
         SetupArrow();
-        SetupTrajectoryLine();
 
         if (existingArrow != null)
         {
@@ -55,8 +56,11 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         // 화살이 발사 중이면 애니메이션 상태를 확인하지 않고 바로 리턴
         if (isArrowActive)
         {
-            // 화살이 발사 중이면 레이저를 비활성화 (줄을 없앰)
-            trajectoryLine.positionCount = 0;
+            // 화살이 발사 중이면 표적을 비활성화
+            if (currentTargetIndicator != null)
+            {
+                Destroy(currentTargetIndicator);
+            }
             return;
         }
 
@@ -68,10 +72,24 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
             {
                 lastTargetPosition = currentTarget.position + neckOffset;
 
-                // 목표를 향한 빨간 줄 그리기
-                trajectoryLine.positionCount = 2;
-                trajectoryLine.SetPosition(0, firePoint.position);     // 시작점
-                trajectoryLine.SetPosition(1, lastTargetPosition);     // 끝점
+                // 표적 표시
+                if (currentTargetIndicator == null)
+                {
+                    currentTargetIndicator = Instantiate(targetIndicatorPrefab, lastTargetPosition, Quaternion.identity);
+                    currentTargetIndicator.transform.localScale = Vector3.one * 3;
+                }
+                else
+                {
+                    currentTargetIndicator.transform.position = lastTargetPosition;
+                }
+            }
+            else
+            {
+                // 목표가 없을 때 표적 제거
+                if (currentTargetIndicator != null)
+                {
+                    Destroy(currentTargetIndicator);
+                }
             }
         }
 
@@ -163,6 +181,12 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         isArrowActive = true; // 발사 중 상태로 설정
 
+        // 발사 시 표적 제거
+        if (currentTargetIndicator != null)
+        {
+            Destroy(currentTargetIndicator);
+        }
+
         if (bowAnimator != null)
         {
             bowAnimator.SetTrigger("Shoot");
@@ -210,7 +234,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         // 스케일 초기화 (필요 시)
         existingArrow.transform.localScale = Vector3.one * 2;
 
-        trajectoryLine.positionCount = 0;
+        // trajectoryLine.positionCount = 0; // 제거됨
 
         isArrowActive = false; // 발사 상태 해제
 
@@ -258,16 +282,6 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         }
     }
 
-    private void SetupTrajectoryLine()
-    {
-        trajectoryLine = gameObject.AddComponent<LineRenderer>();
-        trajectoryLine.startWidth = 0.02f;
-        trajectoryLine.endWidth = 0.02f;
-        trajectoryLine.material = new Material(Shader.Find("Sprites/Default"));
-        trajectoryLine.startColor = Color.red;  // 빨간색 레이저 효과
-        trajectoryLine.endColor = Color.red;    // 빨간색 레이저 효과
-    }
-
     private Transform FindClosestTarget()
     {
         return EnemyManager.Instance.GetNearestEnemy(transform.position);
@@ -298,7 +312,13 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
             isArrowActive = false;
 
-            trajectoryLine.positionCount = 0;
+            // trajectoryLine.positionCount = 0; // 제거됨
+
+            // 표적 제거
+            if (currentTargetIndicator != null)
+            {
+                Destroy(currentTargetIndicator);
+            }
         }
     }
 
@@ -310,8 +330,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         if (currentTarget != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(firePoint.position, lastTargetPosition);
-            Gizmos.DrawSphere(lastTargetPosition, 0.5f);
+            // Gizmos.DrawLine(firePoint.position, lastTargetPosition); // 제거됨
+            // Gizmos.DrawSphere(lastTargetPosition, 0.5f); // 제거됨
         }
     }
 }
