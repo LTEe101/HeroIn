@@ -208,6 +208,10 @@ public class UI_Game_Score : UI_Scene
         {
             Managers.Scene.LoadScene(Define.Scene.StoryFour);
         }
+        else
+        {
+            Managers.Scene.LoadScene(Define.Scene.StorySix);
+        }
     }
 
     void OnMouseClicked(Define.MouseEvent evt)
