@@ -28,6 +28,7 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         websocket.OnOpen += () =>
         {
             Debug.Log("WebSocket 연결 성공");
+            StartWebcam();  // 웹소켓 연결 성공 시 웹캠 시작
         };
 
         websocket.OnError += (e) =>
@@ -50,12 +51,20 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
 
         // 웹소켓 연결 시도
         await ConnectWebSocket();
+    }
 
-        // 웹캠 시작
+    private void StartWebcam()
+    {
         if (WebCamTexture.devices.Length > 0)
         {
             webCamTexture = new WebCamTexture();
+            webCamTexture.requestedWidth = 1280;  // 원하는 해상도로 설정
+            webCamTexture.requestedHeight = 720;  // 원하는 해상도로 설정
+            webCamTexture.requestedFPS = 30;  // 원하는 FPS로 설정
+
             webCamTexture.Play();
+
+            Debug.Log("웹캠 시작됨");
         }
         else
         {
@@ -65,16 +74,18 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
 
     async Task ConnectWebSocket()
     {
-        try
+        while (true)
         {
-            await websocket.Connect();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"WebSocket 연결 실패: {e.Message}");
-            // 연결 재시도 로직 추가
-            await Task.Delay(5000); // 5초 후 재시도
-            await ConnectWebSocket();
+            try
+            {
+                await websocket.Connect();
+                break;  // 연결 성공 시 루프 종료
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"WebSocket 연결 실패: {e.Message}");
+                await Task.Delay(5000); // 5초 후 재시도
+            }
         }
     }
 
@@ -213,5 +224,14 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
     private void LogReceivedData(string message)
     {
         Debug.Log($"수신된 데이터: {message}");
+    }
+
+    private void OnDisable()
+    {
+        if (webCamTexture != null && webCamTexture.isPlaying)
+        {
+            webCamTexture.Stop();
+            Debug.Log("웹캠 정지됨");
+        }
     }
 }
