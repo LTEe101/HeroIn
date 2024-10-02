@@ -7,6 +7,7 @@ using static CameraController;
 using static Outline;
 using UnityEngine.InputSystem;
 using Photon.Pun;
+using UnityEngine.AI;
 
 public class PhotonPlayerController: MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class PhotonPlayerController: MonoBehaviour
 
     public TMP_Text playerNameText; // 캐릭터 이름 표시용 TextMeshPro
     public string playerName; // 플레이어 이름
-
+    private NavMeshAgent agent;      // NavMeshAgent 컴포넌트
     public enum PlayerState
     {
         Chatting,
@@ -75,23 +76,15 @@ public class PhotonPlayerController: MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerInput.actions["Interaction"].performed += OnInteraction;
         UpdateCameraPosition();
-
+        agent = GetComponent<NavMeshAgent>();
         // 만약 이 플레이어가 로컬 플레이어라면 ChatManager에 등록
         if (PV.IsMine)
         {
             ChatManager.Instance.SetLocalPlayer(this);
-            if (Managers.Data.userInfo != null)
-            {
-                playerName = Managers.Data.userInfo.name;
-            }
-            else
-            {
-                playerName = "나의이름은";
-            }
-           
+
         }
-        playerNameText.text = playerName; // 이름 표시
-                                          
+        // 닉네임 동기화
+        playerNameText.text = PV.Owner.NickName; // PhotonView의 소유자 닉네임을 표시
         Cursor.lockState = CursorLockMode.None; // 마우스 커서 잠금 해제
     }
 
@@ -149,6 +142,7 @@ public class PhotonPlayerController: MonoBehaviour
 
     void Update()
     {
+
         // 이름 텍스트가 존재할 때, 항상 카메라를 바라보게 설정
         if (playerNameText != null)
         {
@@ -342,7 +336,7 @@ public class PhotonPlayerController: MonoBehaviour
     {
         if (State == PlayerState.Jumping) return;
 
-        // 이동 입력 처리
+        //// 이동 입력 처리
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
@@ -357,6 +351,11 @@ public class PhotonPlayerController: MonoBehaviour
         right.Normalize();
 
         moveDirection = (forward * moveZ + right * moveX).normalized * _speed;
+
+        if (moveDirection != Vector3.zero)
+        {
+            State = PlayerState.Moving;
+        }
 
         if (moveDirection != Vector3.zero)
         {

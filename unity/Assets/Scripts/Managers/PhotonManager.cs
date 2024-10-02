@@ -11,6 +11,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Photon Master");
+        PhotonNetwork.NickName = Managers.Data.userInfo.name;
         JoinMainScene();
     }
 
