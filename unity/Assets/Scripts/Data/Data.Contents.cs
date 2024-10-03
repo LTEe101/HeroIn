@@ -252,3 +252,28 @@ public class GameInfoData : ILoader<int, GameInfo>
 }
 
 #endregion
+
+#region MetaHistory
+[Serializable]
+public class MetaHistory
+{
+    public string title;   // 제목
+    public string desc; // 내용
+}
+
+[Serializable]
+public class MetaHistoryData : ILoader<int, MetaHistory>
+{
+    public List<MetaHistory> histories = new List<MetaHistory>();
+
+    public Dictionary<int, MetaHistory> MakeDict()
+    {
+        Dictionary<int, MetaHistory> dict = new Dictionary<int, MetaHistory>();
+        for (int i = 0; i < histories.Count; i++)
+        {
+            dict.Add(i + 1, histories[i]);
+        }
+        return dict;
+    }
+}
+#endregion
