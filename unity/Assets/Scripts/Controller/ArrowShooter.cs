@@ -13,9 +13,6 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     [SerializeField] private Vector3 neckOffset = new Vector3(0, 1.5f, 0);
     [SerializeField] private Vector3 rotationOffset = Vector3.zero;
 
-    [SerializeField] private GameObject targetIndicatorPrefab; // 타겟 표적 prefab
-
-    private GameObject currentTargetIndicator; // 현재 활성화된 표적 인스턴스
     private Rigidbody arrowRb;
     private Transform currentTarget;
     private Vector3 lastTargetPosition;
@@ -56,11 +53,6 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         // 화살이 발사 중이면 애니메이션 상태를 확인하지 않고 바로 리턴
         if (isArrowActive)
         {
-            // 화살이 발사 중이면 표적을 비활성화
-            if (currentTargetIndicator != null)
-            {
-                Destroy(currentTargetIndicator);
-            }
             return;
         }
 
@@ -71,25 +63,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
             if (currentTarget != null)
             {
                 lastTargetPosition = currentTarget.position + neckOffset;
-
-                // 표적 표시
-                if (currentTargetIndicator == null)
-                {
-                    currentTargetIndicator = Instantiate(targetIndicatorPrefab, lastTargetPosition, Quaternion.identity);
-                    currentTargetIndicator.transform.localScale = Vector3.one * 3;
-                }
-                else
-                {
-                    currentTargetIndicator.transform.position = lastTargetPosition;
-                }
-            }
-            else
-            {
-                // 목표가 없을 때 표적 제거
-                if (currentTargetIndicator != null)
-                {
-                    Destroy(currentTargetIndicator);
-                }
+                // 빨간 선 관련 코드 제거됨
             }
         }
 
@@ -180,12 +154,6 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
         arrowRb.velocity = direction * arrowSpeed;
 
         isArrowActive = true; // 발사 중 상태로 설정
-
-        // 발사 시 표적 제거
-        if (currentTargetIndicator != null)
-        {
-            Destroy(currentTargetIndicator);
-        }
 
         if (bowAnimator != null)
         {
@@ -313,12 +281,6 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
             isArrowActive = false;
 
             // trajectoryLine.positionCount = 0; // 제거됨
-
-            // 표적 제거
-            if (currentTargetIndicator != null)
-            {
-                Destroy(currentTargetIndicator);
-            }
         }
     }
 
