@@ -47,7 +47,7 @@ public class UI_Museum_1592 : UI_Popup
     void OnEnterButtonClicked(PointerEventData data)
     {
         PlayButtonSound();
-        Managers.Scene.LodingLoadScene(Define.Scene.MetaverseWar);
+        Managers.Scene.LoadScene(Define.Scene.MetaverseWar);
         // 메타버스 입장
         Debug.Log("메타버스 입장");
     }
