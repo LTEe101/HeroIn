@@ -255,10 +255,16 @@ public class GameInfoData : ILoader<int, GameInfo>
 
 #region MetaHistory
 [Serializable]
-public class MetaHistory
+public class History
 {
     public string title;   // 제목
-    public string desc; // 내용
+    public string desc;    // 내용
+}
+
+[Serializable]
+public class MetaHistory
+{
+    public List<History> history = new List<History>();
 }
 
 [Serializable]
