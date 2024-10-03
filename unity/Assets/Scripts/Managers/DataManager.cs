@@ -17,6 +17,8 @@ public class DataManager
     public List<string> AfterStoryList { get; private set; } = new List<string>();
     public Dictionary<int, List<Dialog>> DialogDataMap { get; private set; } = new Dictionary<int, List<Dialog>>();
     public Dictionary<int, GameInfo> GameInfos { get; private set; } = new Dictionary<int, GameInfo>();
+    public List<QuizQuestion> QuizQuestions { get; private set; } = new List<QuizQuestion>();
+
     public void Init()
     {
         NarrationData narrationData = LoadJson<NarrationData>("NarrationData");
@@ -33,6 +35,7 @@ public class DataManager
 
         LoadAllScenarios("DialogsData");
         LoadGameInfos("GameInfoData");
+        LoadQuizData("QuizData");
     }
     public void SetUserInfo(User user)
     {
@@ -62,7 +65,21 @@ public class DataManager
              GameInfos = gameInfoData.MakeDict();
          }
      }
- private void LoadAllScenarios(string path)
+    // 퀴즈 데이터를 로드하는 메서드
+    private void LoadQuizData(string path)
+    {
+        QuizQuestionList quizQuestionList = LoadJson<QuizQuestionList>(path);
+        if (quizQuestionList != null && quizQuestionList.questions != null)
+        {
+            QuizQuestions = quizQuestionList.questions;
+            Debug.Log($"Loaded {QuizQuestions.Count} quiz questions.");
+        }
+        else
+        {
+            Debug.LogError("Failed to load quiz questions or quiz data is empty.");
+        }
+    }
+    private void LoadAllScenarios(string path)
  {
      var allScenarios = LoadJson<AllScenariosData>(path);
      if (allScenarios != null && allScenarios.scenarios != null)

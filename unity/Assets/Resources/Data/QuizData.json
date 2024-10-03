@@ -1,0 +1,16 @@
+{
+  "questions": [
+    {
+      "question": "문제 1: OX 중 무엇이 맞나요?",
+      "answer": "O"
+    },
+    {
+      "question": "문제 2: 이건 정답이 X인가요?",
+      "answer": "X"
+    },
+    {
+      "question": "문제 3: 마지막 문제입니다. O가 맞나요?",
+      "answer": "O"
+    }
+  ]
+}
