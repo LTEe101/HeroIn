@@ -54,7 +54,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         if (localPlayerController != null)
         {
-            localPlayerController.SetState(PhotonPlayerController.PlayerState.Chatting); 
+            localPlayerController.SetIsChatting(true); 
         }
     }
 
@@ -63,7 +63,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     {
         if (localPlayerController != null)
         {
-            localPlayerController.SetState(PhotonPlayerController.PlayerState.Idle); 
+            localPlayerController.SetIsChatting(false); 
         }
     }
     // Photon Chat에 연결하는 함수
@@ -81,7 +81,7 @@ public class ChatManager : MonoBehaviour, IChatClientListener
     // Photon Chat 연결 상태 업데이트
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) && localPlayerController.State != PhotonPlayerController.PlayerState.Chatting)
+        if (Input.GetKeyDown(KeyCode.Return) && !localPlayerController.IsChatting)
         {
             inputField.ActivateInputField();
         }

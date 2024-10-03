@@ -33,7 +33,7 @@ public class UI_Museum_1592 : UI_Popup
         // 버튼 이벤트 등록
         GetButton((int)Buttons.CloseButton).gameObject.BindEvent(OnCloseButtonClicked);
         GetButton((int)Buttons.EnterButton).gameObject.BindEvent(OnEnterButtonClicked);
-        GetTMP((int)Texts.DescriptionText).text = "역사에 대한 설명 데이터";
+        GetTMP((int)Texts.DescriptionText).text = "임진왜란의 현장을 생생하게 만나보세요!\n\n임진왜란 속 중요한 장면들을 재미있게 탐험하며 우리 역사를 배워볼 수 있어요.\n\n함께 역사 속으로 떠나볼까요?";
     }
 
     // CloseButton 이벤트
