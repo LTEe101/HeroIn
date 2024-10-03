@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     // 이동
     Animator anim;
     private Rigidbody rb;
-    float _speed = 5.0f;
+    float _speed = 7.0f;
     public float jumpForce = 7f; // 점프 힘
     private Vector3 moveDirection; // 이동 방향
     public LayerMask groundLayer; // 바닥 레이어 설정 (점프할 수 있는 곳)
