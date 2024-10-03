@@ -6,7 +6,7 @@ using TMPro;
 
 public class HakikjinSign : MonoBehaviour, IInteractable
 {
-    UI_User popup = null;
+    UI_Meta_Info popup = null;
 
     public bool _isPress { get; private set; }
 
@@ -26,7 +26,8 @@ public class HakikjinSign : MonoBehaviour, IInteractable
         if (!_isPress)
         {
             Debug.Log("상호작용");
-            popup = Managers.UI.ShowPopupUI<UI_User>();
+            popup = Managers.UI.ShowPopupUI<UI_Meta_Info>();
+            popup.InitMetaHistory(2);
             _isPress = true;
         }
         else
