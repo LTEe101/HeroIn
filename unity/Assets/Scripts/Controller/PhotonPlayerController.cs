@@ -13,44 +13,43 @@ public class PhotonPlayerController: MonoBehaviour
 {
     public static PhotonPlayerController Instance { get; private set; }
 
+    // 이동
     Animator anim;
     private Rigidbody rb;
+    float _speed = 7.0f;
     public float jumpForce = 7f; // 점프 힘
     private Vector3 moveDirection; // 이동 방향
     public LayerMask groundLayer; // 바닥 레이어 설정 (점프할 수 있는 곳)
     private bool isGrounded; // 캐릭터가 바닥에 있는지 여부
-    float _speed = 7.0f;
     Vector3 _destPos;
-    float _mouseSensitivity = 2.0f; // 마우스 감도
-    private PlayerInput playerInput; // PlayerInput 변수 선언
 
     // 상호 작용
     [SerializeField] private TMP_Text _interactText; // 상호작용 가능할 때 나타나는 텍스트 UI
-    [SerializeField] private float _checkRate = 0.05f; // 광선을 쏘는 주기 (0.05초마다)
-    [SerializeField] private float _maxDistance = 3.0f; // 광선이 감지할 수 있는 최대 거리
-    [SerializeField] private LayerMask _layerMask; // 상호작용할 수 있는 오브젝트를 감지할 레이어
+    private float _checkRate = 0.05f; // 광선을 쏘는 주기 (0.05초마다)
+    private float _maxDistance = 3.0f; // 광선이 감지할 수 있는 최대 거리
+    private LayerMask _layerMask; // 상호작용할 수 있는 오브젝트를 감지할 레이어
     private float _lastCheckTime; // 마지막으로 광선을 쏜 시간을 기록
     private GameObject _curGameobject; // 현재 감지된 오브젝트
     private IInteractable _curInteractable; // 현재 상호작용 가능한 인터페이스를 구현한 오브젝트
+    private PlayerInput playerInput; // PlayerInput 변수 선언
 
     // 카메라
     public Transform cameraTransform; // 카메라의 Transform
-    private Vector3 _initialPosition = new Vector3(-10f, 1.910354f, -2.25f); // 초기 위치
-    private Quaternion _initialRotation = Quaternion.Euler(6f, 0.0f, 0.0f); // 초기 회전
     public Vector3 cameraOffset = new Vector3(0, 7.7f, -7); // 카메라가 캐릭터로부터 떨어진 거리
     private float xRotation = 0f; // 카메라 회전 속도 설정
+    float _mouseSensitivity = 2.0f; // 마우스 감도
 
     // 포톤
     public PhotonView PV;
     private GameObject chatBubblePrefab; // 말풍선 UI 프리팹을 연결할 변수
     private GameObject currentChatBubble; // 현재 말풍선 인스턴스를 저장할 변수
-
     public TMP_Text playerNameText; // 캐릭터 이름 표시용 TextMeshPro
     public string playerName; // 플레이어 이름
     private NavMeshAgent agent;      // NavMeshAgent 컴포넌트
+
+    public bool IsChatting { get; private set; } = false;
     public enum PlayerState
     {
-        Chatting,
         Jumping,
         Moving,
         Idle,
@@ -63,19 +62,31 @@ public class PhotonPlayerController: MonoBehaviour
     {
         State = state;
     }
+    
+    public void SetIsChatting(bool isChatting)
+    {
+        this.IsChatting = isChatting;
+    }
 
     void Start()
     {
-        chatBubblePrefab = Resources.Load<GameObject>("Prefabs/ChatBubble");
+        // 캐릭터
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         anim = GetComponent<Animator>(); // 애니메이션 컴포넌트
-        PV = GetComponent<PhotonView>(); // PhotonView 초기화
         _destPos = transform.position;  // 시작 위치 설정
-        cameraTransform = Camera.main.transform; // 기본 메인 카메라를 설정
-        _layerMask = LayerMask.GetMask("Interactable"); // "Interactable" 레이어에 속하는 오브젝트만 감지하도록 설정
+
+        // 상호작용
         playerInput = GetComponent<PlayerInput>();
         playerInput.actions["Interaction"].performed += OnInteraction;
+        _layerMask = LayerMask.GetMask("Interactable"); // "Interactable" 레이어에 속하는 오브젝트만 감지하도록 설정
+
+        // 카메라
+        cameraTransform = Camera.main.transform; // 기본 메인 카메라를 설정
         UpdateCameraPosition();
+
+        // 포톤
+        chatBubblePrefab = Resources.Load<GameObject>("Prefabs/ChatBubble");
+        PV = GetComponent<PhotonView>(); // PhotonView 초기화
         agent = GetComponent<NavMeshAgent>();
         // 만약 이 플레이어가 로컬 플레이어라면 ChatManager에 등록
         if (PV.IsMine)
@@ -162,7 +173,7 @@ public class PhotonPlayerController: MonoBehaviour
         if (PV.IsMine)
         {
             // Chatting 상태일 때는 아무 동작도 하지 않음
-            if (State == PlayerState.Chatting)
+            if (IsChatting)
             {
                 
                 if (IsGrounded()) 
@@ -260,7 +271,8 @@ public class PhotonPlayerController: MonoBehaviour
     // 상호작용 입력 처리 (Input 시스템에서 호출됨)
     public void OnInteraction(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("OnInteract"); // 상호작용 시 디버그 메시지 출력
+        // 채팅 중일 때는 상호작용을 하지 않도록 리턴
+        if (IsChatting) return;
         Debug.Log($"OnInteract, {callbackContext.phase} {_curInteractable}"); // 상호작용 상태와 현재 상호작용 가능한 오브젝트 정보 출력
 
         // 상호작용 입력이 시작되고, 상호작용 가능한 오브젝트가 존재할 때
@@ -269,22 +281,15 @@ public class PhotonPlayerController: MonoBehaviour
             if (State == PlayerState.Watch)
             {
                 ExitWatchState(); // Watch 상태에서 나옴
-                UpdateCameraPosition();
-                SetRenderersEnabled(true);
             }
             else if (_curInteractable != null)
             {
                 Debug.Log("상호작용 중...");
                 State = PlayerState.Watch; // Watch 상태로 진입
                 _curInteractable.Interact(); // 상호작용 로직 실행
-                cameraTransform.position = _initialPosition;
-                cameraTransform.rotation = _initialRotation;
                 _interactText.gameObject.SetActive(false); // 텍스트 비활성화
                 UpdateIdle();
-                SetRenderersEnabled(false);
             }
-            //_curGameobject = null; // 상호작용 후 오브젝트 정보를 초기화 (현재는 주석 처리됨)
-            //_curInteractable = null; // 상호작용 가능한 오브젝트 정보도 초기화 (현재는 주석 처리됨)
         }
     }
 
@@ -292,19 +297,10 @@ public class PhotonPlayerController: MonoBehaviour
     void ExitWatchState()
     {
         Debug.Log("Watch 상태 종료, Idle 상태로 전환");
+        _curInteractable.Interact(); // 상호작용 로직 실행
         State = PlayerState.Idle; // 상태를 Idle로 전환
     }
 
-
-    void SetRenderersEnabled(bool isEnabled)
-    {
-        // 해당 게임 오브젝트와 그 하위 모든 오브젝트의 Renderer를 찾아서 설정
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        foreach (Renderer renderer in renderers)
-        {
-            renderer.enabled = isEnabled;
-        }
-    }
     // 채팅
     [PunRPC]
     public void ShowChatBubble(string message)
@@ -351,11 +347,6 @@ public class PhotonPlayerController: MonoBehaviour
         right.Normalize();
 
         moveDirection = (forward * moveZ + right * moveX).normalized * _speed;
-
-        if (moveDirection != Vector3.zero)
-        {
-            State = PlayerState.Moving;
-        }
 
         if (moveDirection != Vector3.zero)
         {

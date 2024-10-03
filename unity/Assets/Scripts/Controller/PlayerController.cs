@@ -9,33 +9,48 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    float _speed = 5.0f;
     public static PlayerController Instance { get; private set; }
-    [SerializeField] private TMP_Text _interactText; // 상호작용 가능할 때 나타나는 텍스트 UI
-    [SerializeField] private float _checkRate = 0.05f; // 광선을 쏘는 주기 (0.05초마다)
-    [SerializeField] private float _maxDistance = 3.0f; // 광선이 감지할 수 있는 최대 거리
-    [SerializeField] private LayerMask _layerMask; // 상호작용할 수 있는 오브젝트를 감지할 레이어
+
+    // 이동
+    Animator anim;
+    private Rigidbody rb;
+    float _speed = 5.0f;
+    public float jumpForce = 7f; // 점프 힘
+    private Vector3 moveDirection; // 이동 방향
+    public LayerMask groundLayer; // 바닥 레이어 설정 (점프할 수 있는 곳)
+    private bool isGrounded; // 캐릭터가 바닥에 있는지 여부
+    Vector3 _destPos;
+
+    // 카메라
+    public Transform cameraTransform; // 카메라의 Transform
     private Vector3 _initialPosition = new Vector3(-10f, 1.910354f, -2.25f); // 초기 위치
     private Quaternion _initialRotation = Quaternion.Euler(6f, 0.0f, 0.0f); // 초기 회전
+    public Vector3 cameraOffset = new Vector3(0, 7.7f, -7); // 카메라가 캐릭터로부터 떨어진 거리
+    private float xRotation = 0f; // 카메라 회전 속도 설정
+    float _mouseSensitivity = 2.0f; // 마우스 감도
 
-    Vector3 _destPos;
+    // 상호 작용
+    [SerializeField] private TMP_Text _interactText; // 상호작용 가능할 때 나타나는 텍스트 UI
+    private float _checkRate = 0.05f; // 광선을 쏘는 주기 (0.05초마다)
+    private float _maxDistance = 3.0f; // 광선이 감지할 수 있는 최대 거리
+    private LayerMask _layerMask; // 상호작용할 수 있는 오브젝트를 감지할 레이어
     private float _lastCheckTime; // 마지막으로 광선을 쏜 시간을 기록
-
     private GameObject _curGameobject; // 현재 감지된 오브젝트
     private IInteractable _curInteractable; // 현재 상호작용 가능한 인터페이스를 구현한 오브젝트
-
-    // 카메라를 참조하는 변수
-    private Camera _camera;
-
-    // 카메라의 오프셋
-    [SerializeField]
-    Vector3 cameraOffset = new Vector3(0, 2, -2); // 적절한 높이와 거리 설정
-
-    [SerializeField]
-    float _mouseSensitivity = 2.0f; // 마우스 감도
     private PlayerInput playerInput; // PlayerInput 변수 선언
 
+    public enum PlayerState
+    {
+        Jumping,
+        Moving,
+        Idle,
+        Watch,
+    }
+    public PlayerState State { get; private set; } = PlayerState.Idle;
+    public void SetState(PlayerState state)
+    {
+        State = state;
+    }
     void Awake()
     {
         // 싱글톤 인스턴스 설정
@@ -45,76 +60,73 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("PlayerController 인스턴스는 하나만 존재해야 합니다.");
             Destroy(gameObject);
         }
     }
     void Start()
     {
+        // 캐릭터
+        rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
+        anim = GetComponent<Animator>(); // 애니메이션 컴포넌트
         _destPos = transform.position;  // 시작 위치 설정
-        _camera = Camera.main;
-        _layerMask = LayerMask.GetMask("Interactable"); // "Interactable" 레이어에 속하는 오브젝트만 감지하도록 설정
+
+        // 상호작용
         playerInput = GetComponent<PlayerInput>();
         playerInput.actions["Interaction"].performed += OnInteraction;
+        _layerMask = LayerMask.GetMask("Interactable"); // "Interactable" 레이어에 속하는 오브젝트만 감지하도록 설정
+
+        // 카메라
+        cameraTransform = Camera.main.transform; // 기본 메인 카메라를 설정
         UpdateCameraPosition();
     }
-    public enum PlayerState
-    {
-        Die,
-        Moving,
-        Idle,
-        Watch,
-    }
-    public PlayerState State { get; private set; } = PlayerState.Idle;
+   
 
-    void UpdateDie()
+    void UpdateJumping()
     {
-        // 아무것도 못함
+        // 점프 중 이동 처리
+        if (moveDirection != Vector3.zero)
+        {
+            rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
+        }
+        if (IsGrounded()) // 착지했을 때 상태를 Idle로 전환
+        {
+            State = PlayerState.Idle;
+            anim.SetBool("isJumping", false);
+        }
     }
-
     void UpdateMoving()
     {
-        Vector3 dir = _destPos - transform.position;
-
-        // 레이캐스트를 사용하여 플레이어 전방에 벽이 있는지 확인
+        // 플레이어 전방에 벽이 있는지 레이캐스트로 감지
+        Vector3 dir = moveDirection; // 이동 방향
         RaycastHit hit;
-        float rayDistance = 1.0f; // 레이캐스트의 거리
+        float rayDistance = 1.0f; // 레이캐스트 거리 설정
         LayerMask wallLayer = LayerMask.GetMask("Wall"); // Wall 레이어 설정
-        LayerMask targetLayer = LayerMask.GetMask("Target");
 
-        // 플레이어 전방으로 레이캐스트를 쏨
-        if (Physics.Raycast(transform.position, dir.normalized, out hit, rayDistance, wallLayer | _layerMask | targetLayer))
+        // 플레이어 전방으로 레이캐스트를 쏘아 벽 감지
+        if (Physics.Raycast(transform.position + Vector3.up * 1.0f, dir.normalized, out hit, rayDistance, wallLayer))
         {
-            Debug.Log("벽과 충돌: " + hit.collider.name);
             State = PlayerState.Idle; // 벽에 부딪히면 이동 멈춤
             return;
         }
+
         RayInteractable();
-        if (dir.magnitude < 0.0001f)
+        // 이동 중이 아닌 경우 Idle 상태로 전환
+        if (moveDirection == Vector3.zero)
         {
             State = PlayerState.Idle;
         }
         else
         {
-            float moveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);
-            transform.position += dir.normalized * moveDist;
-            // 후진 중이 아니면 회전
-            if (!Input.GetKey(KeyCode.S)) // 후진할 때는 회전하지 않음
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 2 * Time.deltaTime);
-            }
-        }
+            // 이동 처리
+            rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
 
-        // 애니메이션
-        Animator anim = GetComponent<Animator>();
-        anim.SetFloat("speed", _speed);
-        UpdateCameraPosition();
+            // 애니메이션 설정
+            anim.SetFloat("speed", _speed);
+        }
     }
 
     void UpdateIdle()
     {
-        // 애니메이션
-        Animator anim = GetComponent<Animator>();
         anim.SetFloat("speed", 0);
     }
 
@@ -130,8 +142,8 @@ public class PlayerController : MonoBehaviour
 
         switch (State)
         {
-            case PlayerState.Die:
-                UpdateDie();
+            case PlayerState.Jumping:
+                UpdateJumping();
                 break;
             case PlayerState.Moving:
                 UpdateMoving();
@@ -141,7 +153,10 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        HandleMovement();
+        // 카메라
+        HandleMouseRotation();
+        UpdateCameraPosition();
+        OnKeyboard();
     }
     void RayInteractable()
     {
@@ -227,14 +242,12 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("상호작용 중...");
                 State = PlayerState.Watch; // Watch 상태로 진입
                 _curInteractable.Interact(); // 상호작용 로직 실행
-                _camera.transform.position = _initialPosition;
-                _camera.transform.rotation = _initialRotation; 
+                cameraTransform.transform.position = _initialPosition;
+                cameraTransform.transform.rotation = _initialRotation; 
                 _interactText.gameObject.SetActive(false); // 텍스트 비활성화
                 UpdateIdle();
                 SetRenderersEnabled(false);
             }
-            //_curGameobject = null; // 상호작용 후 오브젝트 정보를 초기화 (현재는 주석 처리됨)
-            //_curInteractable = null; // 상호작용 가능한 오브젝트 정보도 초기화 (현재는 주석 처리됨)
         }
     }
     void SetLayerTo(string objectName, int layerNum)
@@ -265,57 +278,103 @@ public class PlayerController : MonoBehaviour
         SetLayerTo("UserButton", 0);
     }
 
-    void HandleMovement()
+
+    // 키 감지하는 함수
+    void OnKeyboard()
     {
-        if (State == PlayerState.Die)
-            return;
+        if (State == PlayerState.Jumping) return;
 
-        Vector3 moveDir = Vector3.zero;
+        //// 이동 입력 처리
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
 
-        // 카메라 방향에 따라 이동할 방향을 계산
-        Vector3 forward = _camera.transform.forward;
-        Vector3 right = _camera.transform.right;
+        // 카메라 방향을 기준으로 이동 방향 설정
+        Vector3 forward = cameraTransform.forward; // 카메라의 앞방향
+        Vector3 right = cameraTransform.right;     // 카메라의 오른쪽방향
 
-        // Y축 제외하여 평면 상에서 이동하도록 설정
         forward.y = 0;
         right.y = 0;
+
         forward.Normalize();
         right.Normalize();
 
-        // WASD 입력 처리
-        if (Input.GetKey(KeyCode.W))
-        {
-            moveDir += forward; // 카메라가 보는 방향으로 전진
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            moveDir -= forward; // 카메라가 보는 방향의 반대 방향으로 후진
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            moveDir -= right; // 카메라 왼쪽으로 이동
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            moveDir += right; // 카메라 오른쪽으로 이동
-        }
+        moveDirection = (forward * moveZ + right * moveX).normalized * _speed;
 
-        if (moveDir != Vector3.zero)
+        if (moveDirection != Vector3.zero)
         {
-            _destPos = transform.position + moveDir.normalized * _speed * Time.deltaTime;
             State = PlayerState.Moving;
         }
-    }
-    void UpdateCameraPosition()
-    {
-        if (_camera != null)
-        {
-            // 캐릭터의 정면 기준으로 카메라를 회전시켜서 캐릭터의 뒤에 위치시킴
-            Vector3 targetPosition = transform.position + (transform.rotation * cameraOffset); // 캐릭터의 회전값을 반영한 오프셋 위치
-            _camera.transform.position = targetPosition;
 
-            // 카메라가 캐릭터를 항상 바라보도록 설정
-            _camera.transform.LookAt(transform.position + Vector3.up * 1.5f);
+        // 점프 입력 처리
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        {
+            Jump();
+        }
+    }
+
+    // 점프 함수
+    private void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        State = PlayerState.Jumping;
+        anim.SetBool("isJumping", true);
+    }
+
+    // 땅에 있는지 확인하는 함수
+    private bool IsGrounded()
+    {
+        // 캐릭터의 아래로 스피어캐스트를 쏴서 바닥에 있는지 확인
+        RaycastHit hit;
+        float distanceToGround = 0.5f; // 바닥과의 최소 거리
+        float sphereRadius = 0.3f; // 스피어의 반경 (캐릭터 크기에 맞게 조정)
+        Vector3 origin = transform.position + Vector3.up * 0.4f; // 캐릭터 중심에서 약간 위에서 시작
+
+        // 디버그용 스피어캐스트 그리기 (시각적으로 확인)
+        Debug.DrawRay(origin, Vector3.down * (distanceToGround + sphereRadius), Color.red);
+
+        // 스피어캐스트를 사용하여 바닥 감지
+        if (Physics.SphereCast(origin, sphereRadius, Vector3.down, out hit, distanceToGround, groundLayer))
+        {
+            return true; // 바닥에 닿아 있으면 true 반환
+        }
+
+        return false; // 공중에 있으면 false 반환
+    }
+    // 카메라
+    void HandleMouseRotation()
+    {
+        if (Input.GetMouseButton(1)) // 마우스 우클릭 시
+        {
+            float mouseX = Input.GetAxis("Mouse X") * _mouseSensitivity;
+            float mouseY = Input.GetAxis("Mouse Y") * _mouseSensitivity;
+
+            // 캐릭터와 카메라 Y축 회전
+            transform.Rotate(0, mouseX, 0); // 캐릭터 회전
+
+            // 마우스 상하 움직임에 따른 카메라 오프셋 조절 (카메라 높이 조절)
+            cameraOffset.y -= mouseY * 0.1f; // 감도를 조정해 자연스러운 높이 변화
+            cameraOffset.y = Mathf.Clamp(cameraOffset.y, 1f, 2.5f); // 카메라 높이 제한 (1 ~ 10)
+
+            // 카메라 상하 각도 조절
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -45f, 45f); // 카메라 상하 각도를 제한 (-45도 ~ 45도)
+
+            // 카메라 상하 회전 적용
+            cameraTransform.localRotation = Quaternion.Euler(xRotation, transform.eulerAngles.y, 0f);
+        }
+    }
+
+    // 카메라가 캐릭터를 따라다니도록 위치 업데이트
+    private void UpdateCameraPosition()
+    {
+        if (cameraTransform != null)
+        {
+            // 캐릭터의 회전을 반영하여 카메라 위치 설정
+            Vector3 targetPosition = transform.position + transform.rotation * cameraOffset;
+            cameraTransform.position = targetPosition;
+
+            // 카메라가 캐릭터를 바라보도록 설정
+            cameraTransform.LookAt(transform.position + Vector3.up * 1f);
         }
     }
 
