@@ -312,7 +312,7 @@ public class PhotonPlayerController: MonoBehaviour
         Debug.Log(message);
 
         // 말풍선을 캐릭터의 머리 위 고정된 위치로 생성 (캐릭터 크기에 따라 적절히 조정)
-        Vector3 bubblePosition = transform.position + Vector3.up * 3.5f; // 머리 위로 고정
+        Vector3 bubblePosition = transform.position + Vector3.up * 4.2f; // 머리 위로 고정
 
         // 말풍선을 캐릭터의 머리 위 고정 위치로 생성
         currentChatBubble = Instantiate(chatBubblePrefab, bubblePosition, Quaternion.identity);
@@ -363,7 +363,7 @@ public class PhotonPlayerController: MonoBehaviour
     // 점프 함수
     private void Jump()
     {
-
+        if (IsChatting) return;
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         State = PlayerState.Jumping;
         anim.SetBool("isJumping", true);
