@@ -6,6 +6,7 @@ using UnityEngine;
 public class StoryOneScene : BaseScene
 {
     private CameraController _cameraController;
+    private UI_Skip _skipUI;
     private void Start()
     {
         _cameraController.onCloseUpComplete = OnCloseUpComplete;
@@ -15,6 +16,10 @@ public class StoryOneScene : BaseScene
         base.Init();
 
         SceneType = Define.Scene.StoryOne;
+
+        _skipUI = Managers.UI.ShowSceneUI<UI_Skip>();
+        _skipUI.SetNextScene(Define.Scene.StoryTwo);
+
         _cameraController = FindObjectOfType<CameraController>();
         _cameraController.StartCloseUp(new Vector3(48f, 31f, -19.2f), new Vector3(70.1f, 24.7f, -42.6f),
              new Quaternion(0.05f, 0.94f, -0.15f, 0.3f), new Quaternion(0.03f, 0.96f, -0.15f, 0.22f),
