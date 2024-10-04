@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
@@ -192,12 +193,20 @@ public class UI_Game_Score : UI_Scene
     {
         if (score >= 3) // 스코어가 3 이상이면 성공 팝업
         {
+            // Close the UI_Motion_State before showing the finish UI
+            var motionStateUI = FindObjectOfType<UI_Motion_State>();
+            if (motionStateUI != null)
+            {
+                motionStateUI.Close(); // Close the UI_Motion_State
+            }
+
             Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_02", Define.Sound.Effect);
 
             Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
             StartCoroutine(NextScene(5f)); // 5초 후에 다음 씬으로 전환
         }
     }
+
 
     private IEnumerator NextScene(float waitTime)
     {

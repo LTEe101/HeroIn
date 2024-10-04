@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HandGestureController : MonoBehaviour, IMotionGameScript
 {
     [SerializeField] private Animator bowAnimator;
     [SerializeField] private ShootingManager shootingManager;
+    [SerializeField] private UI_Motion_State uiMotionState;
+
     private bool canDetectGesture = true;
     private const float GESTURE_COOLDOWN = 5f;
 
@@ -23,6 +26,25 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
     {
         get { return enabled; }
         set { enabled = value; }
+    }
+    private void Start()
+    {
+        // UI_Motion_State 인스턴스를 찾기
+        if (uiMotionState == null)
+        {
+            uiMotionState = FindObjectOfType<UI_Motion_State>();
+        }
+
+        if (uiMotionState != null)
+        {
+            uiMotionState.UpdateCurrentStateText("카메라에 두 손이 잘 보이도록 해주세요"); // 초기 상태 설정
+            Debug.Log("UI_Motion_State 인스턴스가 할당되었습니다."); // 로그 추가
+            Debug.Log($"UI_Motion_State 활성화 상태: {uiMotionState.gameObject.activeSelf}"); // 활성화 상태 로그
+        }
+        else
+        {
+            Debug.LogError("UI_Motion_State reference is not set."); // 오류 메시지
+        }
     }
 
     void Update()
@@ -49,6 +71,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         else
         {
             bowAnimator.SetBool("Aiming", false);
+            UpdateHandStateText("카메라에 두 손이 잘 보이도록 해주세요");
         }
     }
 
@@ -96,6 +119,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
             {
                 bowAnimator.SetBool("Aiming", true);
                 isAimingSoundPlayed = false;
+                UpdateHandStateText("조준 중");
             }
 
             PlayAimingSound(); // 조준 소리 재생
@@ -106,6 +130,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         {
             bowAnimator.SetBool("Aiming", false);
             Debug.Log("발사");
+            UpdateHandStateText("발사");
             shootingManager.TryShoot();
             StartCoroutine(GestureCooldown());
             isAimingSoundPlayed = false;
@@ -114,6 +139,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         {
             bowAnimator.SetBool("Aiming", false);
             Debug.Log("그냥 있어");
+            UpdateHandStateText("카메라에 두 손이 잘 보이도록 해주세요");
         }
     }
 
@@ -133,6 +159,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
                 bowAnimator.SetBool("Aiming", true);
                 PlayAimingSound(); // 조준 소리 재생
                 Debug.Log("조준");
+                UpdateHandStateText("조준 중");
             }
             else if (stableLeftHandState == "Open")
             {
@@ -140,9 +167,14 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
                 {
                     bowAnimator.SetBool("Aiming", false);
                     Debug.Log("발사");
+                    UpdateHandStateText("발사");
                     shootingManager.TryShoot();
                     StartCoroutine(GestureCooldown());
                 }
+            }
+            else
+            {
+                UpdateHandStateText("카메라에 두 손이 잘 보이도록 해주세요");
             }
         }
         else if (handType == "Right")
@@ -155,16 +187,38 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
             {
                 bowAnimator.SetBool("Aiming", true);
                 PlayAimingSound(); // 조준 소리 재생
+                Debug.Log("조준");
+                UpdateHandStateText("조준 중");
             }
             else if (stableRightHandState == "Open")
             {
                 if (bowAnimator.GetBool("Aiming"))
                 {
                     bowAnimator.SetBool("Aiming", false);
+                    Debug.Log("발사");
+                    UpdateHandStateText("발사");
                     shootingManager.TryShoot();
                     StartCoroutine(GestureCooldown());
                 }
             }
+            else
+            {
+                UpdateHandStateText("카메라에 두 손이 잘 보이도록 해주세요");
+            }
+        }
+    }
+    private void UpdateHandStateText(string state)
+    {
+        Debug.Log($"상태 텍스트 업데이트 시도: {state}"); // 업데이트 시도 로그
+
+        if (uiMotionState != null)
+        {
+            uiMotionState.UpdateCurrentStateText(state); // 상태 텍스트 업데이트
+            Debug.Log("상태 텍스트가 업데이트되었습니다."); // 업데이트 완료 로그
+        }
+        else
+        {
+            Debug.LogError("UI_Motion_State reference is not set."); // 오류 메시지
         }
     }
 

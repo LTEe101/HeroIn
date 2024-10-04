@@ -21,6 +21,7 @@ public class MotionGameScene : BaseScene
         DisableGameScripts();
 
         videoStreamer = FindObjectOfType<VideoStreamer>(); // VideoStreamer 가져오기
+
     }
 
     private void DisableGameScripts()
@@ -50,6 +51,7 @@ public class MotionGameScene : BaseScene
         {
             script.IsEnabled = true;
         }
+        Managers.UI.ShowSceneUI<UI_Motion_State>();
     }
 
     public override async void Clear() // 비동기 메서드로 변경
