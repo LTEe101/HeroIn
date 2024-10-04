@@ -6,6 +6,7 @@ using UnityEngine;
 using static CameraController;
 using static Outline;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,12 +15,10 @@ public class PlayerController : MonoBehaviour
     // 이동
     Animator anim;
     private Rigidbody rb;
-    float _speed = 7.0f;
-    public float jumpForce = 7f; // 점프 힘
+    float _speed = 5.0f;
     private Vector3 moveDirection; // 이동 방향
-    public LayerMask groundLayer; // 바닥 레이어 설정 (점프할 수 있는 곳)
-    private bool isGrounded; // 캐릭터가 바닥에 있는지 여부
     Vector3 _destPos;
+    NavMeshAgent nav;
 
     // 카메라
     public Transform cameraTransform; // 카메라의 Transform
@@ -41,7 +40,6 @@ public class PlayerController : MonoBehaviour
 
     public enum PlayerState
     {
-        Jumping,
         Moving,
         Idle,
         Watch,
@@ -68,6 +66,7 @@ public class PlayerController : MonoBehaviour
         // 캐릭터
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         anim = GetComponent<Animator>(); // 애니메이션 컴포넌트
+        nav = GetComponent<NavMeshAgent>();
         _destPos = transform.position;  // 시작 위치 설정
 
         // 상호작용
@@ -80,34 +79,8 @@ public class PlayerController : MonoBehaviour
         UpdateCameraPosition();
     }
    
-
-    void UpdateJumping()
-    {
-        // 점프 중 이동 처리
-        if (moveDirection != Vector3.zero)
-        {
-            rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
-        }
-        if (IsGrounded()) // 착지했을 때 상태를 Idle로 전환
-        {
-            State = PlayerState.Idle;
-            anim.SetBool("isJumping", false);
-        }
-    }
     void UpdateMoving()
     {
-        // 플레이어 전방에 벽이 있는지 레이캐스트로 감지
-        Vector3 dir = moveDirection; // 이동 방향
-        RaycastHit hit;
-        float rayDistance = 1.0f; // 레이캐스트 거리 설정
-        LayerMask wallLayer = LayerMask.GetMask("Wall"); // Wall 레이어 설정
-
-        // 플레이어 전방으로 레이캐스트를 쏘아 벽 감지
-        if (Physics.Raycast(transform.position + Vector3.up * 1.0f, dir.normalized, out hit, rayDistance, wallLayer))
-        {
-            State = PlayerState.Idle; // 벽에 부딪히면 이동 멈춤
-            return;
-        }
 
         RayInteractable();
         // 이동 중이 아닌 경우 Idle 상태로 전환
@@ -118,7 +91,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             // 이동 처리
-            rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
+            nav.Move(moveDirection * Time.deltaTime);
 
             // 애니메이션 설정
             anim.SetFloat("speed", _speed);
@@ -142,9 +115,6 @@ public class PlayerController : MonoBehaviour
 
         switch (State)
         {
-            case PlayerState.Jumping:
-                UpdateJumping();
-                break;
             case PlayerState.Moving:
                 UpdateMoving();
                 break;
@@ -233,9 +203,6 @@ public class PlayerController : MonoBehaviour
             if (State == PlayerState.Watch)
             {
                 ExitWatchState(); // Watch 상태에서 나옴
-                UpdateCameraPosition();
-                SetRenderersEnabled(true);
-                
             }
             else if (_curInteractable != null)
             {
@@ -272,6 +239,9 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Watch 상태 종료, Idle 상태로 전환");
         State = PlayerState.Idle; // 상태를 Idle로 전환
+        UpdateCameraPosition();
+        SetRenderersEnabled(true);
+        Managers.UI.CloseAllPopupUI();
         SetLayerTo("1592", 0);
         SetLayerTo("1919", 0);
         SetLayerTo("Start", 0);
@@ -282,8 +252,6 @@ public class PlayerController : MonoBehaviour
     // 키 감지하는 함수
     void OnKeyboard()
     {
-        if (State == PlayerState.Jumping) return;
-
         //// 이동 입력 처리
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
@@ -304,42 +272,8 @@ public class PlayerController : MonoBehaviour
         {
             State = PlayerState.Moving;
         }
-
-        // 점프 입력 처리
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
-        {
-            Jump();
-        }
     }
 
-    // 점프 함수
-    private void Jump()
-    {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        State = PlayerState.Jumping;
-        anim.SetBool("isJumping", true);
-    }
-
-    // 땅에 있는지 확인하는 함수
-    private bool IsGrounded()
-    {
-        // 캐릭터의 아래로 스피어캐스트를 쏴서 바닥에 있는지 확인
-        RaycastHit hit;
-        float distanceToGround = 0.5f; // 바닥과의 최소 거리
-        float sphereRadius = 0.3f; // 스피어의 반경 (캐릭터 크기에 맞게 조정)
-        Vector3 origin = transform.position + Vector3.up * 0.4f; // 캐릭터 중심에서 약간 위에서 시작
-
-        // 디버그용 스피어캐스트 그리기 (시각적으로 확인)
-        Debug.DrawRay(origin, Vector3.down * (distanceToGround + sphereRadius), Color.red);
-
-        // 스피어캐스트를 사용하여 바닥 감지
-        if (Physics.SphereCast(origin, sphereRadius, Vector3.down, out hit, distanceToGround, groundLayer))
-        {
-            return true; // 바닥에 닿아 있으면 true 반환
-        }
-
-        return false; // 공중에 있으면 false 반환
-    }
     // 카메라
     void HandleMouseRotation()
     {
