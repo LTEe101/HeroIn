@@ -81,6 +81,18 @@ public class SoundManager
         }
     }
 
+    public void PlayOneShotSound(string path, float volume = 1.0f)
+    {
+        AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.Effect);
+        if (audioClip != null)
+        {
+            AudioSource audioSource = _audioSources[(int)Define.Sound.Effect];
+            audioSource.volume = volume;
+            audioSource.PlayOneShot(audioClip);
+        }
+    }
+
+
     // 음량 설정 메서드
     private void SetAudioVolume(string clipName, float volume, Define.Sound type)
     {
