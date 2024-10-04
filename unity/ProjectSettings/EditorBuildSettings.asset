@@ -56,4 +56,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MetaverseWar.unity
     guid: 658e4f18d5f269041ae927f7d93297aa
+  - enabled: 1
+    path: Assets/Scenes/Quiz.unity
+    guid: 2bef94af040c9fe448f3b638fce2cb15
   m_configObjects: {}

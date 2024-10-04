@@ -26,6 +26,7 @@ public class Define
         MetaverseWar,
         MotionGame,
         ShipView,
+        Quiz
     }
      public enum StoryType
      {
