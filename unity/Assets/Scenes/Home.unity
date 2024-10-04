@@ -2253,8 +2253,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4, y: 0.66280705, z: 1.6570046}
-  m_Center: {x: 0, y: -0.19832318, z: -0.729931}
+  m_Size: {x: 4, y: 0.66280705, z: 1.9725795}
+  m_Center: {x: 0, y: -0.19832318, z: -0.57214355}
 --- !u!1 &599448626
 GameObject:
   m_ObjectHideFlags: 0
@@ -5795,8 +5795,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.76004255, y: 2.7143989, z: 1.4431729}
-  m_Center: {x: -0.11997872, y: -0.11051566, z: 0.05079325}
+  m_Size: {x: 0.76004255, y: 2.7143989, z: 1.9691367}
+  m_Center: {x: -0.11997873, y: -0.11051566, z: 0.0147487605}
 --- !u!1001 &1568373118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7113,10 +7113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3384beca10462684c92e60e248acd905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 7
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
   cameraTransform: {fileID: 0}
   cameraOffset: {x: 0, y: 2, z: -2}
   _interactText: {fileID: 1171153283}
@@ -7139,10 +7135,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.2
+  m_Height: 0.4
   m_Direction: 1
-  m_Center: {x: 0, y: 0.46078503, z: 0}
+  m_Center: {x: 0, y: 0.16078503, z: 0}
 --- !u!54 &1887130600
 Rigidbody:
   m_ObjectHideFlags: 0

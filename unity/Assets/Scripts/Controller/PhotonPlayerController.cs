@@ -296,7 +296,7 @@ public class PhotonPlayerController: MonoBehaviour
                 Debug.Log("상호작용 중...");
                 State = PlayerState.Watch; // Watch 상태로 진입
                 _curInteractable.Interact(); // 상호작용 로직 실행
-                _interactText.gameObject.SetActive(false); // 텍스트 비활성화
+                SetPromptText();
                 UpdateIdle();
             }
         }
@@ -307,6 +307,7 @@ public class PhotonPlayerController: MonoBehaviour
     {
         Debug.Log("Watch 상태 종료, Idle 상태로 전환");
         _curInteractable.Interact(); // 상호작용 로직 실행
+        SetPromptText();
         State = PlayerState.Idle; // 상태를 Idle로 전환
     }
 
