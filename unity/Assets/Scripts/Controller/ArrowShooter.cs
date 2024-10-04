@@ -26,8 +26,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     private Vector3 AimingArrowPosition = new Vector3(-386.18f, 15.04f, -18.68f);
     private Quaternion AimingArrowRotation = new Quaternion(0.52234f, 0.45622f, -0.54248f, -0.47407f);
 
-    [SerializeField] private float positionLerpSpeed = 5f;
-    [SerializeField] private float rotationLerpSpeed = 5f;
+    [SerializeField] private float positionLerpSpeed = 18f;
+    [SerializeField] private float rotationLerpSpeed = 18f;
 
     private bool isInitialSetupComplete = false;
 

@@ -52,16 +52,24 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         }
     }
 
-    // 공통 함수로 사운드 재생을 처리
+    // 공통 함수로 사운드 재생을 처리 (지연 재생 추가)
     private void PlayAimingSound()
     {
         if (!isAimingSoundPlayed)
         {
-            Managers.Sound.Play("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_draw_stretch2_01후보", Define.Sound.Effect, 1.0f, 2.0f);
+            StartCoroutine(PlaySoundWithDelay("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_draw_stretch2_01후보", 0.8f, 2.0f, 0.3f));
             isAimingSoundPlayed = true; // 소리가 재생되었음을 기록
-            Debug.Log("조준 소리 재생");
+            Debug.Log("조준 소리 재생 대기");
         }
     }
+
+    // 지연 후 사운드를 재생하는 코루틴
+    private IEnumerator PlaySoundWithDelay(string soundPath, float volume, float pitch, float delay)
+    {
+        yield return new WaitForSeconds(delay); // 지정된 시간만큼 대기
+        Managers.Sound.Play(soundPath, Define.Sound.Effect, volume, pitch); // 사운드 재생
+    }
+
 
     private void ProcessBothHands(Vector3[] leftHandPositions, Vector3[] rightHandPositions)
     {
