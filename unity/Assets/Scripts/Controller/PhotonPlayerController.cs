@@ -17,11 +17,14 @@ public class PhotonPlayerController: MonoBehaviour
     Animator anim;
     private Rigidbody rb;
     float _speed = 7.0f;
-    public float jumpForce = 7f; // 점프 힘
+    public float jumpForce = 7.0f; // 점프 힘
+    private float jumpCooldown = 1f; // 점프 직후 쿨다운 시간
+    private float lastJumpTime; // 마지막으로 점프한 시간
     private Vector3 moveDirection; // 이동 방향
     public LayerMask groundLayer; // 바닥 레이어 설정 (점프할 수 있는 곳)
-    private bool isGrounded; // 캐릭터가 바닥에 있는지 여부
     Vector3 _destPos;
+    NavMeshAgent nav;
+
 
     // 상호 작용
     [SerializeField] private TMP_Text _interactText; // 상호작용 가능할 때 나타나는 텍스트 UI
@@ -74,15 +77,11 @@ public class PhotonPlayerController: MonoBehaviour
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         anim = GetComponent<Animator>(); // 애니메이션 컴포넌트
         _destPos = transform.position;  // 시작 위치 설정
-
+        nav = GetComponent<NavMeshAgent>();
         // 상호작용
         playerInput = GetComponent<PlayerInput>();
         playerInput.actions["Interaction"].performed += OnInteraction;
         _layerMask = LayerMask.GetMask("Interactable"); // "Interactable" 레이어에 속하는 오브젝트만 감지하도록 설정
-
-        // 카메라
-        cameraTransform = Camera.main.transform; // 기본 메인 카메라를 설정
-        UpdateCameraPosition();
 
         // 포톤
         chatBubblePrefab = Resources.Load<GameObject>("Prefabs/ChatBubble");
@@ -97,6 +96,10 @@ public class PhotonPlayerController: MonoBehaviour
         // 닉네임 동기화
         playerNameText.text = PV.Owner.NickName; // PhotonView의 소유자 닉네임을 표시
         Cursor.lockState = CursorLockMode.None; // 마우스 커서 잠금 해제
+
+        // 카메라
+        cameraTransform = Camera.main.transform; // 기본 메인 카메라를 설정
+        UpdateCameraPosition();
     }
 
     void UpdateJumping()
@@ -108,7 +111,13 @@ public class PhotonPlayerController: MonoBehaviour
         }
         if (IsGrounded()) // 착지했을 때 상태를 Idle로 전환
         {
+            if (!NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                // 착지한 위치가 NavMesh 경로 밖이라면 다시 경로로 이동
+                nav.Warp(hit.position); // 캐릭터를 NavMesh 경로 내로 복귀시킴
+            }
             State = PlayerState.Idle;
+            nav.enabled = true;
             anim.SetBool("isJumping", false);
         }
     }
@@ -138,7 +147,7 @@ public class PhotonPlayerController: MonoBehaviour
         else
         {
             // 이동 처리
-            rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
+            nav.Move(moveDirection * Time.deltaTime);
 
             // 애니메이션 설정
             anim.SetFloat("speed", _speed);
@@ -287,7 +296,7 @@ public class PhotonPlayerController: MonoBehaviour
                 Debug.Log("상호작용 중...");
                 State = PlayerState.Watch; // Watch 상태로 진입
                 _curInteractable.Interact(); // 상호작용 로직 실행
-                _interactText.gameObject.SetActive(false); // 텍스트 비활성화
+                SetPromptText();
                 UpdateIdle();
             }
         }
@@ -298,6 +307,7 @@ public class PhotonPlayerController: MonoBehaviour
     {
         Debug.Log("Watch 상태 종료, Idle 상태로 전환");
         _curInteractable.Interact(); // 상호작용 로직 실행
+        SetPromptText();
         State = PlayerState.Idle; // 상태를 Idle로 전환
     }
 
@@ -364,26 +374,31 @@ public class PhotonPlayerController: MonoBehaviour
     private void Jump()
     {
         if (IsChatting) return;
+        
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         State = PlayerState.Jumping;
         anim.SetBool("isJumping", true);
+        nav.enabled = false;
+        lastJumpTime = Time.time; // 마지막 점프 시간을 기록
     }
 
 
     // 땅에 있는지 확인하는 함수
     private bool IsGrounded()
     {
-        // 캐릭터의 아래로 스피어캐스트를 쏴서 바닥에 있는지 확인
+        // 점프 직후 일정 시간 동안은 땅에 닿지 않은 것으로 처리
+        if (Time.time < lastJumpTime + jumpCooldown)
+        {
+            return false;
+        }
+
+        // 캐릭터의 아래로 Raycast를 쏴서 바닥에 있는지 확인
         RaycastHit hit;
-        float distanceToGround = 0.5f; // 바닥과의 최소 거리
-        float sphereRadius = 0.3f; // 스피어의 반경 (캐릭터 크기에 맞게 조정)
-        Vector3 origin = transform.position + Vector3.up * 0.7f; // 캐릭터 중심에서 약간 위에서 시작
+        float rayDistance = 1.0f; // 바닥까지의 레이캐스트 거리
+        Vector3 origin = transform.position + Vector3.up * 0.1f; // 캐릭터 중심에서 조금 위쪽에서 시작
 
-        // 디버그용 스피어캐스트 그리기 (시각적으로 확인)
-        Debug.DrawRay(origin, Vector3.down * (distanceToGround + sphereRadius), Color.red);
-
-        // 스피어캐스트를 사용하여 바닥 감지
-        if (Physics.SphereCast(origin, sphereRadius, Vector3.down, out hit, distanceToGround, groundLayer))
+        // Ray를 아래로 쏘아 바닥과 충돌하는지 확인
+        if (Physics.Raycast(origin, Vector3.down, out hit, rayDistance, groundLayer))
         {
             return true; // 바닥에 닿아 있으면 true 반환
         }
@@ -419,7 +434,7 @@ public class PhotonPlayerController: MonoBehaviour
     // 카메라가 캐릭터를 따라다니도록 위치 업데이트
     private void UpdateCameraPosition()
     {
-        if (cameraTransform != null)
+        if (PV.IsMine && cameraTransform != null)
         {
             // 캐릭터의 회전을 반영하여 카메라 위치 설정
             Vector3 targetPosition = transform.position + transform.rotation * cameraOffset;

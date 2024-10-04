@@ -6,6 +6,7 @@ public class MotionGameScene : BaseScene
     private bool isGameStarted = false;
     private UI_Game_Desc popup;
     private IMotionGameScript[] gameplayScripts;
+    private VideoStreamer videoStreamer; // 웹캠 종료를 위한 VideoStreamer 참조 추가
 
     protected override void Init()
     {
@@ -18,6 +19,8 @@ public class MotionGameScene : BaseScene
 
         gameplayScripts = FindObjectsOfType<MonoBehaviour>().OfType<IMotionGameScript>().ToArray();
         DisableGameScripts();
+
+        videoStreamer = FindObjectOfType<VideoStreamer>(); // VideoStreamer 가져오기
     }
 
     private void DisableGameScripts()
@@ -49,8 +52,14 @@ public class MotionGameScene : BaseScene
         }
     }
 
-    public override void Clear()
+    public override async void Clear() // 비동기 메서드로 변경
     {
         Debug.Log("MotionGameScene Clear!");
+
+        // 웹소켓 및 웹캠 종료
+        if (videoStreamer != null)
+        {
+            await videoStreamer.CloseWebSocketAndStopCam(); // await로 비동기 작업 대기
+        }
     }
 }

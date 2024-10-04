@@ -18013,6 +18013,7 @@ GameObject:
   - component: {fileID: 8664229874767072705}
   - component: {fileID: 3956552430103473034}
   - component: {fileID: 2659795232896010259}
+  - component: {fileID: 5537288814902395608}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -18090,7 +18091,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7642662835435731608}
   serializedVersion: 4
-  m_Mass: 1.2
+  m_Mass: 1.4
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -18129,9 +18130,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1.5464158
+  m_Height: 1.5728612
   m_Direction: 1
-  m_Center: {x: 0, y: 0.770797, z: 0}
+  m_Center: {x: 0, y: 0.7575743, z: 0}
 --- !u!114 &5551768496390729980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18248,6 +18249,28 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!195 &5537288814902395608
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7642662835435731608}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: -0.08
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7678740270033538457
 GameObject:
   m_ObjectHideFlags: 0
