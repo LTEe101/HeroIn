@@ -26,8 +26,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
     private Vector3 AimingArrowPosition = new Vector3(-386.18f, 15.04f, -18.68f);
     private Quaternion AimingArrowRotation = new Quaternion(0.52234f, 0.45622f, -0.54248f, -0.47407f);
 
-    [SerializeField] private float positionLerpSpeed = 5f;
-    [SerializeField] private float rotationLerpSpeed = 5f;
+    [SerializeField] private float positionLerpSpeed = 18f;
+    [SerializeField] private float rotationLerpSpeed = 18f;
 
     private bool isInitialSetupComplete = false;
 
@@ -139,6 +139,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         existingArrow.transform.parent = null;
 
+        Managers.Sound.Play("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_shoot_type1_ÈÄº¸ 1", Define.Sound.Effect, 0.8f, 3.0f);
+
         float spawnOffsetDistance = 0.2f;
         Vector3 spawnPosition = firePoint.position + firePoint.forward * spawnOffsetDistance;
         existingArrow.transform.position = spawnPosition;
@@ -169,6 +171,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         Debug.Log($"Arrow fired. Direction: {direction}, Target: {targetPosition}");
     }
+
 
     private IEnumerator DeactivateArrowAfterLifetime()
     {

@@ -14,13 +14,14 @@ public class MotionGameScene : BaseScene
         SceneType = Define.Scene.MotionGame;
         popup = Managers.UI.ShowPopupUI<UI_Game_Desc>();
         popup.LoadInfos(2);
-        Managers.Sound.Play("KarugamoBGM/KBF_Battle_Nomal_04", Define.Sound.Bgm, 0.8f);
+        Managers.Sound.Play("KarugamoBGM/KBF_Battle_Nomal_04", Define.Sound.Bgm, 0.6f);
         popup.OnStartGame += StartGame;
 
         gameplayScripts = FindObjectsOfType<MonoBehaviour>().OfType<IMotionGameScript>().ToArray();
         DisableGameScripts();
 
         videoStreamer = FindObjectOfType<VideoStreamer>(); // VideoStreamer 가져오기
+
     }
 
     private void DisableGameScripts()
@@ -50,6 +51,7 @@ public class MotionGameScene : BaseScene
         {
             script.IsEnabled = true;
         }
+        Managers.UI.ShowSceneUI<UI_Motion_State>();
     }
 
     public override async void Clear() // 비동기 메서드로 변경
