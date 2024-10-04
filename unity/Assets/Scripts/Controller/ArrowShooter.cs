@@ -139,7 +139,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         existingArrow.transform.parent = null;
 
-        Managers.Sound.Play("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_shoot_type1_후보 1", Define.Sound.Effect, 0.8f, 2.0f);
+        Managers.Sound.Play("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_shoot_type1_후보 1", Define.Sound.Effect, 0.8f, 3.0f);
 
         float spawnOffsetDistance = 0.2f;
         Vector3 spawnPosition = firePoint.position + firePoint.forward * spawnOffsetDistance;
