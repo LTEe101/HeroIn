@@ -17,6 +17,8 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
     private string previousLeftHandStableState = "Open";
     private string previousRightHandStableState = "Open";
 
+    private bool isAimingSoundPlayed = false; // 사운드 재생 여부를 체크하는 플래그
+
     public bool IsEnabled
     {
         get { return enabled; }
@@ -44,17 +46,20 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         {
             ProcessBothHands(leftHandPositions, rightHandPositions);
         }
-        //else if (isLeftHandValid)
-        //{
-        //    ProcessSingleHand(leftHandPositions, "Left");
-        //}
-        //else if (isRightHandValid)
-        //{
-        //    ProcessSingleHand(rightHandPositions, "Right");
-        //}
         else
         {
             bowAnimator.SetBool("Aiming", false);
+        }
+    }
+
+    // 공통 함수로 사운드 재생을 처리
+    private void PlayAimingSound()
+    {
+        if (!isAimingSoundPlayed)
+        {
+            Managers.Sound.Play("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_draw_stretch2_01후보", Define.Sound.Effect, 1.0f, 2.0f);
+            isAimingSoundPlayed = true; // 소리가 재생되었음을 기록
+            Debug.Log("조준 소리 재생");
         }
     }
 
@@ -72,26 +77,30 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         string stableLeftHandState = GetStableHandState(leftHandStateHistory, previousLeftHandStableState);
         string stableRightHandState = GetStableHandState(rightHandStateHistory, previousRightHandStableState);
 
-        // 현재 stable 상태를 업데이트
         previousLeftHandStableState = stableLeftHandState;
         previousRightHandStableState = stableRightHandState;
-
-        //Debug.Log($"Left Hand - Average Angle: {leftAverageAngle:F2} degrees - Stable State: {stableLeftHandState}");
-        //Debug.Log($"Right Hand - Average Angle: {rightAverageAngle:F2} degrees - Stable State: {stableRightHandState}");
 
         bool isOneHandBehind = IsOneHandBehind(leftHandPositions, rightHandPositions);
 
         if (stableLeftHandState == "Fist" && stableRightHandState == "Fist" && isOneHandBehind)
         {
-            bowAnimator.SetBool("Aiming", true);
-            Debug.Log("조준");
+            if (!bowAnimator.GetBool("Aiming"))
+            {
+                bowAnimator.SetBool("Aiming", true);
+                isAimingSoundPlayed = false;
+            }
+
+            PlayAimingSound(); // 조준 소리 재생
         }
-        else if (bowAnimator.GetBool("Aiming") && ((stableLeftHandState == "Fist" && stableRightHandState == "Open") || (stableLeftHandState == "Open" && stableRightHandState == "Fist")))
+        else if (bowAnimator.GetBool("Aiming") &&
+                 ((stableLeftHandState == "Fist" && stableRightHandState == "Open") ||
+                  (stableLeftHandState == "Open" && stableRightHandState == "Fist")))
         {
             bowAnimator.SetBool("Aiming", false);
             Debug.Log("발사");
-            shootingManager.TryShoot(); // 발사 요청
+            shootingManager.TryShoot();
             StartCoroutine(GestureCooldown());
+            isAimingSoundPlayed = false;
         }
         else
         {
@@ -111,11 +120,10 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
             string stableLeftHandState = GetStableHandState(leftHandStateHistory, previousLeftHandStableState);
             previousLeftHandStableState = stableLeftHandState;
 
-            //Debug.Log($"Left Hand - Average Angle: {averageAngle:F2} degrees - Stable State: {stableLeftHandState}");
-
             if (stableLeftHandState == "Fist")
             {
                 bowAnimator.SetBool("Aiming", true);
+                PlayAimingSound(); // 조준 소리 재생
                 Debug.Log("조준");
             }
             else if (stableLeftHandState == "Open")
@@ -124,7 +132,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
                 {
                     bowAnimator.SetBool("Aiming", false);
                     Debug.Log("발사");
-                    shootingManager.TryShoot(); // 발사 요청
+                    shootingManager.TryShoot();
                     StartCoroutine(GestureCooldown());
                 }
             }
@@ -135,18 +143,17 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
             string stableRightHandState = GetStableHandState(rightHandStateHistory, previousRightHandStableState);
             previousRightHandStableState = stableRightHandState;
 
-            //Debug.Log($"Right Hand - Average Angle: {averageAngle:F2} degrees - Stable State: {stableRightHandState}");
-
             if (stableRightHandState == "Fist")
             {
                 bowAnimator.SetBool("Aiming", true);
+                PlayAimingSound(); // 조준 소리 재생
             }
             else if (stableRightHandState == "Open")
             {
                 if (bowAnimator.GetBool("Aiming"))
                 {
                     bowAnimator.SetBool("Aiming", false);
-                    shootingManager.TryShoot(); // 발사 요청
+                    shootingManager.TryShoot();
                     StartCoroutine(GestureCooldown());
                 }
             }
@@ -252,33 +259,27 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
         // 손바닥 중심의 z축 차이를 기준으로 한 손이 뒤에 있는지 판단합니다.
         if (leftHandZ < rightHandZ)
         {
-            // 왼손이 오른손 뒤에 있는지 확인
             return AreFingersBehind(leftPoints, rightPoints);
         }
         else if (rightHandZ < leftHandZ)
         {
-            // 오른손이 왼손 뒤에 있는지 확인
             return AreFingersBehind(rightPoints, leftPoints);
         }
 
-        // 그렇지 않으면 false를 반환합니다.
         return false;
     }
 
     private bool AreFingersBehind(Vector3[] backHandPoints, Vector3[] frontHandPoints)
     {
-        // 손가락 끝의 z축 값을 확인하여 손가락도 뒤에 있는지 확인합니다.
-        for (int i = 5; i <= 20; i += 4)  // 5, 9, 13, 17: 각 손가락 기점
+        for (int i = 5; i <= 20; i += 4)
         {
             if (backHandPoints[i].z >= frontHandPoints[i].z)
             {
-                return false;  // 하나라도 앞에 있으면 뒤에 있는 것이 아님
+                return false;
             }
         }
-        return true;  // 모든 손가락이 뒤에 있으면 true
+        return true;
     }
-
-
 
     Vector3 GetHandMin(Vector3[] points)
     {
