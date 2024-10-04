@@ -6,12 +6,17 @@ using UnityEngine;
 public class ShipViewScene : BaseScene
 {
     private Animator _animator;
+    private UI_Skip _skipUI;
     protected override void Init()
     {
         base.Init();
 
         SceneType = Define.Scene.ShipView;
         _animator = GetComponent<Animator>();
+
+        _skipUI = Managers.UI.ShowSceneUI<UI_Skip>();
+        _skipUI.SetNextScene(Define.Scene.StoryFive);
+
     }
 
     public void OnAnimationEnd()

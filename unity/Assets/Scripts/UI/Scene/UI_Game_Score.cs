@@ -156,7 +156,8 @@ public class UI_Game_Score : UI_Scene
         if (particleInstance == null)
         {
             // 폭발 효과 생성
-            particleInstance = Instantiate(boom, target.transform.position, target.transform.rotation);
+            Vector3 particlePosition = target.transform.position + new Vector3(0, 10, 5);
+            particleInstance = Instantiate(boom, particlePosition, target.transform.rotation);
             particleInstance.SetActive(true);
 
             // 게임 1 효과음 재생
