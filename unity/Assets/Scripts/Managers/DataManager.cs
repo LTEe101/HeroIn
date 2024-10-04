@@ -18,16 +18,14 @@ public class DataManager
     public Dictionary<int, List<Dialog>> DialogDataMap { get; private set; } = new Dictionary<int, List<Dialog>>();
     public Dictionary<int, GameInfo> GameInfos { get; private set; } = new Dictionary<int, GameInfo>();
     public List<QuizQuestion> QuizQuestions { get; private set; } = new List<QuizQuestion>();
-
+    public Dictionary<int, MetaHistory> MetaHistoryDatas { get; private set; } = new Dictionary<int, MetaHistory>();
+  
     public void Init()
     {
         NarrationData narrationData = LoadJson<NarrationData>("NarrationData");
         GameInfos = LoadJson<GameInfoData>("GameInfoData").MakeDict();
-        Debug.Log($"Loaded GameInfos count: {GameInfos.Count}");
-        foreach (var info in GameInfos)
-        {
-            Debug.Log($"Game ID: {info.Key}, Title: {info.Value.title}");
-        }
+        MetaHistoryDatas = LoadJson<MetaHistoryData>("MetaHistoryData").MakeDict();
+
 
         BeforeStoryList = narrationData.beforeStory;
         AfterStoryList = narrationData.afterStory;
