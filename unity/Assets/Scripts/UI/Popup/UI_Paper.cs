@@ -106,8 +106,7 @@ private int _currentNarrationIndex = 0; // 현재 보여줄 내레이션 인덱스
                     }
                 ));
 
-                Managers.Sound.StopBGM();
-                // 타임머신으로 돌아가기
+               
                 Managers.Scene.LoadScene(Define.Scene.Quiz);
             }
         }

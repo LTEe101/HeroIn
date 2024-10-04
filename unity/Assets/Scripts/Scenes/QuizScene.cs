@@ -30,14 +30,21 @@ public class QuizScene : BaseScene
         }
 
         Debug.Log("Loaded quiz questions successfully.");
+
+        _cameraController = FindObjectOfType<CameraController>();
+        _cameraController.StartCloseUp(new Vector3(-13.1f, 55.7f, -79.8f), new Vector3(46.77f, 17.83f, -45.87f),
+            new Quaternion(-0.24f, -0.54f, 0.16f, -0.8f), new Quaternion(-0.0227f, 0.717f, 0.0235f, 0.7f),
+             1.0f);
+
         ShowStartUI();
     }
 
     private void ShowStartUI()
     {
         Debug.Log("Showing UI_Quiz_Start");
+
         _startUI = Managers.UI.ShowPopupUI<UI_Quiz_Start>();  // Start UI 표시
-        StartCoroutine(HideStartUIAfterDelay(_startUI, 3.0f));  // 3초 후 Start UI 숨기기
+        StartCoroutine(HideStartUIAfterDelay(_startUI, 5.0f));  // 3초 후 Start UI 숨기기
     }
 
     private IEnumerator HideStartUIAfterDelay(UI_Quiz_Start startUI, float delay)
@@ -55,15 +62,38 @@ public class QuizScene : BaseScene
             EndQuiz();
             return;
         }
+        switch (_currentQuestionIndex)
+        {
+            case 0:
+                _cameraController.StartCloseUp(
+                    new Vector3(46.77f, 17.83f, -45.87f), // 시작 위치
+                    new Vector3(46.77f, 17.83f, -45.87f), // 끝 위치
+                    new Quaternion(-0.0227f, 0.717f, 0.0235f, 0.7f),          // 시작 회전
+                    new Quaternion(-0.0227f, 0.717f, 0.0235f, 0.7f),          // 끝 회전
+                    1.0f                                // 시간
+                );
+                break;
+            case 1:
+                _cameraController.StartCloseUp(
+                    new Vector3(46.77f, 17.83f, -45.87f), // 시작 위치
+                    new Vector3(111.85f, 22.97f, -45.32f), // 끝 위치
+                    new Quaternion(-0.0227f, 0.717f, 0.0235f, 0.7f),          // 시작 회전
+                    new Quaternion(-0.003f, 0.71f, 0.003f, 0.7f),          // 끝 회전
+                    1.0f                                // 시간
+                );
+                break;
+            case 2:
+                _cameraController.StartCloseUp(
+                    new Vector3(111.85f, 22.97f, -45.32f), // 시작 위치
+                    new Vector3(143.476f, 31.22f, -45.7f), // 끝 위치
+                    new Quaternion(-0.003f, 0.71f, 0.003f, 0.7f),          // 시작 회전
+                    new Quaternion(-0.003f, 0.71f, 0.003f, 0.7f),          // 끝 회전
+                    1.0f                                // 시간
+                );
+                break;
+        }
 
-        // 카메라 이동 로직
-        _cameraController.StartCloseUp(
-            new Vector3(-13.1f, 55.7f, -79.8f), // 시작 위치
-            new Vector3(34.9f, 26.5f, -59.3f), // 끝 위치
-            Quaternion.Euler(0, 0, 0),          // 시작 회전
-            Quaternion.Euler(0, 0, 0),          // 끝 회전
-            1.0f                                // 시간
-        );
+        
     }
 
     private void OnCloseUpComplete()
@@ -118,14 +148,14 @@ public class QuizScene : BaseScene
         if (selectedAnswer == correctAnswer)
         {
             // 정답 처리
-            Debug.Log("Correct answer selected.");
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_02", Define.Sound.Effect, 0.8f);
             UI_Quiz_Correct correctUI = Managers.UI.ShowPopupUI<UI_Quiz_Correct>();
             StartCoroutine(ProceedToNextQuestionAfterDelay(correctUI, 2.0f));  // Correct UI 표시 후 2초 후 다음 문제로 이동
         }
         else
         {
             // 오답 처리
-            Debug.Log("Wrong answer selected.");
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/jingle_chime_22_negative", Define.Sound.Effect, 0.8f);
             UI_Quiz_Wrong wrongUI = Managers.UI.ShowPopupUI<UI_Quiz_Wrong>();
             StartCoroutine(ProceedToSameQuestionAfterDelay(wrongUI, 2.0f));  // Wrong UI 표시 후 2초 후 같은 문제 반복
         }
@@ -154,16 +184,27 @@ public class QuizScene : BaseScene
 
         ShowQuizUI();  // 같은 문제 다시 표시
     }
+    private IEnumerator WaitForFinishUIAndLoadScene(UI_Popup finishUI, float delay)
+    {
+        yield return new WaitForSeconds(delay);  // 일정 시간 대기
 
+        // UI가 완전히 표시되었다고 판단되면 해당 UI를 닫고 다음 씬으로 넘어감
+        Managers.UI.ClosePopupUI(finishUI);
+        Debug.Log("Quiz finished!");
+        Managers.Sound.StopBGM();
+        Managers.Scene.LodingLoadScene(Define.Scene.Home);  // 다음 씬으로 전환
+    }
     private void EndQuiz()
     {
+        Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_single_02", Define.Sound.Effect, 0.8f);
         UI_Quiz_Finish finishUI = Managers.UI.ShowPopupUI<UI_Quiz_Finish>();
         Debug.Log("Quiz finished!");
-        Managers.Scene.LodingLoadScene(Define.Scene.Home);
+        StartCoroutine(WaitForFinishUIAndLoadScene(finishUI, 4.0f));
     }
 
     public override void Clear()
     {
         Debug.Log("QuizScene Clear!");
     }
+
 }

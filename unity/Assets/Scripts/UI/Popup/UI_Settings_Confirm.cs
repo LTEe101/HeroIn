@@ -26,7 +26,7 @@ public class UI_Settings_Confirm : UI_Popup
         Text confirmText = Get<Text>((int)Texts.ConfirmText);
         if (_confirmType == Define.ConfirmType.Home)
         {
-            confirmText.text = "홈으로 돌아가시겠습니까?";  // Home에 대한 확인 메시지
+            confirmText.text = "메인으로 돌아가시겠습니까?";  // Home에 대한 확인 메시지
         }
         else if (_confirmType == Define.ConfirmType.Exit)
         {
@@ -43,7 +43,7 @@ public class UI_Settings_Confirm : UI_Popup
 
         if (_confirmType == Define.ConfirmType.Home)
         {
-            BindEvent(GetButton((int)Buttons.ConfirmButton).gameObject, (PointerEventData data) => { PlayButtonSound(); Managers.Scene.LoadScene(Define.Scene.Home); }, Define.UIEvent.Click);
+            BindEvent(GetButton((int)Buttons.ConfirmButton).gameObject, (PointerEventData data) => { PlayButtonSound(); Managers.Sound.StopBGM(); Managers.Scene.LoadScene(Define.Scene.Museum); }, Define.UIEvent.Click);
         } else if (_confirmType == Define.ConfirmType.Exit)
         {
             BindEvent(GetButton((int)Buttons.ConfirmButton).gameObject, (PointerEventData data) => { PlayButtonSound(); Application.Quit(); }, Define.UIEvent.Click);

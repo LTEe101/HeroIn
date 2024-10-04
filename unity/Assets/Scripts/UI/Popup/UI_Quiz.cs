@@ -70,6 +70,11 @@ public class UI_Quiz : UI_Popup
 
     private void OnAnswer(string selectedAnswer)
     {
+        PlayButtonSound();
         _onAnswerSelected?.Invoke(selectedAnswer);
+    }
+    private void PlayButtonSound()
+    {
+        Managers.Sound.Play("ProEffect/User_Interface_Menu/ui_menu_button_keystroke_01", Define.Sound.Effect, 0.2f);
     }
 }
