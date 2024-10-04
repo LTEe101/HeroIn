@@ -53,17 +53,54 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         await ConnectWebSocket();
     }
 
+    void Update()
+    {
+#if !UNITY_WEBGL || UNITY_EDITOR
+        if (websocket != null)
+        {
+            websocket.DispatchMessageQueue();
+        }
+#endif
+
+        // 웹캠 상태 체크 후 강제로 종료
+        if (webCamTexture != null && !webCamTexture.isPlaying)
+        {
+            // 웹캠이 멈추지 않았는데 상태가 false일 때 강제 종료
+            if (webCamTexture.isPlaying == false)
+            {
+                ForceStopWebCam();
+            }
+        }
+
+        if (webCamTexture != null && webCamTexture.isPlaying && webCamTexture.didUpdateThisFrame)
+        {
+            SendFrame();
+        }
+    }
+
+    // 웹캠 강제 종료 메서드
+    private void ForceStopWebCam()
+    {
+        if (webCamTexture != null)
+        {
+            Debug.LogWarning("웹캠이 정상적으로 멈추지 않았으므로 강제로 해제합니다.");
+            webCamTexture.Stop(); // Stop 호출 시도
+            Destroy(webCamTexture); // 강제로 리소스 해제
+            webCamTexture = null;
+            Debug.Log("웹캠 리소스가 강제로 해제되었습니다.");
+        }
+    }
+
     private void StartWebcam()
     {
         if (WebCamTexture.devices.Length > 0)
         {
             webCamTexture = new WebCamTexture();
-            webCamTexture.requestedWidth = 1280;  // 원하는 해상도로 설정
-            webCamTexture.requestedHeight = 720;  // 원하는 해상도로 설정
-            webCamTexture.requestedFPS = 30;  // 원하는 FPS로 설정
+            webCamTexture.requestedWidth = 1280;
+            webCamTexture.requestedHeight = 720;
+            webCamTexture.requestedFPS = 30;
 
             webCamTexture.Play();
-
             Debug.Log("웹캠 시작됨");
         }
         else
@@ -86,21 +123,6 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
                 Debug.LogError($"WebSocket 연결 실패: {e.Message}");
                 await Task.Delay(5000); // 5초 후 재시도
             }
-        }
-    }
-
-    void Update()
-    {
-#if !UNITY_WEBGL || UNITY_EDITOR
-        if (websocket != null)
-        {
-            websocket.DispatchMessageQueue();
-        }
-#endif
-
-        if (webCamTexture != null && webCamTexture.isPlaying && webCamTexture.didUpdateThisFrame)
-        {
-            SendFrame();
         }
     }
 
@@ -133,7 +155,6 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         Destroy(resizedTexture);
     }
 
-    // 데이터를 분석하여 왼손과 오른손 데이터를 분리
     private void ParseData(string receivedData)
     {
         try
@@ -151,16 +172,10 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
             if (handType == "Left")
             {
                 leftHandData = data;
-                //Debug.Log($"왼손 데이터 업데이트: {data}");  // 왼손 데이터 로깅
             }
             else if (handType == "Right")
             {
                 rightHandData = data;
-                //Debug.Log($"오른손 데이터 업데이트: {data}");  // 오른손 데이터 로깅
-            }
-            else
-            {
-                //Debug.LogWarning($"알 수 없는 손 타입: {handType}");
             }
         }
         catch (Exception e)
@@ -186,22 +201,18 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
             width = Mathf.RoundToInt(height * aspect);
         }
 
-        // WebCamTexture의 데이터를 Texture2D로 복사
         Texture2D sourceTexture = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
         sourceTexture.SetPixels32(source.GetPixels32());
         sourceTexture.Apply();
 
-        // 새로운 크기의 Texture2D 생성
         RenderTexture rt = new RenderTexture(width, height, 24);
         RenderTexture.active = rt;
 
-        // 리사이징 수행
         Graphics.Blit(sourceTexture, rt);
         Texture2D resizedTexture = new Texture2D(width, height);
         resizedTexture.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         resizedTexture.Apply();
 
-        // 임시 텍스처 정리
         RenderTexture.active = null;
         rt.Release();
         Destroy(sourceTexture);
@@ -209,29 +220,40 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
         return resizedTexture;
     }
 
-    async void OnApplicationQuit()
+    public async Task CloseWebSocketAndStopCam()
     {
+        // 웹소켓 종료
         if (websocket != null && websocket.State == WebSocketState.Open)
         {
             await websocket.Close();
+            Debug.Log("WebSocket 연결이 종료되었습니다.");
         }
-        if (webCamTexture != null)
-        {
-            webCamTexture.Stop();
-        }
-    }
 
-    private void LogReceivedData(string message)
-    {
-        //Debug.Log($"수신된 데이터: {message}");
-    }
-
-    private void OnDisable()
-    {
+        // 웹캠 종료
         if (webCamTexture != null && webCamTexture.isPlaying)
         {
             webCamTexture.Stop();
             Debug.Log("웹캠 정지됨");
+
+            // 강제로 웹캠 리소스 해제
+            Destroy(webCamTexture);
+            webCamTexture = null;
+            Debug.Log("웹캠 리소스가 파괴되었습니다.");
         }
+    }
+
+    async void OnApplicationQuit()
+    {
+        await CloseWebSocketAndStopCam();
+    }
+
+    private async void OnDisable()
+    {
+        await CloseWebSocketAndStopCam();
+    }
+
+    private void LogReceivedData(string message)
+    {
+        // Debug.Log($"수신된 데이터: {message}");
     }
 }
