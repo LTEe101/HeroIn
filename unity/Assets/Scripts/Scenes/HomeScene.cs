@@ -47,22 +47,40 @@ public class HomeScene : BaseScene
             _historicalFigure = historicalFigureObject.GetComponent<TextMeshPro>();
         }
         StartCoroutine(Managers.API.GetUserCardInfo(
-                      Managers.Data.userInfo.userId,
-                      () => {
-                          // 카드 정보를 성공적으로 가져왔을 때 처리
-                          Debug.Log("카드 정보를 성공적으로 가져왔습니다.");
+            Managers.Data.userInfo.userId,
+            () => {
+                // 카드 정보를 성공적으로 가져왔을 때 처리
+                Debug.Log("카드 정보를 성공적으로 가져왔습니다.");
 
-                          // 가져온 카드 정보를 출력하거나 필요한 곳에 활용
-                          foreach (var card in Managers.Data.cards)
-                          {
-                              Debug.Log($"카드 이름: {card.name}, 설명: {card.description}");
-                          }
-                      },
-                      (error) => {
-                          // 카드 정보를 가져오는 데 실패했을 때 처리
-                          Debug.LogError($"카드 정보 가져오기 실패: {error}");
-                      }
-                  ));
+                // 가져온 카드 정보를 출력하거나 필요한 곳에 활용
+                foreach (var card in Managers.Data.cards)
+                {
+                    Debug.Log($"카드 이름: {card.name}, 설명: {card.description}");
+                }
+            },
+            (error) => {
+                // 카드 정보를 가져오는 데 실패했을 때 처리
+                Debug.LogError($"카드 정보 가져오기 실패: {error}");
+            }
+        ));
+        StartCoroutine(Managers.API.GetUserTitleInfo(
+            Managers.Data.userInfo.userId,
+            () => {
+                // 카드 정보를 성공적으로 가져왔을 때 처리
+                Debug.Log("업적 정보를 성공적으로 가져왔습니다.");
+
+                // 가져온 카드 정보를 출력하거나 필요한 곳에 활용
+                foreach (var title in Managers.Data.titles)
+                {
+                    Debug.Log($"업적 이름: {title.userTitle}");
+                }
+
+            },
+            (error) => {
+                // 카드 정보를 가져오는 데 실패했을 때 처리
+                Debug.LogError($"업적 정보 가져오기 실패: {error}");
+            }
+        ));
     }
     public override void Clear()
     {
