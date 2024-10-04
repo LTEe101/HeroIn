@@ -6,6 +6,7 @@ using UnityEngine;
 using static CameraController;
 using static Outline;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,12 +15,14 @@ public class PlayerController : MonoBehaviour
     // 이동
     Animator anim;
     private Rigidbody rb;
-    float _speed = 7.0f;
+    float _speed = 5.0f;
     public float jumpForce = 7f; // 점프 힘
+    private float jumpCooldown = 1f; // 점프 직후 쿨다운 시간
+    private float lastJumpTime; // 마지막으로 점프한 시간
     private Vector3 moveDirection; // 이동 방향
     public LayerMask groundLayer; // 바닥 레이어 설정 (점프할 수 있는 곳)
-    private bool isGrounded; // 캐릭터가 바닥에 있는지 여부
     Vector3 _destPos;
+    NavMeshAgent nav;
 
     // 카메라
     public Transform cameraTransform; // 카메라의 Transform
@@ -68,6 +71,7 @@ public class PlayerController : MonoBehaviour
         // 캐릭터
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         anim = GetComponent<Animator>(); // 애니메이션 컴포넌트
+        nav = GetComponent<NavMeshAgent>();
         _destPos = transform.position;  // 시작 위치 설정
 
         // 상호작용
@@ -90,7 +94,13 @@ public class PlayerController : MonoBehaviour
         }
         if (IsGrounded()) // 착지했을 때 상태를 Idle로 전환
         {
+            if (!NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+            {
+                // 착지한 위치가 NavMesh 경로 밖이라면 다시 경로로 이동
+                nav.Warp(hit.position); // 캐릭터를 NavMesh 경로 내로 복귀시킴
+            }
             State = PlayerState.Idle;
+            nav.enabled = true;
             anim.SetBool("isJumping", false);
         }
     }
@@ -118,7 +128,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             // 이동 처리
-            rb.MovePosition(transform.position + moveDirection * Time.deltaTime);
+            nav.Move(moveDirection * Time.deltaTime);
 
             // 애니메이션 설정
             anim.SetFloat("speed", _speed);
@@ -233,8 +243,7 @@ public class PlayerController : MonoBehaviour
             if (State == PlayerState.Watch)
             {
                 ExitWatchState(); // Watch 상태에서 나옴
-                UpdateCameraPosition();
-                SetRenderersEnabled(true);
+                
                 
             }
             else if (_curInteractable != null)
@@ -272,6 +281,9 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Watch 상태 종료, Idle 상태로 전환");
         State = PlayerState.Idle; // 상태를 Idle로 전환
+        UpdateCameraPosition();
+        SetRenderersEnabled(true);
+        Managers.UI.CloseAllPopupUI();
         SetLayerTo("1592", 0);
         SetLayerTo("1919", 0);
         SetLayerTo("Start", 0);
@@ -318,28 +330,33 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         State = PlayerState.Jumping;
         anim.SetBool("isJumping", true);
+        nav.enabled = false;
+        lastJumpTime = Time.time; // 마지막 점프 시간을 기록
     }
 
     // 땅에 있는지 확인하는 함수
     private bool IsGrounded()
     {
-        // 캐릭터의 아래로 스피어캐스트를 쏴서 바닥에 있는지 확인
+        // 점프 직후 일정 시간 동안은 땅에 닿지 않은 것으로 처리
+        if (Time.time < lastJumpTime + jumpCooldown)
+        {
+            return false;
+        }
+
+        // 캐릭터의 아래로 Raycast를 쏴서 바닥에 있는지 확인
         RaycastHit hit;
-        float distanceToGround = 0.5f; // 바닥과의 최소 거리
-        float sphereRadius = 0.3f; // 스피어의 반경 (캐릭터 크기에 맞게 조정)
-        Vector3 origin = transform.position + Vector3.up * 0.4f; // 캐릭터 중심에서 약간 위에서 시작
+        float rayDistance = 1.0f; // 바닥까지의 레이캐스트 거리
+        Vector3 origin = transform.position + Vector3.up * 0.1f; // 캐릭터 중심에서 조금 위쪽에서 시작
 
-        // 디버그용 스피어캐스트 그리기 (시각적으로 확인)
-        Debug.DrawRay(origin, Vector3.down * (distanceToGround + sphereRadius), Color.red);
-
-        // 스피어캐스트를 사용하여 바닥 감지
-        if (Physics.SphereCast(origin, sphereRadius, Vector3.down, out hit, distanceToGround, groundLayer))
+        // Ray를 아래로 쏘아 바닥과 충돌하는지 확인
+        if (Physics.Raycast(origin, Vector3.down, out hit, rayDistance, groundLayer))
         {
             return true; // 바닥에 닿아 있으면 true 반환
         }
 
         return false; // 공중에 있으면 false 반환
     }
+
     // 카메라
     void HandleMouseRotation()
     {
