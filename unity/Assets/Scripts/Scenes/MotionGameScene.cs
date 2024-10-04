@@ -14,7 +14,7 @@ public class MotionGameScene : BaseScene
         SceneType = Define.Scene.MotionGame;
         popup = Managers.UI.ShowPopupUI<UI_Game_Desc>();
         popup.LoadInfos(2);
-        Managers.Sound.Play("KarugamoBGM/KBF_Battle_Nomal_04", Define.Sound.Bgm, 0.8f);
+        Managers.Sound.Play("KarugamoBGM/KBF_Battle_Nomal_04", Define.Sound.Bgm, 0.6f);
         popup.OnStartGame += StartGame;
 
         gameplayScripts = FindObjectsOfType<MonoBehaviour>().OfType<IMotionGameScript>().ToArray();

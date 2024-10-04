@@ -57,7 +57,7 @@ public class HandGestureController : MonoBehaviour, IMotionGameScript
     {
         if (!isAimingSoundPlayed)
         {
-            StartCoroutine(PlaySoundWithDelay("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_draw_stretch2_01후보", 0.8f, 2.0f, 0.3f));
+            StartCoroutine(PlaySoundWithDelay("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_draw_stretch2_01후보", 0.8f, 3.0f, 0.4f));
             isAimingSoundPlayed = true; // 소리가 재생되었음을 기록
             Debug.Log("조준 소리 재생 대기");
         }

@@ -139,6 +139,8 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         existingArrow.transform.parent = null;
 
+        Managers.Sound.Play("ProEffect/Guns_Weapons/Bow_Arrow/bow_crossbow_arrow_shoot_type1_ÈÄº¸ 1", Define.Sound.Effect, 0.8f, 2.0f);
+
         float spawnOffsetDistance = 0.2f;
         Vector3 spawnPosition = firePoint.position + firePoint.forward * spawnOffsetDistance;
         existingArrow.transform.position = spawnPosition;
@@ -169,6 +171,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         Debug.Log($"Arrow fired. Direction: {direction}, Target: {targetPosition}");
     }
+
 
     private IEnumerator DeactivateArrowAfterLifetime()
     {
