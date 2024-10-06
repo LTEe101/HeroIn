@@ -2442,6 +2442,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9217,6 +9221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15947,6 +15955,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18455,6 +18467,10 @@ PrefabInstance:
     - target: {fileID: 722037414042166725, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
       propertyPath: m_Name
       value: InsideWoodPillar_A (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22845,6 +22861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bowAnimator: {fileID: 1476327599}
   shootingManager: {fileID: 1476327602}
+  uiMotionState: {fileID: 0}
 --- !u!1001 &1478003784
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23623,6 +23640,10 @@ PrefabInstance:
     - target: {fileID: 722037414042166725, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
       propertyPath: m_Name
       value: InsideWoodPillar_A (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24472,6 +24493,10 @@ PrefabInstance:
     - target: {fileID: 722037414042166725, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
       propertyPath: m_Name
       value: InsideWoodPillar_A (19)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26350,83 +26375,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 3
   m_ShadowAngle: 0
---- !u!1001 &1696918345
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7441484950283758235, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_Name
-      value: UI_Game2_Tutorial
-      objectReference: {fileID: 0}
-    - target: {fileID: 7441484950283758235, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -377
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 12.68
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -23.73
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.009927793
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.9999507
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 178.862
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7512333689438023635, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 544b66acbaa28924f98c23452d6ee1e4, type: 3}
 --- !u!1 &1706935909
 GameObject:
   m_ObjectHideFlags: 0
@@ -28257,6 +28205,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28416,6 +28368,10 @@ PrefabInstance:
     - target: {fileID: 722037414042166725, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
       propertyPath: m_Name
       value: InsideWoodPillar_A (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -29990,6 +29946,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30201,6 +30161,10 @@ PrefabInstance:
     - target: {fileID: 722037414042166725, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
       propertyPath: m_Name
       value: InsideWoodPillar_A (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -31765,6 +31729,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33082,6 +33050,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InsideWoodPillar_A (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 7726345828081642513, guid: c8b5228fee2d9ee4c95241d4c7f743bb, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -33627,7 +33599,6 @@ SceneRoots:
   - {fileID: 1817996632}
   - {fileID: 1824079474}
   - {fileID: 1982282222}
-  - {fileID: 1696918345}
   - {fileID: 708039664}
   - {fileID: 992750477}
   - {fileID: 199795150}
