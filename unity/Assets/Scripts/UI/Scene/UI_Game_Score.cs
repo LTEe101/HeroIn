@@ -163,7 +163,7 @@ public class UI_Game_Score : UI_Scene
 
             // 게임 1 효과음 재생
             AudioClip audioClip = Managers.Sound.GetOrAddAudioClip("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect);
-            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.2f);
+            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.3f);
             Destroy(ball);
             Destroy(target);
             if (audioClip != null)
@@ -201,10 +201,28 @@ public class UI_Game_Score : UI_Scene
                 motionStateUI.Close(); // Close the UI_Motion_State
             }
 
+            TriggerEnemyDie();
+
             Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_jingle_02", Define.Sound.Effect);
 
             Managers.UI.ShowPopupUI<UI_Game_Finish>(); // 성공 팝업 표시
             StartCoroutine(NextScene(5f)); // 5초 후에 다음 씬으로 전환
+        }
+    }
+
+    private void TriggerEnemyDie()
+    {
+        // 'Enemy' 태그로 모든 적 오브젝트 찾기
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        // 각 적의 Animator에서 Die 트리거 활성화
+        foreach (GameObject enemy in enemies)
+        {
+            Animator animator = enemy.GetComponent<Animator>();
+            if (animator != null)
+            {
+                animator.SetTrigger("Die"); // Die 트리거 활성화
+            }
         }
     }
 

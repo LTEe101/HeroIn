@@ -88,7 +88,14 @@ public class CursorManager : MonoBehaviour
             {
                 ApplyCursor(_hoverCursor);  // 버튼 위에 있으면 호버 커서로 변경
                 _currentState = CursorState.Hover;
+
+                rt.localScale = Vector3.one * 1.1f;
                 return;  // 버튼 위에 있으면 더 이상 체크하지 않음
+            }
+            else
+            {
+                // 마우스가 버튼 위에서 벗어나면 원래 크기로 되돌림
+                rt.localScale = Vector3.one;  // 기본 크기로 설정
             }
         }
 

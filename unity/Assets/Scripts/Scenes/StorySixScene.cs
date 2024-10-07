@@ -22,8 +22,8 @@ public class StorySixScene : BaseScene
 
 
         _cameraController = FindObjectOfType<CameraController>();
-        _cameraController.StartCloseUp(new Vector3(58.6f, 27.8f, -23.5f), new Vector3(33.7f, 10f, -48.47f),
-             new Quaternion(-0.089f, 0.84f, -0.14f, -0.5f), new Quaternion(-0.058f, 0.567f, -0.04f, -0.82f),
+        _cameraController.StartCloseUp(new Vector3(58.6f, 27.8f, -23.5f), new Vector3(64.8626022f, 13.6136112f, -44.7812691f),
+             new Quaternion(-0.089f, 0.84f, -0.14f, -0.5f), new Quaternion(-0.108274944f, 0.646892965f, -0.0935138166f, -0.749040246f),
               1.2f);
         Managers.Sound.Play("RpgGameBGM/StrangeRoad(Loop)", Define.Sound.Bgm, 1.4f);
     }

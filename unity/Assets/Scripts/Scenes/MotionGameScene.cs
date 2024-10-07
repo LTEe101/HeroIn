@@ -5,6 +5,7 @@ public class MotionGameScene : BaseScene
 {
     private bool isGameStarted = false;
     private UI_Game_Desc popup;
+    private UI_Skip _skipUI;
     private IMotionGameScript[] gameplayScripts;
     private VideoStreamer videoStreamer; // 웹캠 종료를 위한 VideoStreamer 참조 추가
 
@@ -12,6 +13,10 @@ public class MotionGameScene : BaseScene
     {
         base.Init();
         SceneType = Define.Scene.MotionGame;
+
+        _skipUI = Managers.UI.ShowSceneUI<UI_Skip>();
+        _skipUI.SetNextScene(Define.Scene.StorySix);
+
         popup = Managers.UI.ShowPopupUI<UI_Game_Desc>();
         popup.LoadInfos(2);
         Managers.Sound.Play("KarugamoBGM/KBF_Battle_Nomal_04", Define.Sound.Bgm, 0.6f);
