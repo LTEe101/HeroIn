@@ -75,12 +75,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         if (!isChatMinimized)
         {
             chatScrollView.gameObject.SetActive(false);
-            topIcon.anchoredPosition = new Vector2(topIcon.anchoredPosition.x, -343.454f);
+            topIcon.anchorMin = new Vector2(0, 0);  // 왼쪽 하단
+            topIcon.anchorMax = new Vector2(1, 0);  // 오른쪽 하단
+            topIcon.pivot = new Vector2(0.5f, 0);   // 피벗을 하단 중앙으로 설정
+            topIcon.anchoredPosition = Vector2.zero; // 앵커 기준 위치를 (0, 0)으로 설정
         }
         else
         {
             chatScrollView.gameObject.SetActive(true);
-            topIcon.anchoredPosition = new Vector2(topIcon.anchoredPosition.x, -3.453949f);  // Y 값을 조정하여 위치 이동
+            topIcon.anchorMin = new Vector2(0, 1);  // 왼쪽 상단
+            topIcon.anchorMax = new Vector2(1, 1);  // 오른쪽 상단
+            topIcon.pivot = new Vector2(0.5f, 1);   // 피벗을 상단 중앙으로 설정
+            topIcon.anchoredPosition = Vector2.zero; // 앵커 기준 위치를 (0, 0)으로 설정
 
 
         }
