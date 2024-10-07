@@ -163,7 +163,7 @@ public class UI_Game_Score : UI_Scene
 
             // 게임 1 효과음 재생
             AudioClip audioClip = Managers.Sound.GetOrAddAudioClip("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect);
-            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.2f);
+            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.3f);
             Destroy(ball);
             Destroy(target);
             if (audioClip != null)

@@ -21,9 +21,9 @@ public class StoryOneScene : BaseScene
         _skipUI.SetNextScene(Define.Scene.StoryTwo);
 
         _cameraController = FindObjectOfType<CameraController>();
-        _cameraController.StartCloseUp(new Vector3(48f, 31f, -19.2f), new Vector3(70.1f, 24.7f, -42.6f),
-             new Quaternion(0.05f, 0.94f, -0.15f, 0.3f), new Quaternion(0.03f, 0.96f, -0.15f, 0.22f),
-              1.2f);
+        _cameraController.StartCloseUp(new Vector3(69.6947021f, 28.1520462f, -28.1233196f), new Vector3(64.2851181f, 13.381629f, -45.2922134f),
+             new Quaternion(-0.0737237707f, 0.925995588f, -0.273118824f, -0.250006258f), new Quaternion(0.0380175672f, -0.702807605f, 0.0376910046f, 0.709362745f),
+              1.0f);
        
     }
 

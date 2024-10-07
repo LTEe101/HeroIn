@@ -35,7 +35,7 @@ public class UI_Story : UI_Popup
     private void InitSpeakerCameras()
     {
         _speakerCameras["병사"] = GameObject.Find("SoldierCamera").GetComponent<Camera>();
-        _speakerCameras["이순신 장군"] = GameObject.Find("BossCamera").GetComponent<Camera>();
+        _speakerCameras["이순신 장군(나)"] = GameObject.Find("BossCamera").GetComponent<Camera>();
         _speakerCameras["전투 지휘관"] = GameObject.Find("ArmyCamera").GetComponent<Camera>();
     }
     private void SwitchToSpeakerCamera(string speaker)
