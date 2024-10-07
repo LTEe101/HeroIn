@@ -12,7 +12,19 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [SerializeField] private RectTransform topIcon;  // 스크롤 뷰의 RectTransform
 
     private bool isChatMinimized = false; // 채팅이 축소되었는지 여부를 저장
-
+                                          // 싱글톤 인스턴스
+    public static PhotonManager Instance { get; private set; }
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         ShowLoadingScreen(true);  // 연결 시도 전 로딩 화면 활성화
@@ -70,7 +82,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     }
 
     // 채팅 UI 활성/비활성 토글 함수
-    private void ToggleChatting()
+    public void ToggleChatting()
     {
         if (!isChatMinimized)
         {
