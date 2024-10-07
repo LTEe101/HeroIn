@@ -123,6 +123,7 @@ public class MuseumScene : BaseScene
         {
             string hitObjectName = currentHovered.name;
             Debug.Log(hitObjectName);
+            UI_MuseumStory popup = null;
             switch (hitObjectName)
             {
                 case "Spaceship":
@@ -131,7 +132,18 @@ public class MuseumScene : BaseScene
                     break;
                 case "1592":
                     PlayButtonSound();
-                    Managers.UI.ShowPopupUI<UI_Museum_1592>();
+                    popup = Managers.UI.ShowPopupUI<UI_MuseumStory>();
+                    popup.InitStory(Define.MuseumStoryType.Story1592);
+                    break;
+                case "1919":
+                    PlayButtonSound();
+                    popup = Managers.UI.ShowPopupUI<UI_MuseumStory>();
+                    popup.InitStory(Define.MuseumStoryType.Story1919);
+                    break;
+                case "1443":
+                    PlayButtonSound();
+                    popup = Managers.UI.ShowPopupUI<UI_MuseumStory>();
+                    popup.InitStory(Define.MuseumStoryType.Story1443);
                     break;
                 default:
                     Debug.Log("해당 오브젝트에 대한 팝업이 없습니다.");
