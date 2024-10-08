@@ -84,12 +84,19 @@ public class UI_Game_Score : UI_Scene
     // 게임 1의 기존 클릭 및 애니메이션 처리 로직
     private GameObject _gameBarBox;
     private bool hasScored = false;
+    private AudioSource _effectSource;
     private void Update()
     {
         if (!isGameTwo && isHolding)
         {
+
             holdTime += Time.deltaTime;
-            
+
+            if (_effectSource == null)
+            {
+                _effectSource = Managers.Sound.PlayReturnAudioSource("2000Effect/MECHS - MACHINES - SERVOS - (103)/MECH Servo Motor Power Up Long 03", Define.Sound.Effect, 0.4f);
+            }
+
             if (_gameBarBox == null && target != null)
             {
                 _gameBarBox = Managers.Resource.Instantiate("GameBarBox");
@@ -163,7 +170,7 @@ public class UI_Game_Score : UI_Scene
 
             // 게임 1 효과음 재생
             AudioClip audioClip = Managers.Sound.GetOrAddAudioClip("ProEffect/Explosion_Fire_Gas/explosion_large_no_tail_02", Define.Sound.Effect);
-            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.3f);
+            Managers.Sound.Play(audioClip, Define.Sound.Effect, 0.5f);
             Destroy(ball);
             Destroy(target);
             if (audioClip != null)
@@ -288,6 +295,11 @@ public class UI_Game_Score : UI_Scene
         {
             Destroy(_gameBarBox); // GameBarBox 인스턴스 삭제
             _gameBarBox = null;
+        }
+        if (_effectSource != null)
+        {
+            _effectSource.Stop(); // 사운드 멈춤
+            _effectSource = null;
         }
     }
 
