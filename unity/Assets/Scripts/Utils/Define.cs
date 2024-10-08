@@ -33,7 +33,12 @@ public class Define
          Before,
          After
      }
-
+    public enum MuseumStoryType
+    {
+        Story1592,
+        Story1919, 
+        Story1443,
+    }
     public enum ConfirmType
     {
         Home,

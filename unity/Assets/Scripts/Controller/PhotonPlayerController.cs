@@ -12,7 +12,6 @@ using UnityEngine.AI;
 public class PhotonPlayerController: MonoBehaviour
 {
     public static PhotonPlayerController Instance { get; private set; }
-
     // 이동
     Animator anim;
     private Rigidbody rb;
@@ -113,8 +112,10 @@ public class PhotonPlayerController: MonoBehaviour
         {
             if (!NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
             {
-                // 착지한 위치가 NavMesh 경로 밖이라면 다시 경로로 이동
-                nav.Warp(hit.position); // 캐릭터를 NavMesh 경로 내로 복귀시킴
+                if (!float.IsInfinity(hit.position.x) && !float.IsInfinity(hit.position.y) && !float.IsInfinity(hit.position.z))
+                {
+                    nav.Warp(hit.position);
+                }
             }
             State = PlayerState.Idle;
             nav.enabled = true;
@@ -287,6 +288,7 @@ public class PhotonPlayerController: MonoBehaviour
         // 상호작용 입력이 시작되고, 상호작용 가능한 오브젝트가 존재할 때
         if (callbackContext.phase == InputActionPhase.Performed && _curInteractable != null)
         {
+            PhotonManager.Instance.ToggleChatting();
             if (State == PlayerState.Watch)
             {
                 ExitWatchState(); // Watch 상태에서 나옴
