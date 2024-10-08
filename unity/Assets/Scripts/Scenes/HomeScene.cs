@@ -81,7 +81,7 @@ public class HomeScene : BaseScene
                 Debug.LogError($"업적 정보 가져오기 실패: {error}");
             }
         ));
-        Managers.Sound.Play("KarugamoBGM/KBF_Town_Indoor_G01_A", Define.Sound.Bgm, 1.2f);
+        Managers.Sound.Play("KarugamoBGM/KBF_Town_Indoor_G01_A", Define.Sound.Bgm, 1.5f);
     }
     public override void Clear()
     {
@@ -278,6 +278,7 @@ public class HomeScene : BaseScene
 
     public void LoadScene()
     {
+        Managers.Sound.StopBGM();
         switch (_monitorStatus)
         {
             case MonitorStatus.Story1592:
