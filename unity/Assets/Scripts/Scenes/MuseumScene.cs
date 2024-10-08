@@ -18,6 +18,8 @@ public class MuseumScene : BaseScene
         // InputManager의 MouseAction에 이벤트 등록
         Managers.Input.MouseAction -= OnMouseAction;
         Managers.Input.MouseAction += OnMouseAction;
+
+        Managers.Sound.Play("UltimateBGM/Low Poly Ambience Loop", Define.Sound.Bgm);
     }
 
     void Update()
