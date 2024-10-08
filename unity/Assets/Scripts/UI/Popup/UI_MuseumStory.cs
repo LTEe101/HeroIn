@@ -62,16 +62,16 @@ public class UI_MuseumStory: UI_Popup
         {
             case Define.MuseumStoryType.Story1592:
                 _list = Managers.Data.MuseumStory1919;
-                GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "한산도 대첩 - 이순신 장군";
+                GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "한산도 대첩";
                 break;
             case Define.MuseumStoryType.Story1919:
                 _list = Managers.Data.MuseumStory1919;
-                GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "3.1운동 - 윤관순 열사";
+                GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "3.1운동";
                 GetTMP((int)Texts.EnterText).GetComponent<TextMeshProUGUI>().text = "준비 중";
                 break;
             case Define.MuseumStoryType.Story1443:
                 _list = Managers.Data.MuseumStory1443;
-                GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "훈민정음 - 세종대왕";
+                GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "훈민정음";
                 GetTMP((int)Texts.EnterText).GetComponent<TextMeshProUGUI>().text = "준비 중";
                 break;
         }
