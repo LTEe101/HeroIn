@@ -8,7 +8,7 @@ public class MotionGameScene : BaseScene
     private UI_Skip _skipUI;
     private IMotionGameScript[] gameplayScripts;
     private VideoStreamer videoStreamer; // 웹캠 종료를 위한 VideoStreamer 참조 추가
-
+    float _rotationSpeed = 1.5f;
     protected override void Init()
     {
         base.Init();
@@ -28,7 +28,11 @@ public class MotionGameScene : BaseScene
         videoStreamer = FindObjectOfType<VideoStreamer>(); // VideoStreamer 가져오기
 
     }
-
+    private void Update()
+    {
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
+    }
     private void DisableGameScripts()
     {
         foreach (var script in gameplayScripts)

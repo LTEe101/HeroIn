@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MetaverseWarScene : BaseScene
 {
-    float _rotationSpeed = 3.0f;
+    float _rotationSpeed = 1.5f;
     protected override void Init()
     {
         base.Init();
