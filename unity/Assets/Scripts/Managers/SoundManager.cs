@@ -172,5 +172,42 @@ public class SoundManager
     {
         _audioSources[(int)Define.Sound.Bgm].Stop();
     }
+    public AudioSource PlayReturnAudioSource(string path, Define.Sound type = Define.Sound.Effect, float volume = 1.0f, float pitch = 1.0f)
+    {
+        SetAudioVolume(path, volume, type); // 음량 설정
+
+        AudioClip audioClip = GetOrAddAudioClip(path, type);
+        return PlayAndReturnAudioSource(audioClip, type, pitch); // AudioSource를 반환
+    }
+
+    private AudioSource PlayAndReturnAudioSource(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
+    {
+        if (audioClip == null)
+            return null;
+
+        AudioSource audioSource = null;
+        if (type == Define.Sound.Bgm)
+        {
+            audioSource = _audioSources[(int)Define.Sound.Bgm];
+            if (audioSource.isPlaying && audioSource.clip == audioClip)
+                return audioSource;
+
+            audioSource.pitch = pitch;
+            audioSource.clip = audioClip;
+            audioSource.volume = GetAudioVolume(audioClip.name, type); // 음량 설정
+            audioSource.mute = _isMuted;
+            audioSource.Play();
+        }
+        else
+        {
+            audioSource = _audioSources[(int)Define.Sound.Effect];
+            audioSource.pitch = pitch;
+            audioSource.volume = GetAudioVolume(audioClip.name, type); // 음량 설정
+            audioSource.mute = _isMuted;
+            audioSource.PlayOneShot(audioClip);
+        }
+
+        return audioSource; // 재생 중인 AudioSource 반환
+    }
 
 }
