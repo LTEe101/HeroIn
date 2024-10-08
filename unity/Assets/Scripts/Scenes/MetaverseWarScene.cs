@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MetaverseWarScene : BaseScene
 {
+    float _rotationSpeed = 3.0f;
     protected override void Init()
     {
         base.Init();
@@ -14,7 +15,8 @@ public class MetaverseWarScene : BaseScene
 
     private void Update()
     {
-        
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
     }
 
     public override void Clear()

@@ -19,17 +19,21 @@ public class DataManager
     public Dictionary<int, GameInfo> GameInfos { get; private set; } = new Dictionary<int, GameInfo>();
     public List<QuizQuestion> QuizQuestions { get; private set; } = new List<QuizQuestion>();
     public Dictionary<int, MetaHistory> MetaHistoryDatas { get; private set; } = new Dictionary<int, MetaHistory>();
-  
+    public List<string> MuseumStory1592 { get; private set; } = new List<string>();
+    public List<string> MuseumStory1919 { get; private set; } = new List<string>();
+    public List<string> MuseumStory1443 { get; private set; } = new List<string>();
     public void Init()
     {
         NarrationData narrationData = LoadJson<NarrationData>("NarrationData");
         GameInfos = LoadJson<GameInfoData>("GameInfoData").MakeDict();
         MetaHistoryDatas = LoadJson<MetaHistoryData>("MetaHistoryData").MakeDict();
-
+        StoryData storyData = LoadJson<StoryData>("StoryData");
 
         BeforeStoryList = narrationData.beforeStory;
         AfterStoryList = narrationData.afterStory;
-
+        MuseumStory1592 = storyData.story1592;
+        MuseumStory1919 = storyData.story1919;
+        MuseumStory1443 = storyData.story1443;
 
         LoadAllScenarios("DialogsData");
         LoadGameInfos("GameInfoData");
