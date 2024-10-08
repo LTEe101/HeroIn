@@ -6,6 +6,7 @@ using UnityEngine;
 public class BeforeStoryScene : BaseScene
 {
     public CameraController _cameraController;
+    float _rotationSpeed = 1.5f;
     private void Start()
     {
         _cameraController.onCloseUpComplete = OnCloseUpComplete;
@@ -25,6 +26,9 @@ public class BeforeStoryScene : BaseScene
 
     private void Update()
     {
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
+
     }
 
     public override void Clear()

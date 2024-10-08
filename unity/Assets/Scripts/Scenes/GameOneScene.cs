@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameOneScene : BaseScene
 {
+    float _rotationSpeed = 1.5f;
     protected override void Init()
     {
         base.Init();
@@ -15,6 +16,8 @@ public class GameOneScene : BaseScene
 
     private void Update()
     {
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
     }
 
     public override void Clear()

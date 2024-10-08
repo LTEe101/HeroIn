@@ -7,6 +7,7 @@ public class ShipViewScene : BaseScene
 {
     private Animator _animator;
     private UI_Skip _skipUI;
+    float _rotationSpeed = 1.5f;
     protected override void Init()
     {
         base.Init();
@@ -18,7 +19,11 @@ public class ShipViewScene : BaseScene
         _skipUI.SetNextScene(Define.Scene.StoryFive);
 
     }
-
+    private void Update()
+    {
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
+    }
     public void OnAnimationEnd()
     {
         Managers.Scene.LoadScene(Define.Scene.StoryFive);

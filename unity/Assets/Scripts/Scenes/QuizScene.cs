@@ -9,7 +9,7 @@ public class QuizScene : BaseScene
     private List<QuizQuestion> _quizQuestions;
     private UI_Quiz_Start _startUI;  // Start UI를 관리하는 변수 추가
     private UI_Quiz _quizUI;  // Quiz UI를 관리하는 변수 추가
-
+    float _rotationSpeed = 1.5f;
     private void Start()
     {
         // 카메라 컨트롤러 초기화
@@ -202,6 +202,11 @@ public class QuizScene : BaseScene
         StartCoroutine(WaitForFinishUIAndLoadScene(finishUI, 4.0f));
     }
 
+    private void Update()
+    {
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
+    }
     public override void Clear()
     {
         Debug.Log("QuizScene Clear!");
