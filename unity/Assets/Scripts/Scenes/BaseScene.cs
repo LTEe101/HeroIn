@@ -8,7 +8,12 @@ public abstract class BaseScene : MonoBehaviour
     public Define.Scene SceneType { get; protected set; } = Define.Scene.Unknown;
     void Awake()
 	{
-		Init();
+        int width = 1920;  // 가로 해상도
+        int height = 1080; // 세로 해상도
+
+        // 전체 화면 모드에서 원하는 해상도로 설정
+        Screen.SetResolution(width, height, true);
+        Init();
 	}
 
     protected virtual void Init()
