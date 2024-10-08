@@ -6,6 +6,7 @@ public class StoryFourScene : BaseScene
 {
     private CameraController _cameraController;
     private UI_Skip _skipUI;
+    float _rotationSpeed = 1.5f;
     private void Start()
     {
         _cameraController.onCloseUpComplete = OnCloseUpComplete;
@@ -29,6 +30,8 @@ public class StoryFourScene : BaseScene
 
     private void Update()
     {
+        float rotation = _rotationSpeed * Time.time;
+        RenderSettings.skybox.SetFloat("_Rotation", rotation);
     }
 
     public override void Clear()
