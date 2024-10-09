@@ -44,7 +44,7 @@ public class QuizScene : BaseScene
         Debug.Log("Showing UI_Quiz_Start");
 
         _startUI = Managers.UI.ShowPopupUI<UI_Quiz_Start>();  // Start UI 표시
-        StartCoroutine(HideStartUIAfterDelay(_startUI, 5.0f));  // 3초 후 Start UI 숨기기
+        StartCoroutine(HideStartUIAfterDelay(_startUI, 2.3f));  // 3초 후 Start UI 숨기기
     }
 
     private IEnumerator HideStartUIAfterDelay(UI_Quiz_Start startUI, float delay)
