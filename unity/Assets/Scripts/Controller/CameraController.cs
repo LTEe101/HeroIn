@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector3 closeUpPosition; // 클로즈업할 위치 (카메라가 이동할 위치)
     [SerializeField] Quaternion startRotation; // 카메라 시작 회전
     [SerializeField] Quaternion closeUpRotation; // 클로즈업할 회전
-    [SerializeField] float movingSpeed = 1.0f; // 카메라 이동 속도
+    float movingSpeed = 1.8f; // 카메라 이동 속도
     private bool isMoving = false; // 카메라가 움직이는지 여부
     public System.Action onCloseUpComplete;
 
@@ -78,7 +78,7 @@ public class CameraController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, closeUpRotation, Time.deltaTime * movingSpeed);
 
             // 클로즈업 위치에 도달하면 움직임을 멈춤
-            if (Vector3.Distance(transform.position, closeUpPosition) < 0.1f)
+            if (Vector3.Distance(transform.position, closeUpPosition) < 0.5f)
             {
                 isMoving = false;
                 onCloseUpComplete?.Invoke();
@@ -91,7 +91,6 @@ public class CameraController : MonoBehaviour
         closeUpPosition = end;
         startRotation = startRot;
         closeUpRotation = endRot;
-        movingSpeed = speed;
         isMoving = true;
     }
 
