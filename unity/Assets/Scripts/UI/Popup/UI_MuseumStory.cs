@@ -61,7 +61,7 @@ public class UI_MuseumStory: UI_Popup
         switch (_storyType)
         {
             case Define.MuseumStoryType.Story1592:
-                _list = Managers.Data.MuseumStory1919;
+                _list = Managers.Data.MuseumStory1592;
                 GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "한산도 대첩";
                 break;
             case Define.MuseumStoryType.Story1919:
