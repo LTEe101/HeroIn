@@ -193,7 +193,7 @@ public class APIManager : MonoBehaviour
                     Debug.LogError("카드 정보 파싱 실패: " + ex.Message);
                     onError?.Invoke("카드 정보 파싱 실패: " + ex.Message);
                 }
-
+                Managers.Data.cards = new List<HistoryCard>();
                 // 카드 리스트를 순회하면서 데이터를 저장
                 foreach (CardData card in cardList)
                     {
@@ -255,7 +255,7 @@ public class APIManager : MonoBehaviour
                     Debug.LogError("업적 정보 파싱 실패: " + ex.Message);
                     onError?.Invoke("업적 정보 파싱 실패: " + ex.Message);
                 }
-
+                Managers.Data.titles = new List<HistoryTitle>();
                 // 카드 리스트를 순회하면서 데이터를 저장
                 foreach (TitleData title in titleList)
                 {
