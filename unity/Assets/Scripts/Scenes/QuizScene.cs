@@ -44,15 +44,6 @@ public class QuizScene : BaseScene
         Debug.Log("Showing UI_Quiz_Start");
 
         _startUI = Managers.UI.ShowPopupUI<UI_Quiz_Start>();  // Start UI 표시
-        StartCoroutine(HideStartUIAfterDelay(_startUI, 2.3f));  // 3초 후 Start UI 숨기기
-    }
-
-    private IEnumerator HideStartUIAfterDelay(UI_Quiz_Start startUI, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        Managers.UI.ClosePopupUI(startUI);  // Start UI 숨기기
-
-        MoveToNextSpot();
     }
 
     private void MoveToNextSpot()
@@ -115,7 +106,7 @@ public class QuizScene : BaseScene
             Debug.LogError("Current question index is out of range.");
             return;
         }
-
+        Managers.UI.CloseAllPopupUI();
         _quizUI = Managers.UI.ShowPopupUI<UI_Quiz>();  // Quiz UI 표시
 
         // 현재 질문이 null인 경우 확인
