@@ -62,15 +62,46 @@ public class UI_MuseumStory: UI_Popup
         {
             case Define.MuseumStoryType.Story1592:
                 _list = Managers.Data.MuseumStory1592;
+
+                for (int i = 0; i < _list.Count; i++)
+                {
+                    // 이순신 장군에 색상과 볼드 적용
+                    _list[i] = _list[i].Replace("이순신 장군", "<color=#1E90FF><b>이순신 장군</b></color>");
+
+                    // 거북선에 색상과 볼드 적용
+                    _list[i] = _list[i].Replace("거북선", "<color=#1E90FF><b>거북선</b></color>");
+
+                    // 학익진에 색상과 볼드 적용
+                    _list[i] = _list[i].Replace("학익진", "<color=#1E90FF><b>학익진</b></color>");
+                }
+
                 GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "한산도 대첩";
                 break;
             case Define.MuseumStoryType.Story1919:
                 _list = Managers.Data.MuseumStory1919;
+                for (int i = 0; i < _list.Count; i++)
+                {
+                    _list[i] = _list[i].Replace("일제강점기", "<color=#1E90FF><b>일제강점기</b></color>");
+                    _list[i] = _list[i].Replace("유관순 열사", "<color=#1E90FF><b>유관순 열사</b></color>");
+                    _list[i] = _list[i].Replace("안중근 의사", "<color=#1E90FF><b>안중근 의사</b></color>");
+                    _list[i] = _list[i].Replace("김구 선생님", "<color=#1E90FF><b>김구 선생님</b></color>");
+                    _list[i] = _list[i].Replace("독립운동", "<color=#1E90FF><b>독립운동</b></color>");
+                    _list[i] = _list[i].Replace("대한독립 만세!", "<color=#1E90FF><b>대한독립 만세!</b></color>");
+                    _list[i] = _list[i].Replace("광복절", "<color=#1E90FF><b>광복절</b></color>");
+                }
                 GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "3.1운동";
                 GetTMP((int)Texts.EnterText).GetComponent<TextMeshProUGUI>().text = "준비 중";
                 break;
             case Define.MuseumStoryType.Story1443:
                 _list = Managers.Data.MuseumStory1443;
+                for (int i = 0; i < _list.Count; i++)
+                {
+                    _list[i] = _list[i].Replace("세종대왕", "<color=#1E90FF><b>세종대왕</b></color>");
+                    _list[i] = _list[i].Replace("측우기", "<color=#1E90FF><b>측우기</b></color>");
+                    _list[i] = _list[i].Replace("해시계", "<color=#1E90FF><b>해시계</b></color>");
+                    _list[i] = _list[i].Replace("물시계", "<color=#1E90FF><b>물시계</b></color>");
+                    _list[i] = _list[i].Replace("한글", "<color=#1E90FF><b>한글</b></color>");
+                }
                 GetTMP((int)Texts.NameText).GetComponent<TextMeshProUGUI>().text = "훈민정음";
                 GetTMP((int)Texts.EnterText).GetComponent<TextMeshProUGUI>().text = "준비 중";
                 break;
