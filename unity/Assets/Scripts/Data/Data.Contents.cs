@@ -14,6 +14,7 @@ public class User
 	public string title;
     public Sprite imgNo;
 }
+
 #endregion
 
 #region HistoryTitle
