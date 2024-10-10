@@ -27,6 +27,7 @@ public class StorySixScene : BaseScene
              new Quaternion(-0.089f, 0.84f, -0.14f, -0.5f), new Quaternion(-0.108274944f, 0.646892965f, -0.0935138166f, -0.749040246f),
               1.2f);
         Managers.Sound.Play("RpgGameBGM/StrangeRoad(Loop)", Define.Sound.Bgm, 1.4f);
+        Managers.Sound.Play("환호사운드", Define.Sound.Effect, 1.0f);
     }
 
     private void Update()
