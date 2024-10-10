@@ -11,6 +11,7 @@ public interface ILoader<Key, Value>
 public class DataManager
 {
     public User userInfo { get; private set; } = new User();
+    public bool ControlPannel { get; set; } = false;
     public List<HistoryCard> cards = new List<HistoryCard>();
     public List<HistoryTitle> titles = new List<HistoryTitle>();
     public List<string> BeforeStoryList { get; private set; } = new List<string>();

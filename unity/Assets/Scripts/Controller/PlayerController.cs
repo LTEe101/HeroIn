@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform; // 카메라의 Transform
     private Vector3 _initialPosition = new Vector3(-10f, 1.910354f, -2.25f); // 초기 위치
     private Quaternion _initialRotation = Quaternion.Euler(6f, 0.0f, 0.0f); // 초기 회전
-    public Vector3 cameraOffset = new Vector3(0, 7.7f, -7); // 카메라가 캐릭터로부터 떨어진 거리
+    Vector3 cameraOffset = new Vector3(0, 1.5f, -2); // 카메라가 캐릭터로부터 떨어진 거리
     private float xRotation = 0f; // 카메라 회전 속도 설정
     float _mouseSensitivity = 2.0f; // 마우스 감도
 

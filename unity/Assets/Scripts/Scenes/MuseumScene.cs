@@ -13,8 +13,10 @@ public class MuseumScene : BaseScene
     {
         base.Init();
         SceneType = Define.Scene.Museum;
-
-        Managers.UI.ShowPopupUI<UI_Control>();
+        if(!Managers.Data.ControlPannel)
+        {
+            Managers.UI.ShowPopupUI<UI_Control>();
+        }
         // InputManager의 MouseAction에 이벤트 등록
         Managers.Input.MouseAction -= OnMouseAction;
         Managers.Input.MouseAction += OnMouseAction;

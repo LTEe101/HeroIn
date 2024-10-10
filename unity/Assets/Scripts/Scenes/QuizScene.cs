@@ -48,11 +48,6 @@ public class QuizScene : BaseScene
 
     private void MoveToNextSpot()
     {
-        if (_currentQuestionIndex >= _quizQuestions.Count)
-        {
-            EndQuiz();
-            return;
-        }
         switch (_currentQuestionIndex)
         {
             case 0:
@@ -103,6 +98,10 @@ public class QuizScene : BaseScene
 
         if (_currentQuestionIndex >= _quizQuestions.Count)
         {
+            Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_single_02", Define.Sound.Effect, 0.8f);
+            UI_Quiz_Finish finishUI = Managers.UI.ShowPopupUI<UI_Quiz_Finish>();
+            Debug.Log("Quiz finished!");
+            StartCoroutine(WaitForFinishUIAndLoadScene(finishUI, 4.0f));
             Debug.LogError("Current question index is out of range.");
             return;
         }
@@ -187,10 +186,16 @@ public class QuizScene : BaseScene
     }
     private void EndQuiz()
     {
-        Managers.Sound.Play("ProEffect/Collectibles_Items_Powerup/points_ticker_bonus_score_reward_single_02", Define.Sound.Effect, 0.8f);
-        UI_Quiz_Finish finishUI = Managers.UI.ShowPopupUI<UI_Quiz_Finish>();
-        Debug.Log("Quiz finished!");
-        StartCoroutine(WaitForFinishUIAndLoadScene(finishUI, 4.0f));
+        
+        // 카메라 이동 추가
+        _cameraController.StartCloseUp(
+                 new Vector3(143.476f, 31.22f, -45.7f), // 시작 위치
+                 new Vector3(179.070557f, 34.1159019f, -45.9486237f), // 끝 위치
+                 new Quaternion(-0.003f, 0.71f, 0.003f, 0.7f),          // 시작 회전
+                 new Quaternion(-0.010757722f, 0.704041123f, 0.0106653553f, 0.709997654f),          // 끝 회전
+                 1.0f                                // 시간
+             );
+    
     }
 
     private void Update()
