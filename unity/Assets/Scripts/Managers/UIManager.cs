@@ -139,6 +139,44 @@ public class UIManager
             ClosePopupUI(); // 팝업이 있을 때까지 계속 닫기
     }
 
+    public void CloseSelectPopupUI(UI_Popup popup)
+    {
+        if (_popupStack.Count == 0)
+            return; // 스택에 팝업이 없으면 리턴
+
+        // 팝업이 스택의 최상단에 있지 않더라도 닫을 수 있도록 변경
+        if (_popupStack.Contains(popup))
+        {
+            Stack<UI_Popup> tempStack = new Stack<UI_Popup>();
+
+            // 스택에서 닫으려는 팝업을 찾을 때까지 임시 스택에 이동
+            while (_popupStack.Count > 0)
+            {
+                UI_Popup topPopup = _popupStack.Pop();
+                if (topPopup == popup)
+                {
+                    Managers.Resource.Destroy(popup.gameObject); // 팝업 오브젝트 파괴
+                    popup = null; // 팝업 참조 해제
+                    _order--; // 정렬 순서 감소
+                    break;
+                }
+                else
+                {
+                    tempStack.Push(topPopup); // 팝업이 아니면 임시 스택에 추가
+                }
+            }
+
+            // 나머지 팝업을 원래 스택에 다시 넣음
+            while (tempStack.Count > 0)
+            {
+                _popupStack.Push(tempStack.Pop());
+            }
+        }
+        else
+        {
+            Debug.Log("Popup not found in the stack!"); // 스택에 팝업이 없으면 경고 메시지 출력
+        }
+    }
     // UI 관련 데이터를 모두 초기화하는 함수
     public void Clear()
     {
