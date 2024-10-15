@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MotionGameScene : BaseScene
 {
@@ -9,6 +10,7 @@ public class MotionGameScene : BaseScene
     private IMotionGameScript[] gameplayScripts;
     private VideoStreamer videoStreamer; // 웹캠 종료를 위한 VideoStreamer 참조 추가
     float _rotationSpeed = 1.5f;
+    public RawImage webcamDisplay;
     protected override void Init()
     {
         base.Init();

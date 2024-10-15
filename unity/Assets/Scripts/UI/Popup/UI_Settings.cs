@@ -39,7 +39,7 @@ public class UI_Settings : UI_Popup
         volumeButtonImage = GetButton((int)Buttons.VolumeOnOff).GetComponent<Image>(); // VolumeButton의 Image 컴포넌트 가져오기
         volumeSlider = Get<Slider>((int)Sliders.VolumeBar);
         volumeSlider.onValueChanged.AddListener(AdjustVolume);
-        BindEvent(GetButton((int)Buttons.CloseButton).gameObject, (PointerEventData data) => { PlayButtonSound(); ClosePopupUI(); }, Define.UIEvent.Click);
+        BindEvent(GetButton((int)Buttons.CloseButton).gameObject, (PointerEventData data) => { PlayButtonSound(); Managers.UI.CloseSelectPopupUI(this); }, Define.UIEvent.Click);
         
         BindEvent(GetButton((int)Buttons.ExitButton).gameObject, (PointerEventData data) => { 
             PlayButtonSound();

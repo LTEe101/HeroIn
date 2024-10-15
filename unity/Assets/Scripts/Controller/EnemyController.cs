@@ -66,6 +66,7 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.CompareTag("Arrow") && !isHit)
         {
             isHit = true;
+            collision.gameObject.SetActive(false);
             HitByArrow();
         }
     }

@@ -201,7 +201,7 @@ public class ArrowShooter : MonoBehaviour, IMotionGameScript
 
         existingArrow.transform.position = initialArrowPosition;
         existingArrow.transform.rotation = initialArrowRotation;
-
+        existingArrow.SetActive(true);
         // 스케일 초기화 (필요 시)
         existingArrow.transform.localScale = Vector3.one * 2;
 
