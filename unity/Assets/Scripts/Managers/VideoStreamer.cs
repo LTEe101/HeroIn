@@ -2,12 +2,15 @@ using UnityEngine;
 using System.Threading.Tasks;
 using NativeWebSocket;
 using System;
+using UnityEngine.UI;
 
 public class VideoStreamer : MonoBehaviour, IMotionGameScript
 {
     public string websocketUrl = "ws://j11e101.p.ssafy.io:8000/ws";
     private WebSocket websocket;
     private WebCamTexture webCamTexture;
+    public RawImage webcamDisplay;
+    public WebCamCanvasController webcamCanvasController;  // WebCamCanvasController 참조 추가
     private const int MAX_PACKET_SIZE = 60000; // 패킷 최대 크기
     private const int MAX_IMAGE_SIZE = 640; // 이미지 크기 조정
 
@@ -22,6 +25,10 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
 
     async void Start()
     {
+        // 처음에 Canvas를 비활성화
+        if (webcamCanvasController != null)
+            webcamCanvasController.HideCanvas();
+
         // WebSocket 초기화 및 이벤트 핸들러 설정
         websocket = new WebSocket(websocketUrl);
 
@@ -100,7 +107,24 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
             webCamTexture.requestedHeight = 720;
             webCamTexture.requestedFPS = 30;
 
+            // 첫 번째 웹캠을 사용하여 WebCamTexture를 생성합니다.
+            WebCamDevice[] devices = WebCamTexture.devices;
+
+            if (devices.Length == 0)
+            {
+                Debug.Log("No webcam detected.");
+                return;
+            }
+
+            // 이미 선언된 webCamTexture를 사용하여 영상을 RawImage에 할당합니다.
+            webcamDisplay.texture = webCamTexture;
+
             webCamTexture.Play();
+
+            // 웹캠이 시작되면 Canvas 활성화
+            if (webcamCanvasController != null)
+                webcamCanvasController.ShowCanvas();
+
             Debug.Log("웹캠 시작됨");
         }
         else
@@ -108,6 +132,7 @@ public class VideoStreamer : MonoBehaviour, IMotionGameScript
             Debug.LogWarning("사용 가능한 웹캠이 없습니다.");
         }
     }
+
 
     async Task ConnectWebSocket()
     {
